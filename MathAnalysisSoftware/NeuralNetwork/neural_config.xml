@@ -1,0 +1,45 @@
+<config>
+
+	<NeuralNetParams 
+		neurons="4" 
+		dimensions="2" 
+		activationFunction="Logistic" 
+		errorExponent="2" 
+		trainingsCount="50" 
+		pointsToPredict="0"
+	/>
+  <!-- Activation functions: Logistic , Sigmoid  ,Gaussian , Gaussian_derivative , Cosine , Exponential , Linear , Piecewise_linear , Hyperbolic_tangent , Binary_shift , Polynomial , Rational , Special-->
+	
+	<LowLevelParams 
+		learningRate="0.999"
+		cycleSize="1e6"
+		biasTerm="1" 
+		constantTerm="0" 
+		maxPertrubation="2" 
+		nudge="0.5" 
+		pruning="0" 
+		testingInterval="1e5"
+	/>
+	<!-- Learning rate (default 0.999)-->
+	<!-- Number of iterations per cycle (default 1e6)-->
+	<!-- 0 for bias term; otherwise 1 (default 1) -->
+	<!-- 0 for constant term; otherwise 1 (default 0) -->
+	<!-- Maximum perturbation (default 2) -->
+	<!-- Amount to nudge the parameters back toward zero (default 0.5) -->
+	<!-- Pruning level (0 = no pruning) (default 0) -->
+	<!-- Interval for testing neural net results (default 1e4) -->
+ 
+	<FilesToAnalyse>
+    <!--file path="Test\henon" dataColumn="1" start="" end="" pts=""/-->
+    <file path="TestData\henon" dataColumn="1" start="" end="" pts=""/>
+	</FilesToAnalyse>
+
+
+  <Output>
+    <reconstructedSignal pts=""/>
+    <wav lengthSeconds="2"/>
+    <reconstructedPoincare pts="1e5"/>
+    <model3D pts="1e5"/>
+  </Output>
+	
+</config>
