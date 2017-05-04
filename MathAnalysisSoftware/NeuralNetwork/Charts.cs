@@ -1,11 +1,10 @@
-﻿using System;
+﻿using MathLib.DrawEngine;
+using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.IO;
-using System.Windows.Interop;
-using System.Windows.Media.Imaging;
 
-namespace NeuralNetwork {
+namespace NeuralNetwork
+{
     class Charts {
 
         private const float AOffset = 1f;
@@ -174,51 +173,7 @@ namespace NeuralNetwork {
         #endregion
 
 
-
-        #region "Neural Net animation"
-
-        private static GifBitmapEncoder gEnc;
+        public static Animation NeuralAnimation;
         
-        public static void InitAnimation() {
-            gEnc = new GifBitmapEncoder();
-        }
-
-
-        [System.Runtime.InteropServices.DllImport("gdi32.dll")]
-        public static extern bool DeleteObject(IntPtr hObject);
-
-        public static void AddFrame(Bitmap frame) {
-
-            
-                IntPtr hBitmap = frame.GetHbitmap();
-
-                BitmapSource bitmap = Imaging.CreateBitmapSourceFromHBitmap(
-                    hBitmap,
-                    IntPtr.Zero,
-                    System.Windows.Int32Rect.Empty,
-                    BitmapSizeOptions.FromEmptyOptions());
-
-
-                gEnc.Frames.Add(BitmapFrame.Create(bitmap));
-
-                DeleteObject(hBitmap);
-
-            /*var src = Imaging.CreateBitmapSourceFromHBitmap(
-                    frame.GetHbitmap(),
-                    IntPtr.Zero,
-                    System.Windows.Int32Rect.Empty,
-                    BitmapSizeOptions.FromEmptyOptions());
-                gEnc.Frames.Add(BitmapFrame.Create(src));*/
-        }
-
-
-
-        public static void SaveAnimation() {
-            using (FileStream fs = new FileStream(NeuralOutput.BasePath + "_neural_anim.gif", FileMode.Create)) {
-                gEnc.Save(fs);
-            }
-        }
-
-        #endregion
     }
 }

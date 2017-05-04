@@ -41,18 +41,16 @@ namespace NeuralNetwork {
             Console.Title = "Signal: " + NeuralOutput.FileName + " | " + taskParams.ActFunction.GetName();
             Console.WriteLine("\nStarting...");
 
-            Charts.InitAnimation();
+            Charts.NeuralAnimation = new Animation();
 
             Calculations calc = new Calculations(NeuralNet.Task_Params);
 
             NeuralNet.LoggingMethod = calc.LoggingEvent;
             NeuralNet.EndCycleMethod = calc.EndCycleEvent;
 
-            
-
             task.RunTask();
 
-            Charts.SaveAnimation();
+            Charts.NeuralAnimation.SaveAnimation(NeuralOutput.BasePath + "_neural_anim.gif");
         }
     }
 }

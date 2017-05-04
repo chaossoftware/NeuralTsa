@@ -222,7 +222,7 @@ namespace NeuralNetwork {
 
 
         public void LoggingEvent() {
-            Charts.AddFrame(Charts.DrawNetworkState(800, NeuralNet.a, NeuralNet.b, NeuralNet.Task_Params.Dimensions, NeuralNet.Task_Params.Neurons, NeuralNet.Task_Params.CMax * NeuralNet.successCount + NeuralNet._c));
+            Charts.NeuralAnimation.AddFrame(Charts.DrawNetworkState(800, NeuralNet.a, NeuralNet.b, NeuralNet.Task_Params.Dimensions, NeuralNet.Task_Params.Neurons, NeuralNet.Task_Params.CMax * NeuralNet.successCount + NeuralNet._c));
             Console.WriteLine("{0}\tE: {1:0.#####e-0}", NeuralNet._c, NeuralNet.ebest);
         }
 
