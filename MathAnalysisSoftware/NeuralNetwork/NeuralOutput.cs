@@ -81,11 +81,11 @@ namespace NeuralNetwork {
         /// <param name="yt">array of points Y coordinates</param>
         /// <param name="zt">array of points Z coordinates</param>
         public static void Create3dModelFile(double[] xt, double[] yt, double[] zt) {
-            if (!saveModel) 
-                return;
-
-            string filePath = BasePath + "_model.ply";
-            Model3D.Create3dModelFile(filePath, xt, yt, zt);
+            if (saveModel)
+            {
+                string filePath = BasePath + "_model.ply";
+                Model3D.Create3dModelFile(filePath, xt, yt, zt);
+            }
         }
 
 
@@ -94,14 +94,11 @@ namespace NeuralNetwork {
         /// </summary>
         /// <param name="yt">Y coordinates of attractor points</param>
         public static void CreateWavFile(double[] yt) {
-
-            if (!saveWav) 
-                return;
-
-            long pts = yt.Length;
-            string filePath = BasePath + "_sound.wav";
-
-            Sound.CreateWavFile(filePath, yt);
+            if (saveWav)
+            {
+                string filePath = BasePath + "_sound.wav";
+                Sound.CreateWavFile(filePath, yt);
+            }
         }
 
 
