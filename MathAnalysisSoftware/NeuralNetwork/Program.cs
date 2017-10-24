@@ -43,7 +43,7 @@ namespace NeuralNetwork {
 
             Charts.NeuralAnimation = new Animation();
 
-            Calculations calc = new Calculations(NeuralNet.Task_Params);
+            Calculations calc = new Calculations(NeuralNet.Params);
 
             NeuralNet.LoggingMethod = calc.LoggingEvent;
             NeuralNet.EndCycleMethod = calc.EndCycleEvent;
