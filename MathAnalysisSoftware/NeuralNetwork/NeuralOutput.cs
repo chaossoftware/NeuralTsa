@@ -1,5 +1,6 @@
 ﻿using MathLib.IO;
 using MathLib.MathMethods.Lyapunov;
+using MathLib.NeuralNet.Entities;
 using MathLib.Transform;
 using System;
 using System.Globalization;
@@ -45,15 +46,18 @@ namespace NeuralNetwork {
         }
 
 
-        public static void SaveDebugInfoToFile(double ebest, BenettinResult result, double _le, double[] bbest, double[,] abest, int n, int d) {
-            
+        public static void SaveDebugInfoToFile(double ebest, BenettinResult result, double _le, Neuron outputNeuron, Neuron[] hiddenNeurons) {
+
+            int d = hiddenNeurons[1].Inputs.Length - 1;
+            int n = outputNeuron.Inputs.Length - 1;
+
             StringBuilder debug = new StringBuilder();
 
             debug.AppendFormat(CultureInfo.InvariantCulture, "Training error: {0:0.#####e-0}\n\n", ebest);
             debug.Append(result.GetInfo());
             debug.AppendFormat(CultureInfo.InvariantCulture, "Largest Lyapunov exponent: {0:F5}\n", _le);
 
-            debug.AppendFormat(CultureInfo.InvariantCulture, "\nBias: {0:F8}\n\n", bbest[0]);
+            debug.AppendFormat(CultureInfo.InvariantCulture, "\nBias: {0:F8}\n\n", outputNeuron.Inputs[0].WBest);
             
             for (int i = 1; i <= n; i++)
                 debug.AppendFormat("Neuron {0} :\t\t\t", i);
@@ -61,13 +65,13 @@ namespace NeuralNetwork {
         
             for (int j = 0; j <= d; j++) {
                 for (int i = 1; i <= n; i++)
-                    debug.AppendFormat(CultureInfo.InvariantCulture, "{0:F8}\t\t", abest[i, j]);
+                    debug.AppendFormat(CultureInfo.InvariantCulture, "{0:F8}\t\t", hiddenNeurons[i].Inputs[j].WBest);
                 debug.Append("\n");
             }
             debug.Append("\n");
 
             for (int i = 1; i <= n; i++)
-                debug.AppendFormat(CultureInfo.InvariantCulture, "{0:F8}\t\t", bbest[i]);
+                debug.AppendFormat(CultureInfo.InvariantCulture, "{0:F8}\t\t", outputNeuron.Inputs[i].WBest);
             debug.Append("\n-----------------------------------------------");
 
             Logger.LogInfo(debug.ToString(), true);

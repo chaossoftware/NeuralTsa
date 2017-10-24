@@ -1,4 +1,5 @@
 ﻿using MathLib.DrawEngine;
+using MathLib.NeuralNet.Entities;
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -21,7 +22,11 @@ namespace NeuralNetwork
         private static int MinIndexA;
         private static int MinIndexB;
 
-        public static Bitmap DrawNetworkState(int height, double[,] a, double[] b, int Dims, int Neurons, long iteration) {
+        public static Bitmap DrawNetworkState(int height, Neuron[] hiddenNeurons, Neuron outputNeuron, long iteration) {
+
+            int Dims = hiddenNeurons[1].Inputs.Length;
+            int Neurons = outputNeuron.Inputs.Length;
+
             int maxItems = Math.Max(Dims, Neurons);
             Size itemSize = GetItemSize(height, maxItems);
             int width = (int)(itemSize.Height * 8d);
@@ -33,28 +38,42 @@ namespace NeuralNetwork
 
             g.DrawString(String.Format("Neurons: {0} ; Dimensions: {1}\nIteration: {2:N0}", Neurons, Dims, iteration), gridFont, br, 0f, 0f);
 
-            Max = GetMax(a);
-            Min = GetMin(a);
+            Max = double.MinValue;
+            Min = double.MaxValue;
+            for (int i = 1; i < Neurons; i++)
+                for (int j = 1; j < Dims; j++)
+                {
+                    Max = Math.Max(Max, hiddenNeurons[i].Inputs[j].Weight);
+                    Min = Math.Min(Min, hiddenNeurons[i].Inputs[j].Weight);
+                }
+            //Max = GetMax(a);
+            //Min = GetMin(a);
             
-            for (int i = 1; i <= Neurons; i++)
-                for (int j = 1; j <= Dims; j++)
-                    g.DrawLine(new Pen(GetColor(a[i,j]), 1.5f), GetItemCenter(i, Neurons, maxItems, itemSize.Width, BOffset), GetItemCenter(j, Dims, maxItems, itemSize.Width, AOffset));
+            for (int i = 1; i < Neurons; i++)
+                for (int j = 1; j < Dims; j++)
+                    g.DrawLine(new Pen(GetColor(hiddenNeurons[i].Inputs[j].Weight), 1.5f), GetItemCenter(i, Neurons, maxItems, itemSize.Width, BOffset), GetItemCenter(j, Dims, maxItems, itemSize.Width, AOffset));
+
+            Max = double.MinValue;
+            Min = double.MaxValue;
+            for (int i = 1; i < Neurons; i++)
+            {
+                Max = Math.Max(Max, outputNeuron.Inputs[i].Weight);
+                Min = Math.Min(Min, outputNeuron.Inputs[i].Weight);
+            }
+            //Max = GetMax(b);
+            //Min = GetMin(b);
+
+            for (int i = 1; i < Neurons; i++)
+                g.DrawLine(new Pen(GetColor(outputNeuron.Inputs[i].Weight), 1.5f), GetItemCenter(i, Neurons, maxItems, itemSize.Width, BOffset), GetItemCenter(1, 1, maxItems, itemSize.Width, OutOffset));
 
 
-            Max = GetMax(b);
-            Min = GetMin(b);
-
-            for (int i = 1; i <= Neurons; i++)
-                g.DrawLine(new Pen(GetColor(b[i]), 1.5f), GetItemCenter(i, Neurons, maxItems, itemSize.Width, BOffset), GetItemCenter(1, 1, maxItems, itemSize.Width, OutOffset));
-
-
-            for (int i = 1; i <= Dims; i++) {
+            for (int i = 1; i < Dims; i++) {
                 Rectangle rect = new Rectangle(GetItemUpLeft(i, Dims, maxItems, itemSize.Width, AOffset), itemSize);
                 g.FillRectangle(new SolidBrush(Color.Orange), rect);
                 gp.AddRectangle(rect);
             }
 
-            for (int i = 1; i <= Neurons; i++) {
+            for (int i = 1; i < Neurons; i++) {
                 Rectangle rect = new Rectangle(GetItemUpLeft(i, Neurons, maxItems, itemSize.Width, BOffset), itemSize);
                 g.FillEllipse(new SolidBrush(Color.Red), rect);
                 gp.AddEllipse(rect);
