@@ -46,7 +46,7 @@ namespace NeuralNetwork {
         }
 
 
-        public static void SaveDebugInfoToFile(double ebest, BenettinResult result, double _le, Neuron outputNeuron, Neuron[] hiddenNeurons) {
+        public static void SaveDebugInfoToFile(double ebest, BenettinResult result, double _le, OutputNeuron outputNeuron, HiddenNeuron[] hiddenNeurons) {
 
             int d = hiddenNeurons[1].Inputs.Length - 1;
             int n = outputNeuron.Inputs.Length - 1;
@@ -57,7 +57,7 @@ namespace NeuralNetwork {
             debug.Append(result.GetInfo());
             debug.AppendFormat(CultureInfo.InvariantCulture, "Largest Lyapunov exponent: {0:F5}\n", _le);
 
-            debug.AppendFormat(CultureInfo.InvariantCulture, "\nBias: {0:F8}\n\n", outputNeuron.Inputs[0].WeightGood);
+            debug.AppendFormat(CultureInfo.InvariantCulture, "\nBias: {0:F8}\n\n", outputNeuron.Inputs[0].Memory);
             
             for (int i = 1; i <= n; i++)
                 debug.AppendFormat("Neuron {0} :\t\t\t", i);
@@ -65,13 +65,13 @@ namespace NeuralNetwork {
         
             for (int j = 0; j <= d; j++) {
                 for (int i = 1; i <= n; i++)
-                    debug.AppendFormat(CultureInfo.InvariantCulture, "{0:F8}\t\t", hiddenNeurons[i].Inputs[j].WeightGood);
+                    debug.AppendFormat(CultureInfo.InvariantCulture, "{0:F8}\t\t", hiddenNeurons[i].Inputs[j].Memory);
                 debug.Append("\n");
             }
             debug.Append("\n");
 
             for (int i = 1; i <= n; i++)
-                debug.AppendFormat(CultureInfo.InvariantCulture, "{0:F8}\t\t", outputNeuron.Inputs[i].WeightGood);
+                debug.AppendFormat(CultureInfo.InvariantCulture, "{0:F8}\t\t", outputNeuron.Inputs[i].Memory);
             debug.Append("\n-----------------------------------------------");
 
             Logger.LogInfo(debug.ToString(), true);

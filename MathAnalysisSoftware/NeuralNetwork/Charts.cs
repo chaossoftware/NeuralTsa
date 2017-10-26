@@ -18,10 +18,10 @@ namespace NeuralNetwork
         private static double Max;
         private static double Min;
 
-        public static Bitmap DrawNetworkState(int height, Neuron[] hiddenNeurons, Neuron outputNeuron, long iteration) {
+        public static Bitmap DrawNetworkState(int height, HiddenNeuron[] hiddenNeurons, long iteration) {
 
-            int Dims = hiddenNeurons[1].Inputs.Length;
-            int Neurons = outputNeuron.Inputs.Length;
+            int Dims = hiddenNeurons[0].Inputs.Length;
+            int Neurons = hiddenNeurons.Length;
 
             int maxItems = Math.Max(Dims, Neurons);
             Size itemSize = GetItemSize(height, maxItems);
@@ -51,12 +51,12 @@ namespace NeuralNetwork
             Min = double.MaxValue;
             for (int i = 0; i < Neurons; i++)
             {
-                Max = Math.Max(Max, outputNeuron.Inputs[i].Weight);
-                Min = Math.Min(Min, outputNeuron.Inputs[i].Weight);
+                Max = Math.Max(Max, hiddenNeurons[i].Outputs[0].Weight);
+                Min = Math.Min(Min, hiddenNeurons[i].Outputs[0].Weight);
             }
 
             for (int i = 0; i < Neurons; i++)
-                g.DrawLine(new Pen(GetColor(outputNeuron.Inputs[i].Weight), 1.5f), GetItemCenter(i + 1, Neurons, maxItems, itemSize.Width, BOffset), GetItemCenter(1, 1, maxItems, itemSize.Width, OutOffset));
+                g.DrawLine(new Pen(GetColor(hiddenNeurons[i].Outputs[0].Weight), 1.5f), GetItemCenter(i + 1, Neurons, maxItems, itemSize.Width, BOffset), GetItemCenter(1, 1, maxItems, itemSize.Width, OutOffset));
 
 
             for (int i = 1; i < Dims; i++) {
@@ -67,9 +67,9 @@ namespace NeuralNetwork
 
             for (int i = 0; i < Neurons; i++) {
                 Color color;
-                if (outputNeuron.Inputs[i].Weight < 0)
+                if (hiddenNeurons[i].Outputs[0].Weight < 0)
                     color = Color.Crimson;
-                else if (outputNeuron.Inputs[i].Weight == 0)
+                else if (hiddenNeurons[i].Outputs[0].Weight == 0)
                     color = Color.Red;
                 else
                     color = Color.OrangeRed;
