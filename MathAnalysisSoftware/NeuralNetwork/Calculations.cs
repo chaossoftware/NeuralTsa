@@ -18,7 +18,7 @@ namespace NeuralNetwork {
         private static NeuralNetParams Task_Params;
 
 
-        private static BenettinResult CalculateLyapunovSpectrum(double[] xdata, Neuron[] hiddenNeurons, Neuron outputNeuron, NeuralNetEquations systemEquations) {
+        private static BenettinResult CalculateLyapunovSpectrum(double[] xdata, Neuron[] hiddenNeurons, Neuron outputNeuron, NeuralNetEquations systemEquations, Synapse bias) {
 
             int Dim = systemEquations.N;
             int DimPlusOne = systemEquations.NN;
@@ -49,7 +49,7 @@ namespace NeuralNetwork {
                     for (int i = 0; i < Dim; i++)
                         x[0, i] = xdata[Dim - i + m];
 
-                    xnew = systemEquations.Derivs(x, Get2DArray(hiddenNeurons), Get1DArray(outputNeuron));
+                    xnew = systemEquations.Derivs(x, Get2DArray(hiddenNeurons), Get1DArray(outputNeuron), bias.Weight);
                     Array.Copy(xnew, v, xnew.Length);
 
                     time++;
@@ -111,7 +111,7 @@ namespace NeuralNetwork {
 
             for (int k = Task_Params.Dimensions + 1; k <= nmax; k++) {
                 x = outputNeuron.Inputs[0].Weight;
-                for (int i = 1; i <= Task_Params.Neurons; i++) {
+                for (int i = 0; i < Task_Params.Neurons; i++) {
                     _arg = hiddenNeurons[i].Inputs[0].Weight;
                     for (int j = 1; j <= Task_Params.Dimensions; j++)
                         _arg += hiddenNeurons[i].Inputs[j].Weight * xdata[k - j];
@@ -120,7 +120,7 @@ namespace NeuralNetwork {
 
                 double xe = outputNeuron.Inputs[0].Weight;
 
-                for (int i = 1; i <= Task_Params.Neurons; i++) {
+                for (int i = 0; i < Task_Params.Neurons; i++) {
                     _arg = hiddenNeurons[i].Inputs[0].Weight;
                     for (int j = 1; j <= Task_Params.Dimensions; j++)
                         _arg += hiddenNeurons[i].Inputs[j].Weight * (xdata[k - j] + dx[j]);
@@ -149,7 +149,7 @@ namespace NeuralNetwork {
 
 
 
-        private static void ConstructAttractor(double[] xdata, double[] xlast, Neuron[] hiddenNeurons, Neuron outputNeuron) {
+        private static void ConstructAttractor(double[] xdata, double[] xlast, Neuron[] hiddenNeurons, Neuron outputNeuron, Synapse bias) {
 
             long pts = 50000;
 
@@ -161,9 +161,9 @@ namespace NeuralNetwork {
                 xlast[j] = xdata[xdata.Length - 1 - j];
 
             for (long t = 1; t < pts; t++) {
-                double xnew = outputNeuron.Inputs[0].WeightBest;
+                double xnew = bias.WeightBest;
 
-                for (int i = 1; i <= Task_Params.Neurons; i++) {
+                for (int i = 0; i < Task_Params.Neurons; i++) {
                     double _arg = hiddenNeurons[i].Inputs[0].WeightBest;
                     for (int j = 1; j <= Task_Params.Dimensions; j++)
                         _arg += hiddenNeurons[i].Inputs[j].WeightBest * xlast[j - 1];
@@ -215,7 +215,7 @@ namespace NeuralNetwork {
 
             for (int k = Task_Params.Dimensions + 1; k <= pointsToPredict + Task_Params.Dimensions; k++) {
                 _xpred = outputNeuron.Inputs[0].WeightBest;
-                for (int i = 1; i <= Task_Params.Neurons; i++) {
+                for (int i = 0; i < Task_Params.Neurons; i++) {
                     double _arg = hiddenNeurons[i].Inputs[0].WeightBest;
 
                     for (int j = 1; j <= Task_Params.Dimensions; j++)
@@ -254,9 +254,9 @@ namespace NeuralNetwork {
             double _le = CalculateLargestLyapunovExponent(NeuralNet.xdata, NeuralNet.HiddenNeurons, NeuralNet.OutputNeuron);
             Console.WriteLine("\nLLE = {0:F5}\n\n", _le);
 
-            NeuralNet.Task_Result = CalculateLyapunovSpectrum(NeuralNet.xdata, NeuralNet.HiddenNeurons, NeuralNet.OutputNeuron, NeuralNet.System_Equations);
+            NeuralNet.Task_Result = CalculateLyapunovSpectrum(NeuralNet.xdata, NeuralNet.HiddenNeurons, NeuralNet.OutputNeuron, NeuralNet.System_Equations, NeuralNet.Bias);
 
-            ConstructAttractor(NeuralNet.xdata, NeuralNet.xlast, NeuralNet.HiddenNeurons, NeuralNet.OutputNeuron);
+            ConstructAttractor(NeuralNet.xdata, NeuralNet.xlast, NeuralNet.HiddenNeurons, NeuralNet.OutputNeuron, NeuralNet.Bias);
             Prediction(NeuralNet.xdata, NeuralNet.HiddenNeurons, NeuralNet.OutputNeuron, NeuralNet.Params.PtsToPredict);
 
             NeuralOutput.SaveDebugInfoToFile(NeuralNet.ebest, NeuralNet.Task_Result, _le, NeuralNet.OutputNeuron, NeuralNet.HiddenNeurons);

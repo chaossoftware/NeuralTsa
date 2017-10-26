@@ -17,10 +17,6 @@ namespace NeuralNetwork
 
         private static double Max;
         private static double Min;
-        private static int MaxIndexA;
-        private static int MaxIndexB;
-        private static int MinIndexA;
-        private static int MinIndexB;
 
         public static Bitmap DrawNetworkState(int height, Neuron[] hiddenNeurons, Neuron outputNeuron, long iteration) {
 
@@ -40,31 +36,27 @@ namespace NeuralNetwork
 
             Max = double.MinValue;
             Min = double.MaxValue;
-            for (int i = 1; i < Neurons; i++)
+            for (int i = 0; i < Neurons; i++)
                 for (int j = 1; j < Dims; j++)
                 {
                     Max = Math.Max(Max, hiddenNeurons[i].Inputs[j].Weight);
                     Min = Math.Min(Min, hiddenNeurons[i].Inputs[j].Weight);
                 }
-            //Max = GetMax(a);
-            //Min = GetMin(a);
             
-            for (int i = 1; i < Neurons; i++)
+            for (int i = 0; i < Neurons; i++)
                 for (int j = 1; j < Dims; j++)
-                    g.DrawLine(new Pen(GetColor(hiddenNeurons[i].Inputs[j].Weight), 1.5f), GetItemCenter(i, Neurons, maxItems, itemSize.Width, BOffset), GetItemCenter(j, Dims, maxItems, itemSize.Width, AOffset));
+                    g.DrawLine(new Pen(GetColor(hiddenNeurons[i].Inputs[j].Weight), 1.5f), GetItemCenter(i + 1, Neurons, maxItems, itemSize.Width, BOffset), GetItemCenter(j, Dims, maxItems, itemSize.Width, AOffset));
 
             Max = double.MinValue;
             Min = double.MaxValue;
-            for (int i = 1; i < Neurons; i++)
+            for (int i = 0; i < Neurons; i++)
             {
                 Max = Math.Max(Max, outputNeuron.Inputs[i].Weight);
                 Min = Math.Min(Min, outputNeuron.Inputs[i].Weight);
             }
-            //Max = GetMax(b);
-            //Min = GetMin(b);
 
-            for (int i = 1; i < Neurons; i++)
-                g.DrawLine(new Pen(GetColor(outputNeuron.Inputs[i].Weight), 1.5f), GetItemCenter(i, Neurons, maxItems, itemSize.Width, BOffset), GetItemCenter(1, 1, maxItems, itemSize.Width, OutOffset));
+            for (int i = 0; i < Neurons; i++)
+                g.DrawLine(new Pen(GetColor(outputNeuron.Inputs[i].Weight), 1.5f), GetItemCenter(i + 1, Neurons, maxItems, itemSize.Width, BOffset), GetItemCenter(1, 1, maxItems, itemSize.Width, OutOffset));
 
 
             for (int i = 1; i < Dims; i++) {
@@ -73,9 +65,17 @@ namespace NeuralNetwork
                 gp.AddRectangle(rect);
             }
 
-            for (int i = 1; i < Neurons; i++) {
-                Rectangle rect = new Rectangle(GetItemUpLeft(i, Neurons, maxItems, itemSize.Width, BOffset), itemSize);
-                g.FillEllipse(new SolidBrush(Color.Red), rect);
+            for (int i = 0; i < Neurons; i++) {
+                Color color;
+                if (outputNeuron.Inputs[i].Weight < 0)
+                    color = Color.Crimson;
+                else if (outputNeuron.Inputs[i].Weight == 0)
+                    color = Color.Red;
+                else
+                    color = Color.OrangeRed;
+
+                Rectangle rect = new Rectangle(GetItemUpLeft(i + 1, Neurons, maxItems, itemSize.Width, BOffset), itemSize);
+                g.FillEllipse(new SolidBrush(color), rect);
                 gp.AddEllipse(rect);
             }
 
