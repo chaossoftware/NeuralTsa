@@ -149,13 +149,14 @@ namespace NeuralNetwork {
 
 
 
-        private static void ConstructAttractor(double[] xdata, double[] xlast, HiddenNeuron[] hiddenNeurons, OutputNeuron outputNeuron, BiasNeuron bias) {
+        private static void ConstructAttractor(double[] xdata, HiddenNeuron[] hiddenNeurons, OutputNeuron outputNeuron, BiasNeuron bias) {
 
             long pts = 50000;
 
             double[] xt = new double[pts];
             double[] yt = new double[pts];
             double[] zt = new double[pts];
+            double[] xlast = new double[Task_Params.Dimensions + 1];
 
             for (int j = 0; j <= Task_Params.Dimensions; j++)
                 xlast[j] = xdata[xdata.Length - 1 - j];
@@ -256,7 +257,7 @@ namespace NeuralNetwork {
 
             NeuralNet.Task_Result = CalculateLyapunovSpectrum(NeuralNet.xdata, NeuralNet.NeuronsHidden, NeuralNet.NeuronOutput, NeuralNet.System_Equations, NeuralNet.NeuronBias);
 
-            ConstructAttractor(NeuralNet.xdata, NeuralNet.xlast, NeuralNet.NeuronsHidden, NeuralNet.NeuronOutput, NeuralNet.NeuronBias);
+            ConstructAttractor(NeuralNet.xdata, NeuralNet.NeuronsHidden, NeuralNet.NeuronOutput, NeuralNet.NeuronBias);
             Prediction(NeuralNet.xdata, NeuralNet.NeuronsHidden, NeuralNet.NeuronOutput, NeuralNet.Params.PtsToPredict);
 
             NeuralOutput.SaveDebugInfoToFile(NeuralNet.NeuronOutput.Outputs[0].Memory, NeuralNet.Task_Result, _le, NeuralNet.NeuronOutput, NeuralNet.NeuronsHidden);
