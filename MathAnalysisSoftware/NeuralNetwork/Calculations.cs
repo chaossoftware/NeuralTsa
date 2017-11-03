@@ -166,15 +166,15 @@ namespace NeuralNetwork {
                 xlast[j] = xdata[xdata.Length - 1 - j];
 
             for (long t = 1; t < pts; t++) {
-                double xnew = bias.Outputs[0].BestCase;
+                double xnew = bias.Best[0];
 
                 for (int i = 0; i < Task_Params.Neurons; i++) {
-                    double _arg = constant.Outputs[i].BestCase;
+                    double _arg = constant.Best[i];
 
                     for (int j = 0; j < Task_Params.Dimensions; j++)
-                        _arg += inputs[j].Outputs[i].BestCase * xlast[j - 1 + 1];
+                        _arg += inputs[j].Best[i] * xlast[j - 1 + 1];
 
-                    xnew += hiddenNeurons[i].Outputs[0].BestCase * Task_Params.ActFunction.Phi(_arg);
+                    xnew += hiddenNeurons[i].Best[0] * Task_Params.ActFunction.Phi(_arg);
                 }
 
                 for (int j = Task_Params.Dimensions; j > 0; j--)
@@ -220,14 +220,14 @@ namespace NeuralNetwork {
                 xpred[Task_Params.Dimensions - j] = xdata[xdata.Length - 1 - j];
 
             for (int k = Task_Params.Dimensions; k < pointsToPredict + Task_Params.Dimensions; k++) {
-                _xpred = bias.Outputs[0].BestCase;
+                _xpred = bias.Best[0];
                 for (int i = 0; i < Task_Params.Neurons; i++) {
-                    double _arg = constant.Outputs[i].BestCase;
+                    double _arg = constant.Best[i];
 
                     for (int j = 0; j < Task_Params.Dimensions; j++)
-                        _arg += input[j].Outputs[i].BestCase * xpred[k - j];
+                        _arg += input[j].Best[i] * xpred[k - j];
 
-                    _xpred += hiddenNeurons[i].Outputs[0].BestCase * Task_Params.ActFunction.Phi(_arg);
+                    _xpred += hiddenNeurons[i].Best[0] * Task_Params.ActFunction.Phi(_arg);
                 }
 
                 xpred[k] = _xpred;
@@ -252,7 +252,7 @@ namespace NeuralNetwork {
 
         public void LoggingEvent() {
             Charts.NeuralAnimation.AddFrame(Charts.DrawNetworkState(800, NeuralNet.NeuronsHidden, NeuralNet.Params.CMax * NeuralNet.successCount + NeuralNet._c));
-            Console.WriteLine("{0}\tE: {1:0.#####e-0}", NeuralNet._c, NeuralNet.NeuronOutput.Outputs[0].Memory);
+            Console.WriteLine("{0}\tE: {1:0.#####e-0}", NeuralNet._c, NeuralNet.NeuronOutput.Memory[0]);
         }
 
 
@@ -265,7 +265,7 @@ namespace NeuralNetwork {
             ConstructAttractor(NeuralNet.xdata, NeuralNet.NeuronsInput, NeuralNet.NeuronsHidden, NeuralNet.NeuronOutput, NeuralNet.NeuronConstant, NeuralNet.NeuronBias);
             Prediction(NeuralNet.xdata, NeuralNet.NeuronsInput, NeuralNet.NeuronsHidden, NeuralNet.Params.PtsToPredict, NeuralNet.NeuronConstant, NeuralNet.NeuronBias);
 
-            NeuralOutput.SaveDebugInfoToFile(NeuralNet.NeuronOutput.Outputs[0].Memory, NeuralNet.Task_Result, _le, NeuralNet.NeuronOutput, NeuralNet.NeuronsHidden, NeuralNet.NeuronConstant, NeuralNet.NeuronBias);
+            NeuralOutput.SaveDebugInfoToFile(NeuralNet.NeuronOutput.Memory[0], NeuralNet.Task_Result, _le, NeuralNet.NeuronsInput, NeuralNet.NeuronOutput, NeuralNet.NeuronsHidden, NeuralNet.NeuronConstant, NeuralNet.NeuronBias);
 
             Charts.DrawNetworkState(1080, NeuralNet.NeuronsHidden, NeuralNet.successCount * Task_Params.CMax).Save(NeuralOutput.NetworkPlotPlotFileName, ImageFormat.Png);
         }
