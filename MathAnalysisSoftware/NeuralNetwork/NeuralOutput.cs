@@ -46,10 +46,10 @@ namespace NeuralNetwork {
         }
 
 
-        public static void SaveDebugInfoToFile(double ebest, BenettinResult result, double _le, OutputNeuron outputNeuron, HiddenNeuron[] hiddenNeurons) {
+        public static void SaveDebugInfoToFile(double ebest, BenettinResult result, double _le, OutputNeuron outputNeuron, HiddenNeuron[] hiddenNeurons, BiasNeuron constant, BiasNeuron bias) {
 
-            int d = hiddenNeurons[1].Inputs.Length - 1;
-            int n = outputNeuron.Inputs.Length - 1;
+            int d = hiddenNeurons[1].Inputs.Length;
+            int n = outputNeuron.Inputs.Length;
 
             StringBuilder debug = new StringBuilder();
 
@@ -57,21 +57,25 @@ namespace NeuralNetwork {
             debug.Append(result.GetInfo());
             debug.AppendFormat(CultureInfo.InvariantCulture, "Largest Lyapunov exponent: {0:F5}\n", _le);
 
-            debug.AppendFormat(CultureInfo.InvariantCulture, "\nBias: {0:F8}\n\n", outputNeuron.Inputs[0].Memory);
+            debug.AppendFormat(CultureInfo.InvariantCulture, "\nBias: {0:F8}\n\n", bias.Outputs[0].Memory);
             
-            for (int i = 1; i <= n; i++)
-                debug.AppendFormat("Neuron {0} :\t\t\t", i);
+            for (int i = 0; i < n; i++)
+                debug.AppendFormat("Neuron {0} :\t\t\t", i + 1);
             debug.Append("\n");
-        
-            for (int j = 0; j <= d; j++) {
-                for (int i = 1; i <= n; i++)
+
+            for (int i = 0; i < n; i++)
+                debug.AppendFormat(CultureInfo.InvariantCulture, "{0:F8}\t\t", constant.Outputs[i].Memory);
+            debug.Append("\n");
+
+            for (int j = 0; j < d; j++) {
+                for (int i = 0; i < n; i++)
                     debug.AppendFormat(CultureInfo.InvariantCulture, "{0:F8}\t\t", hiddenNeurons[i].Inputs[j].Memory);
                 debug.Append("\n");
             }
             debug.Append("\n");
 
-            for (int i = 1; i <= n; i++)
-                debug.AppendFormat(CultureInfo.InvariantCulture, "{0:F8}\t\t", outputNeuron.Inputs[i].Memory);
+            for (int i = 0; i < n; i++)
+                debug.AppendFormat(CultureInfo.InvariantCulture, "{0:F8}\t\t", hiddenNeurons[i].Outputs[0].Memory);
             debug.Append("\n-----------------------------------------------");
 
             Logger.LogInfo(debug.ToString(), true);

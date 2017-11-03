@@ -18,7 +18,7 @@ namespace NeuralNetwork {
         private static NeuralNetParams Task_Params;
 
 
-        private static BenettinResult CalculateLyapunovSpectrum(double[] xdata, HiddenNeuron[] hiddenNeurons, OutputNeuron outputNeuron, NeuralNetEquations systemEquations, BiasNeuron bias) {
+        private static BenettinResult CalculateLyapunovSpectrum(double[] xdata, InputNeuron[] inputs, HiddenNeuron[] hiddenNeurons, NeuralNetEquations systemEquations, BiasNeuron constant, BiasNeuron bias) {
 
             int Dim = systemEquations.N;
             int DimPlusOne = systemEquations.NN;
@@ -29,7 +29,7 @@ namespace NeuralNetwork {
 
             double time = 0;                 //time
             int irate = 1;                   //integration steps per reorthonormalization
-            int io = xdata.Length - Dim;     //number of iterations of the Map
+            int io = xdata.Length - Dim - 1;     //number of iterations of the Map
 
             double[,] x = new double[DimPlusOne, Dim];
             double[,] xnew = new double[DimPlusOne, Dim];
@@ -47,9 +47,9 @@ namespace NeuralNetwork {
 
                     //Use actual data rather than iterated data
                     for (int i = 0; i < Dim; i++)
-                        x[0, i] = xdata[Dim - i + m];
+                        x[0, i] = xdata[Dim - i + m - 1];
 
-                    xnew = systemEquations.Derivs(x, Get2DArray(hiddenNeurons), Get1DArray(outputNeuron), bias.Outputs[0].Weight);
+                    xnew = systemEquations.Derivs(x, Get2DArray(hiddenNeurons, inputs, constant), Get1DArray(hiddenNeurons), bias.Outputs[0].Weight, constant);
                     Array.Copy(xnew, v, xnew.Length);
 
                     time++;
@@ -72,23 +72,23 @@ namespace NeuralNetwork {
             return result;
         }
 
-        private static double[,] Get2DArray(HiddenNeuron[] neurons)
+        private static double[,] Get2DArray(HiddenNeuron[] neurons, InputNeuron[] inputs, BiasNeuron constant)
         {
-            double[,] arr = new double[neurons.Length, neurons[1].Inputs.Length];
+            double[,] arr = new double[neurons.Length, inputs.Length];
 
             for (int i = 0; i < neurons.Length; i++)
-                for (int j = 0; j < neurons[1].Inputs.Length; j++)
-                    arr[i, j] = neurons[i].Inputs[j].Weight;
+                for (int j = 0; j < inputs.Length; j++)
+                    arr[i, j] = inputs[j].Outputs[i].Weight;
 
             return arr;
         }
 
-        private static double[] Get1DArray(OutputNeuron neuron)
+        private static double[] Get1DArray(HiddenNeuron[] neurons)
         {
-            double[] arr = new double[neuron.Inputs.Length];
+            double[] arr = new double[neurons.Length];
 
-            for (int i = 0; i < neuron.Inputs.Length; i++)
-                    arr[i] = neuron.Inputs[i].Weight;
+            for (int i = 0; i < neurons.Length; i++)
+                    arr[i] = neurons[i].Outputs[0].Weight;
 
             return arr;
         }
@@ -98,47 +98,51 @@ namespace NeuralNetwork {
         /// Calculate the largest Lyapunov exponent
         /// </summary>
         /// <returns></returns>
-        private static double CalculateLargestLyapunovExponent(double[] xdata, HiddenNeuron[] hiddenNeurons, OutputNeuron outputNeuron) {
+        private static double CalculateLargestLyapunovExponent(double[] xdata, InputNeuron[] inputs, HiddenNeuron[] hiddenNeurons, OutputNeuron outputNeuron, BiasNeuron constant, BiasNeuron bias) {
             long nmax = xdata.Length;
 
             double _arg, x;
-            double[] dx = new double[hiddenNeurons[1].Inputs.Length];
+            double[] dx = new double[Task_Params.Dimensions];
 
-            for (int j = 1; j <= Task_Params.Dimensions; j++)
+            for (int j = 0; j < Task_Params.Dimensions; j++)
                 dx[j] = PERTRUB_SQR_D;
 
             double _ltot = 0d;
 
-            for (int k = Task_Params.Dimensions + 1; k <= nmax; k++) {
-                x = outputNeuron.Inputs[0].Weight;
+            for (int k = Task_Params.Dimensions; k < nmax; k++) {
+                x = bias.Outputs[0].Weight;
                 for (int i = 0; i < Task_Params.Neurons; i++) {
-                    _arg = hiddenNeurons[i].Inputs[0].Weight;
-                    for (int j = 1; j <= Task_Params.Dimensions; j++)
-                        _arg += hiddenNeurons[i].Inputs[j].Weight * xdata[k - j];
-                    x += outputNeuron.Inputs[i].Weight * Task_Params.ActFunction.Phi(_arg);
+                    _arg = constant.Outputs[i].Weight;
+
+                    for (int j = 0; j < Task_Params.Dimensions; j++)
+                        _arg += inputs[j].Outputs[i].Weight * xdata[k - j - 1];
+
+                    x += hiddenNeurons[i].Outputs[0].Weight * Task_Params.ActFunction.Phi(_arg);
                 }
 
-                double xe = outputNeuron.Inputs[0].Weight;
+                double xe = bias.Outputs[0].Weight;
 
                 for (int i = 0; i < Task_Params.Neurons; i++) {
-                    _arg = hiddenNeurons[i].Inputs[0].Weight;
-                    for (int j = 1; j <= Task_Params.Dimensions; j++)
-                        _arg += hiddenNeurons[i].Inputs[j].Weight * (xdata[k - j] + dx[j]);
-                    xe += outputNeuron.Inputs[i].Weight * Task_Params.ActFunction.Phi(_arg);
+                    _arg = constant.Outputs[i].Weight;
+
+                    for (int j = 0; j < Task_Params.Dimensions; j++)
+                        _arg += inputs[j].Outputs[i].Weight * (xdata[k - j - 1] + dx[j]);
+
+                    xe += hiddenNeurons[i].Outputs[0].Weight * Task_Params.ActFunction.Phi(_arg);
                 }
 
                 double rs = 0;
 
-                for (int j = Task_Params.Dimensions - 1; j > 0; j--) {
+                for (int j = Task_Params.Dimensions - 2; j >= 0; j--) {
                     rs += dx[j] * dx[j];
                     dx[j + 1] = dx[j];
                 }
 
-                dx[1] = xe - x;
-                rs += dx[1] * dx[1];
+                dx[0] = xe - x;
+                rs += dx[0] * dx[0];
                 rs = Math.Sqrt(rs / PERTRUB_2);
 
-                for (int j = 1; j <= Task_Params.Dimensions; j++)
+                for (int j = 0; j < Task_Params.Dimensions; j++)
                     dx[j] /= rs;
 
                 _ltot += Math.Log(rs);
@@ -149,7 +153,7 @@ namespace NeuralNetwork {
 
 
 
-        private static void ConstructAttractor(double[] xdata, HiddenNeuron[] hiddenNeurons, OutputNeuron outputNeuron, BiasNeuron bias) {
+        private static void ConstructAttractor(double[] xdata, InputNeuron[] inputs, HiddenNeuron[] hiddenNeurons, OutputNeuron outputNeuron, BiasNeuron constant, BiasNeuron bias) {
 
             long pts = 50000;
 
@@ -165,11 +169,12 @@ namespace NeuralNetwork {
                 double xnew = bias.Outputs[0].BestCase;
 
                 for (int i = 0; i < Task_Params.Neurons; i++) {
-                    double _arg = hiddenNeurons[i].Inputs[0].BestCase;
-                    for (int j = 1; j <= Task_Params.Dimensions; j++)
-                        _arg += hiddenNeurons[i].Inputs[j].BestCase * xlast[j - 1];
+                    double _arg = constant.Outputs[i].BestCase;
 
-                    xnew += outputNeuron.Inputs[i].BestCase * Task_Params.ActFunction.Phi(_arg);
+                    for (int j = 0; j < Task_Params.Dimensions; j++)
+                        _arg += inputs[j].Outputs[i].BestCase * xlast[j - 1 + 1];
+
+                    xnew += hiddenNeurons[i].Outputs[0].BestCase * Task_Params.ActFunction.Phi(_arg);
                 }
 
                 for (int j = Task_Params.Dimensions; j > 0; j--)
@@ -203,26 +208,26 @@ namespace NeuralNetwork {
 
 
 
-        private static void Prediction(double[] xdata, HiddenNeuron[] hiddenNeurons, OutputNeuron outputNeuron, int pointsToPredict) {
+        private static void Prediction(double[] xdata, InputNeuron[] input, HiddenNeuron[] hiddenNeurons, int pointsToPredict, BiasNeuron constant, BiasNeuron bias) {
 
             if (pointsToPredict == 0)
                 return;
 
-            double[] xpred = new double[pointsToPredict + Task_Params.Dimensions + 1];
+            double[] xpred = new double[pointsToPredict + Task_Params.Dimensions];
             double _xpred = 0;
 
-            for (int j = 0; j <= Task_Params.Dimensions; j++)
+            for (int j = 0; j < Task_Params.Dimensions; j++)
                 xpred[Task_Params.Dimensions - j] = xdata[xdata.Length - 1 - j];
 
-            for (int k = Task_Params.Dimensions + 1; k <= pointsToPredict + Task_Params.Dimensions; k++) {
-                _xpred = outputNeuron.Inputs[0].BestCase;
+            for (int k = Task_Params.Dimensions; k < pointsToPredict + Task_Params.Dimensions; k++) {
+                _xpred = bias.Outputs[0].BestCase;
                 for (int i = 0; i < Task_Params.Neurons; i++) {
-                    double _arg = hiddenNeurons[i].Inputs[0].BestCase;
+                    double _arg = constant.Outputs[i].BestCase;
 
-                    for (int j = 1; j <= Task_Params.Dimensions; j++)
-                        _arg += hiddenNeurons[i].Inputs[j].BestCase * xpred[k - j];
+                    for (int j = 0; j < Task_Params.Dimensions; j++)
+                        _arg += input[j].Outputs[i].BestCase * xpred[k - j];
 
-                    _xpred += outputNeuron.Inputs[i].BestCase * Task_Params.ActFunction.Phi(_arg);
+                    _xpred += hiddenNeurons[i].Outputs[0].BestCase * Task_Params.ActFunction.Phi(_arg);
                 }
 
                 xpred[k] = _xpred;
@@ -252,15 +257,15 @@ namespace NeuralNetwork {
 
 
         public void EndCycleEvent() {
-            double _le = CalculateLargestLyapunovExponent(NeuralNet.xdata, NeuralNet.NeuronsHidden, NeuralNet.NeuronOutput);
+            double _le = CalculateLargestLyapunovExponent(NeuralNet.xdata, NeuralNet.NeuronsInput, NeuralNet.NeuronsHidden, NeuralNet.NeuronOutput, NeuralNet.NeuronConstant, NeuralNet.NeuronBias);
             Console.WriteLine("\nLLE = {0:F5}\n\n", _le);
 
-            NeuralNet.Task_Result = CalculateLyapunovSpectrum(NeuralNet.xdata, NeuralNet.NeuronsHidden, NeuralNet.NeuronOutput, NeuralNet.System_Equations, NeuralNet.NeuronBias);
+            NeuralNet.Task_Result = CalculateLyapunovSpectrum(NeuralNet.xdata, NeuralNet.NeuronsInput, NeuralNet.NeuronsHidden, NeuralNet.System_Equations, NeuralNet.NeuronConstant, NeuralNet.NeuronBias);
 
-            ConstructAttractor(NeuralNet.xdata, NeuralNet.NeuronsHidden, NeuralNet.NeuronOutput, NeuralNet.NeuronBias);
-            Prediction(NeuralNet.xdata, NeuralNet.NeuronsHidden, NeuralNet.NeuronOutput, NeuralNet.Params.PtsToPredict);
+            ConstructAttractor(NeuralNet.xdata, NeuralNet.NeuronsInput, NeuralNet.NeuronsHidden, NeuralNet.NeuronOutput, NeuralNet.NeuronConstant, NeuralNet.NeuronBias);
+            Prediction(NeuralNet.xdata, NeuralNet.NeuronsInput, NeuralNet.NeuronsHidden, NeuralNet.Params.PtsToPredict, NeuralNet.NeuronConstant, NeuralNet.NeuronBias);
 
-            NeuralOutput.SaveDebugInfoToFile(NeuralNet.NeuronOutput.Outputs[0].Memory, NeuralNet.Task_Result, _le, NeuralNet.NeuronOutput, NeuralNet.NeuronsHidden);
+            NeuralOutput.SaveDebugInfoToFile(NeuralNet.NeuronOutput.Outputs[0].Memory, NeuralNet.Task_Result, _le, NeuralNet.NeuronOutput, NeuralNet.NeuronsHidden, NeuralNet.NeuronConstant, NeuralNet.NeuronBias);
 
             Charts.DrawNetworkState(1080, NeuralNet.NeuronsHidden, NeuralNet.successCount * Task_Params.CMax).Save(NeuralOutput.NetworkPlotPlotFileName, ImageFormat.Png);
         }
