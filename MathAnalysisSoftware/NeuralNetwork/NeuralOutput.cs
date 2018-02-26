@@ -92,7 +92,7 @@ namespace NeuralNetwork {
             if (saveModel)
             {
                 string filePath = BasePath + "_model.ply";
-                Model3D.Create3dModelFile(filePath, xt, yt, zt);
+                Model3D.Create3dPlyModelFile(filePath, xt, yt, zt);
             }
         }
 
