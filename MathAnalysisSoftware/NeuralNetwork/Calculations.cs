@@ -1,4 +1,5 @@
 ﻿using MathLib;
+using MathLib.Data;
 using MathLib.DrawEngine;
 using MathLib.DrawEngine.Charts;
 using MathLib.MathMethods.Lyapunov;

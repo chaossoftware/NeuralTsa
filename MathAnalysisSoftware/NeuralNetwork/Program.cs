@@ -8,6 +8,7 @@ using MathLib;
 using MathLib.DrawEngine;
 using System.Threading;
 using System.Globalization;
+using MathLib.Data;
 
 namespace NeuralNetwork {
     class Program {
@@ -30,11 +31,11 @@ namespace NeuralNetwork {
             PlotObject signal = new SignalPlot(sd.TimeSeries, new Size(848, 480), 1);
             signal.Plot().Save(NeuralOutput.SignalPlotFileName, ImageFormat.Png);
 
-            PlotObject poincare = new MapPlot(Ext.GeneratePseudoPoincareMapData(sd.TimeSeries.ValY), new Size(848, 480), 1);
+            PlotObject poincare = new MapPlot(Ext.GeneratePseudoPoincareMapData(sd.TimeSeries.YValues), new Size(848, 480), 1);
             poincare.Plot().Save(NeuralOutput.PoincarePlotFileName, ImageFormat.Png);
 
             NeuralNetParams taskParams = dr.LoadNeuralNetParams();
-            NeuralNet task = new NeuralNet(taskParams, sd.TimeSeries.ValY);
+            NeuralNet task = new NeuralNet(taskParams, sd.TimeSeries.YValues);
 
             Logger.LogInfo(taskParams.GetInfoFull(), true);
 
