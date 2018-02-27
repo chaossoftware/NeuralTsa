@@ -3,7 +3,6 @@ using MathLib.DrawEngine.Charts;
 using MathLib.NeuralNetwork;
 using System.Drawing.Imaging;
 using System.Drawing;
-using MathLib.IO;
 using MathLib;
 using MathLib.DrawEngine;
 using System.Threading;
@@ -22,8 +21,8 @@ namespace NeuralNetwork {
 
             DataFile file = dr.GetFiles()[0];
 
-            SourceData sd = MathLib.IO.DataReader.readTimeSeries(file.FileName);
-            sd.SetTimeSeries(file.DataColumn - 1, 0, sd.timeSeriesLength - 1, 1, false);
+            SourceData sd = new SourceData(file.FileName);
+            sd.SetTimeSeries(file.DataColumn - 1, 0, sd.Length - 1, 1, false);
 
             NeuralOutput.Init(file.FileName);
 

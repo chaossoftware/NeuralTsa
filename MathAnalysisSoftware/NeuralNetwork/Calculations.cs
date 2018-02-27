@@ -194,7 +194,7 @@ namespace NeuralNetwork {
             try {
                 double[] constructedSignal = new double[xdata.Length];
                 Array.Copy(xt, constructedSignal, xdata.Length);
-                PlotObject signal = new SignalPlot(new DataSeries(constructedSignal), new Size(848, 480), 1);
+                PlotObject signal = new SignalPlot(new Timeseries(constructedSignal), new Size(848, 480), 1);
                 signal.Plot().Save(NeuralOutput.ReconstructedSignalPlotFileName, ImageFormat.Png);
 
                 PlotObject poincare = new MapPlot(Ext.GeneratePseudoPoincareMapData(xt), new Size(848, 480), 1);
@@ -234,7 +234,7 @@ namespace NeuralNetwork {
                 xpred[k] = _xpred;
             }
 
-            PlotObject prediction = new SignalPlot(new DataSeries(xpred), new Size(848, 480), 1);
+            PlotObject prediction = new SignalPlot(new Timeseries(xpred), new Size(848, 480), 1);
             prediction.Plot().Save(NeuralOutput.PredictedSignalPlotFileName, ImageFormat.Png);
 
             NeuralOutput.CreatePredictedDataFile(xpred);
