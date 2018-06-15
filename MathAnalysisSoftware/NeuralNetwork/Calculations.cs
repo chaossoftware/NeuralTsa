@@ -21,10 +21,10 @@ namespace NeuralNetwork {
 
         private static BenettinResult CalculateLyapunovSpectrum(double[] xdata, InputNeuron[] inputs, HiddenNeuron[] hiddenNeurons, NeuralNetEquations systemEquations, BiasNeuron constant, BiasNeuron bias) {
 
-            int Dim = systemEquations.N;
-            int DimPlusOne = systemEquations.NN;
+            int Dim = systemEquations.EquationsCount;
+            int DimPlusOne = systemEquations.TotalEquationsCount;
 
-            Orthogonalization Ort = new MGS(Dim);
+            Orthogonalization Ort = new ModifiedGrammSchmidt(Dim);
             BenettinMethod lyap = new BenettinMethod(Dim);
             BenettinResult result;
 
@@ -56,7 +56,7 @@ namespace NeuralNetwork {
                     time++;
                 }
 
-                Ort.makeOrthogonalization(v, znorm);
+                Ort.Perform(v, znorm);
                 lyap.calculateLE(znorm, time);
 
                 for (int k = 0; k < Dim; k++) {
