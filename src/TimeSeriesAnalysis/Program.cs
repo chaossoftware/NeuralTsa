@@ -17,7 +17,7 @@ namespace TimeSeriesAnalysis
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new mainForm());
+            Application.Run(new MainForm());
         }
     }
 }

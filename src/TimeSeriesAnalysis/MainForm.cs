@@ -4,111 +4,113 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
-using MathLib.DrawEngine.Charts;
 using MathLib.IO;
 using MathLib.MathMethods.Lyapunov;
 using System.Globalization;
 using MathLib.Data;
 
 namespace TimeSeriesAnalysis {
-    public partial class mainForm : Form {
-
-        private const string emptyFileMsg = "Select file first";
-
+    public partial class MainForm : Form
+    {
         private Routines routines = new Routines();
 
-        public mainForm() {
+        public MainForm()
+        {
             InitializeComponent();
         }
 
         //File open and read
-        private void openFileBtn_Click(object sender, EventArgs e) {
+        private void openFileBtn_Click(object sender, EventArgs e)
+        {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "All files|*.*|Time series data|*.dat *.txt *.csv";
             openFileDialog.ShowDialog();
             string fName = openFileDialog.FileName;
-            if (fName.Equals("")) {
-                return;
-            }
 
-            cleanUp();
+            if (string.IsNullOrEmpty(fName))
+                return;
+
+            CleanUp();
 
             try
             {
                 routines.sourceData = new SourceData(fName);
+                FillUiWithData();
             }
-            catch (ArgumentException ex) {
+            catch (ArgumentException ex)
+            {
                 MessageBox.Show("Unable to read file file:" + ex.Message);
-                return;
             }
-
-            fillUiWithData();
         }
 
         //Perform calculation in a separate thread
-        private void startBtn_Click(object sender, EventArgs e) {
-            if (!refreshTimeSeries()) {
-                return;
+        private void startBtn_Click(object sender, EventArgs e)
+        {
+            if (RefreshTimeSeries())
+            {
+                le_resultText.Text = StringData.Calculating;
+                le_resultText.BackColor = Color.OrangeRed;
+
+                new Thread(CalculateLyapunovExponent)
+                    .Start();
             }
-
-            resultText.Text = "Calculating...";
-            resultText.BackColor = Color.OrangeRed;
-
-            Thread newThread = new Thread(calculateLyapunovExponent);
-            newThread.Start();
         }
 
-        private bool refreshTimeSeries() {
-            if (routines.sourceData == null) {
-                MessageBox.Show(emptyFileMsg);
+        private bool RefreshTimeSeries()
+        {
+            if (routines.sourceData == null)
+            {
+                MessageBox.Show(StringData.MsgEmptyFile);
                 return false;
             }
+
             routines.sourceData.SetTimeSeries(
-                (int)sourceColumnNum.Value - 1,
-                (int)startPointNum.Value,
-                (int)endPointNum.Value,
-                (int)pointsNum.Value,
+                sourceColumnNum.ToInt() - 1,
+                startPointNum.ToInt(),
+                endPointNum.ToInt(),
+                pointsNum.ToInt(),
                 useTimeCheckbox.Checked
             );
+
             return true;
         }
 
-        private void saveBtn_Click(object sender, EventArgs e) {
-            if (routines.sourceData == null) {
-                MessageBox.Show(emptyFileMsg);
+        private void saveBtn_Click(object sender, EventArgs e)
+        {
+            if (routines.sourceData == null)
+            {
+                MessageBox.Show(StringData.MsgEmptyFile);
                 return;
             }
 
-            string fName = routines.sourceData.Folder + "\\" + routines.sourceData.FileName + "_rez" + "\\" + routines.sourceData.FileName;
+            var outDir = Path.Combine(routines.sourceData.Folder, routines.sourceData.FileName + "_rez");
+            string fName = Path.Combine(outDir, routines.sourceData.FileName);
 
-            if (!Directory.Exists(routines.sourceData.Folder + "\\" + routines.sourceData.FileName + "_rez")) {
-                Directory.CreateDirectory(routines.sourceData.Folder + "\\" + routines.sourceData.FileName + "_rez");
-            }
+            if (!Directory.Exists(outDir))
+                Directory.CreateDirectory(outDir);
 
-            if (signalPBox.Image != null && poincareMapPBox.Image != null) {
-                signalPBox.Image.Save(fName + "_plot.png", ImageFormat.Png);
+            if (signal_plotPBox.Image != null && poincareMapPBox.Image != null)
+            {
+                signal_plotPBox.Image.Save(fName + "_plot.png", ImageFormat.Png);
                 poincareMapPBox.Image.Save(fName + "_poincare.png", ImageFormat.Png);
                 DataWriter.CreateDataFile(fName + "_signal", routines.sourceData.GetTimeSeriesString(false));
             }
 
-            if (fourierPBox.Image != null) {
-                fourierPBox.Image.Save(fName + "_fourier.png", ImageFormat.Png);
-            }
+            if (fft_plotPBox.Image != null)
+                fft_plotPBox.Image.Save(fName + "_fourier.png", ImageFormat.Png);
 
-            if (waveletPBox.Image != null) {
-                waveletPBox.Image.Save(fName + "_wavelet.png", ImageFormat.Png);
-            }
+            if (wav_plotPBox.Image != null)
+                wav_plotPBox.Image.Save(fName + "_wavelet.png", ImageFormat.Png);
 
-            if (routines.lyapunov != null) {
+            if (routines.lyapunov != null)
                 DataWriter.CreateDataFile(fName + "_lyapunov.txt", routines.lyapunov.GetInfoFull());
-            }
 
-            if (lyapunovPBox.Image != null) {
-                lyapunovPBox.Image.Save(fName + "_lyapunovInTime.png", ImageFormat.Png);
-            }
+            if (le_plotPBox.Image != null)
+                le_plotPBox.Image.Save(fName + "_lyapunovInTime.png", ImageFormat.Png);
         }
 
-        private void fillUiWithData() {
+        private void FillUiWithData()
+        {
             fileNameLbl.Text = routines.sourceData.ToString().Replace("\n", " ");
 
             sourceColumnNum.Maximum = routines.sourceData.ColumnsCount;
@@ -120,63 +122,73 @@ namespace TimeSeriesAnalysis {
             endPointNum.Value = routines.sourceData.Length;
         }
 
-
         #region "CHARTS"
 
-        private void plotBtn_Click(object sender, EventArgs e) {
-            if (!refreshTimeSeries()) {
+        private void plotBtn_Click(object sender, EventArgs e)
+        {
+            if (!RefreshTimeSeries())
                 return;
-            }
 
-            routines.deleteTempFiles();
+            routines.DeleteTempFiles();
 
-            signalPBox.Image = routines
-                .GetSignalPlot(signalPBox.Size, 1, useTimeCheckbox.Checked, (int)startPointNum.Value, (int)endPointNum.Value)
+            signal_plotPBox.Image = routines
+                .GetSignalPlot(signal_plotPBox.Size, 1, useTimeCheckbox.Checked, startPointNum.ToInt(), endPointNum.ToInt())
                 .Plot();
 
             poincareMapPBox.Image = routines
                 .GetPoincarePlot(poincareMapPBox.Size, 1)
                 .Plot();
 
-            if (fourierCheckbox.Checked == true) {
-                fourierPBox.Image = null;
-                try{
-                    fourierPBox.Image = routines.GetFourierPlot(signalPBox.Size, 1, GetDoubleFromUI(fourierStartFreqNum), GetDoubleFromUI(fourierEndFreqNum), GetDoubleFromUI(fourier_dtNum), Convert.ToInt32(fourier_logCheckbox.Checked))
+            if (fourierCheckbox.Checked)
+            {
+                try
+                {
+                    fft_plotPBox.Image = routines.GetFourierPlot(
+                        signal_plotPBox.Size, 
+                        1, 
+                        fft_fStartNum.ToDouble(), 
+                        fft_fEndNum.ToDouble(), 
+                        fft_dtNum.ToDouble(), 
+                        fft_logCbox.Checked)
                         .Plot();
-
-                } catch (Exception ex) {
-                    MessageBox.Show("Не удалось построить спект мощности Фурье:\n" + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    fft_plotPBox.Image = null;
+                    MessageBox.Show($"Unable to build {StringData.Fourier}:\n" + ex.Message);
                 }
             }
 
-            if (waveletCheckbox.Checked == true) {
-                waveletPBox.Image = null;
+            if (waveletCheckbox.Checked)
+            {
+                wav_plotPBox.Image = null;
                 double tStart = routines.sourceData.TimeSeries.Min.X;
                 double tEnd = routines.sourceData.TimeSeries.Max.X;
 
                 try
                 {
-                    string fName = "wavelet.tmp";
-                    routines.BuildWavelet(fName, wav_nameCbox.Text, tStart, tEnd, GetDoubleFromUI(wav_startFreq), GetDoubleFromUI(wav_endFreq), GetDoubleFromUI(wav_dtNum), CboxColorMap.Text, waveletPBox.Width, waveletPBox.Height);
-                    GetImageFromFile(waveletPBox, fName);
+                    routines.BuildWavelet(StringData.WaveletFile, wav_nameCombo.Text, tStart, tEnd, wav_fStartNum.ToDouble(), wav_fEndNum.ToDouble(), wav_dtNum.ToDouble(), wav_colorMapCombo.Text, wav_plotPBox.Width, wav_plotPBox.Height);
+                    GetImageFromFile(wav_plotPBox, StringData.WaveletFile);
                 }
-                catch (Exception ex) {
-                    MessageBox.Show("Не удалось построить вейвлет:\n" + ex.Message);
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Unable to build {StringData.Wavelet}:\n" + ex.Message);
                 }
             }
         }
 
         private void lyapunovRedrawBtn_Click(object sender, EventArgs e) {
-            try {
+            try
+            {
 
                 string res;
                 if (routines.lyapunov is KantzMethod)
-                    ((KantzMethod)routines.lyapunov).SetSlope(this.ComboKantzSlope.Text);
+                    ((KantzMethod)routines.lyapunov).SetSlope(this.le_kantz_slopeCombo.Text);
 
-                lyapunovPBox.Image = routines.GetLyapunovPlot(lyapunovPBox.Size, 1, (int)lyapStartNum.Value, (int)lyapEndNum.Value, lyap_calc_Rad_wolf.Checked, out res).Plot();
+                le_plotPBox.Image = routines.GetLyapunovPlot(le_plotPBox.Size, 1, le_pStartNum.ToInt(), le_pEndNum.ToInt(), le_wolf_radio.Checked, out res).Plot();
 
                 if (routines.lyapunov is KantzMethod || routines.lyapunov is RosensteinMethod)
-                    resultText.Text = res;
+                    le_resultText.Text = res;
             }
             catch (Exception ex) {
                 MessageBox.Show("Error plotting Lyapunov slope: " + ex.Message); 
@@ -187,110 +199,108 @@ namespace TimeSeriesAnalysis {
         {
             if (poincareMapPBox.Image != null)
             {
-                int width = Convert.ToInt32(this.numPreviewWidth.Value);
-                int height = Convert.ToInt32(this.numPreviewHeight.Value);
-                PreviewForm pf = new PreviewForm("Псевдосечение Пуанкаре", width, height);
-                pf.Show();
-
-                MapPlot pp = routines.GetPoincarePlot(pf.previewPBox.Size, 1);
+                var pf = GetPreviewForm(StringData.Poincare);
+                var pp = routines.GetPoincarePlot(pf.previewPBox.Size, 1);
                 pf.previewPBox.Image = pp.Plot();
-                pf.plotObject = pp;
+                pf.Plot = pp;
             }
         }
 
-        private void signalPBox_DoubleClick(object sender, EventArgs e)
+        private void signal_plotPBox_DoubleClick(object sender, EventArgs e)
         {
-            if (signalPBox.Image != null)
+            if (signal_plotPBox.Image != null)
             {
-                int width = Convert.ToInt32(this.numPreviewWidth.Value);
-                int height = Convert.ToInt32(this.numPreviewHeight.Value);
-                PreviewForm pf = new PreviewForm("Сигнал", width, height);
-                pf.Show();
+                var pf = GetPreviewForm(StringData.Signal);
 
-                SignalPlot sp = routines.GetSignalPlot(pf.previewPBox.Size, 1, useTimeCheckbox.Checked, (int)startPointNum.Value, (int)endPointNum.Value);
+                var sp = routines.GetSignalPlot(
+                    pf.previewPBox.Size, 
+                    1, 
+                    useTimeCheckbox.Checked, 
+                    startPointNum.ToInt(), 
+                    endPointNum.ToInt());
+
                 pf.previewPBox.Image = sp.Plot();
-                pf.plotObject = sp;
+                pf.Plot = sp;
             }
         }
 
         private void lyapunovPBox_DoubleClick(object sender, EventArgs e)
         {
-            if (lyapunovPBox.Image != null)
+            if (le_plotPBox.Image != null)
             {
-                int width = Convert.ToInt32(this.numPreviewWidth.Value);
-                int height = Convert.ToInt32(this.numPreviewHeight.Value);
-                PreviewForm pf = new PreviewForm("Lyapunov exponent in time", width, height);
-                pf.Show();
                 string tmp;
-
-                PlotObject sp = routines.GetLyapunovPlot(pf.previewPBox.Size, 1, (int)lyapStartNum.Value, (int)lyapEndNum.Value, lyap_calc_Rad_wolf.Checked, out tmp);
+                var pf = GetPreviewForm(StringData.LeInTime);
+                var sp = routines.GetLyapunovPlot(pf.previewPBox.Size, 1, le_pStartNum.ToInt(), le_pEndNum.ToInt(), le_wolf_radio.Checked, out tmp);
                 pf.previewPBox.Image = sp.Plot();
-                pf.plotObject = sp;
+                pf.Plot = sp;
             }
         }
 
-        private void fourierPBox_DoubleClick(object sender, EventArgs e)
+        private void fft_plotPBox_DoubleClick(object sender, EventArgs e)
         {
-            int width = Convert.ToInt32(this.numPreviewWidth.Value);
-            int height = Convert.ToInt32(this.numPreviewHeight.Value);
-
-            PreviewForm pf = new PreviewForm("Fourier power spectrum", width, height);
-            pf.Show();
-
-            SignalPlot sp = routines.GetFourierPlot(pf.previewPBox.Size, 1, GetDoubleFromUI(fourierStartFreqNum), GetDoubleFromUI(fourierEndFreqNum), GetDoubleFromUI(fourier_dtNum), Convert.ToInt32(fourier_logCheckbox.Checked));
-            pf.previewPBox.Image = sp.Plot();
-            pf.plotObject = sp;
+            if (fft_plotPBox.Image != null)
+            {
+                var pf = GetPreviewForm(StringData.Fourier);
+                var sp = routines.GetFourierPlot(pf.previewPBox.Size, 1, fft_fStartNum.ToDouble(), fft_fEndNum.ToDouble(), fft_dtNum.ToDouble(), fft_logCbox.Checked);
+                pf.previewPBox.Image = sp.Plot();
+                pf.Plot = sp;
+            }
         }
 
         private void waveletPBox_DoubleClick(object sender, EventArgs e)
         {
-            int width = Convert.ToInt32(this.numPreviewWidth.Value);
-            int height = Convert.ToInt32(this.numPreviewHeight.Value);
+            var pf = GetPreviewForm(this.wav_nameCombo.Text + " " + StringData.Wavelet);
 
-            PreviewForm pf = new PreviewForm(this.wav_nameCbox.Text + " wavelet", width, height);
-            pf.Show();
             try
             {
-                double tStart = routines.sourceData.TimeSeries.Min.X;
-                double tEnd = routines.sourceData.TimeSeries.Max.X;
-                string fName = "waveletPreview.tmp";
-                routines.BuildWavelet(fName, wav_nameCbox.Text, tStart, tEnd, GetDoubleFromUI(wav_startFreq), GetDoubleFromUI(wav_endFreq), GetDoubleFromUI(wav_dtNum), CboxColorMap.Text, waveletPBox.Width, waveletPBox.Height);
-                GetImageFromFile(pf.previewPBox, fName);
+                routines.BuildWavelet(
+                    StringData.WaveletPreviewFile, 
+                    wav_nameCombo.Text,
+                    routines.sourceData.TimeSeries.Min.X,
+                    routines.sourceData.TimeSeries.Max.X, 
+                    wav_fStartNum.ToDouble(), 
+                    wav_fEndNum.ToDouble(), 
+                    wav_dtNum.ToDouble(), 
+                    wav_colorMapCombo.Text, 
+                    wav_plotPBox.Width, 
+                    wav_plotPBox.Height);
+
+                GetImageFromFile(pf.previewPBox, StringData.WaveletPreviewFile);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Не удалось построить вейвлет:\n" + ex.Message);
+                MessageBox.Show($"Unable to build {StringData.Fourier}:\n" + ex.Message);
             }
         }
 
-        private void GetImageFromFile(PictureBox pb, string fileName) {
-            FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
-            pb.Image = Image.FromStream(fs);
-            fs.Close();
-
-            pb.SizeMode = PictureBoxSizeMode.StretchImage;
+        private void GetImageFromFile(PictureBox pb, string fileName)
+        {
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+            {
+                pb.Image = Image.FromStream(fs);
+                pb.SizeMode = PictureBoxSizeMode.StretchImage;
+            }
         }
 
         #endregion
 
-
         #region lyapunovRelated
 
-        private void calculateLyapunovExponent() {
+        private void CalculateLyapunovExponent()
+        {
+            int dim = le_dimNum.ToInt();
+            int tau = le_tauNum.ToInt();
+            double scaleMin = le_scaleMinNum.ToDouble();
 
-            int dim = (int)dimNum.Value;
-            int tau = (int)tauNum.Value;
-            double scaleMin = GetDoubleFromUI(scaleMinNum);
-
-            if (lyap_calc_Rad_wolf.Checked)
+            if (le_wolf_radio.Checked)
                 routines.lyapunov = new WolfMethod(
                     routines.sourceData.TimeSeries.YValues,
                     dim,
                     tau,
-                    GetDoubleFromUI(stepNum),
+                    le_wolf_stepNum.ToDouble(),
                     scaleMin,
-                    GetDoubleFromUI(scaleMaxNum), 
-                    (int)evolveStepsNum.Value
+                    le_scaleMaxNum.ToDouble(), 
+                    le_wolf_evolveStepsNum.ToInt()
                 );
 
             if (lyap_calc_Rad_rosenstein.Checked)
@@ -298,8 +308,8 @@ namespace TimeSeriesAnalysis {
                     routines.sourceData.TimeSeries.YValues,
                     dim,
                     tau, 
-                    (int)rosStepsNum.Value, 
-                    (int)rosDistanceNum.Value,
+                    le_ros_stepsNum.ToInt(), 
+                    le_ros_distanceNum.ToInt(),
                     scaleMin
                 );
 
@@ -308,114 +318,129 @@ namespace TimeSeriesAnalysis {
                     routines.sourceData.TimeSeries.YValues,
                     dim,
                     tau,
-                    (int)lyap_k_Num_maxiter.Value,
-                    (int)lyap_k_Num_window.Value,
+                    le_kantz_maxIterNum.ToInt(),
+                    le_kantz_windowNum.ToInt(),
                     scaleMin,
-                    GetDoubleFromUI(scaleMaxNum),
-                    (int)lyap_k_Num_scales.Value
+                    le_scaleMaxNum.ToDouble(),
+                    le_kantz_scalesNum.ToInt()
                 );
 
-            try {
+            try
+            {
                 routines.lyapunov.Calculate();
-                MethodInvoker mi = new MethodInvoker(this.setLyapunovResult);
+                var mi = new MethodInvoker(this.SetLyapunovResult);
                 this.BeginInvoke(mi);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 MessageBox.Show("Unable to calculate LE:\n" + ex.Message);
-                resultText.Text = "Error";
+                le_resultText.Text = "Error";
             }
         }
 
-
-        private void setLyapunovResult() {
-
-            resultText.BackColor = Color.Khaki;
-            string result = "";
+        private void SetLyapunovResult()
+        {
+            le_resultText.BackColor = Color.Khaki;
+            string result = string.Empty;
 
             if (routines.lyapunov is WolfMethod)
             {
                 result = string.Format("{0:F5}", ((WolfMethod)routines.lyapunov).rezult);
-                resultText.Text = result;
+                le_resultText.Text = result;
             }
 
             if (routines.lyapunov is KantzMethod)
             {
-                this.ComboKantzSlope.Items.Clear();
+                this.le_kantz_slopeCombo.Items.Clear();
                 string[] items = new string[((KantzMethod)routines.lyapunov).SlopesList.Count];
                 ((KantzMethod)routines.lyapunov).SlopesList.Keys.CopyTo(items, 0);
-                this.ComboKantzSlope.Items.AddRange(items);
-                this.ComboKantzSlope.SelectedIndex = 0;
-                ((KantzMethod)routines.lyapunov).SetSlope(this.ComboKantzSlope.Text);
+                this.le_kantz_slopeCombo.Items.AddRange(items);
+                this.le_kantz_slopeCombo.SelectedIndex = 0;
+                ((KantzMethod)routines.lyapunov).SetSlope(this.le_kantz_slopeCombo.Text);
             }
 
             if (routines.lyapunov.slope.Length > 1)
             {
-                resultText.Text = routines.lyapunov.GetInfoShort();
-                lyapEndNum.Value = routines.lyapunov.slope.Length - 1;
+                le_resultText.Text = routines.lyapunov.GetInfoShort();
+                le_pEndNum.Value = routines.lyapunov.slope.Length - 1;
 
                 try
                 {
-                    lyapunovPBox.Image = routines.GetLyapunovPlot(lyapunovPBox.Size, 1, (int)lyapStartNum.Value, (int)lyapEndNum.Value, lyap_calc_Rad_wolf.Checked, out result).Plot();
+                    le_plotPBox.Image = routines.GetLyapunovPlot(
+                        le_plotPBox.Size, 
+                        1, 
+                        le_pStartNum.ToInt(), 
+                        le_pEndNum.ToInt(), 
+                        le_wolf_radio.Checked, 
+                        out result)
+                        .Plot();
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show("Error plotting Lyapunov slope: " + ex.Message);
-                    result = "No Value";
+                    result = StringData.NoValue;
                 }
             }
             else
             {
-                result = "No Value";
+                result = StringData.NoValue;
             }
                
             if (routines.lyapunov is KantzMethod || routines.lyapunov is RosensteinMethod)
             {
-                resultText.Text = result;
+                le_resultText.Text = result;
             }
         }
 
         #endregion
 
-
-        private void useTimeCheckbox_CheckedChanged(object sender, EventArgs e) {
-            if (this.useTimeCheckbox.Checked) {
-                refreshTimeSeries();
-                sourceStepTxt.Text = string.Format(CultureInfo.InvariantCulture, "{0:F8}", routines.sourceData.Step);
-            }
-            else {
-                sourceStepTxt.Text = "";
-            }
-        }
-
-
-        private void cleanUp() {
-            routines.sourceData = null;
-            signalPBox.Image = null;
-            poincareMapPBox.Image = null;
-            waveletPBox.Image = null;
-            fourierPBox.Image = null;
-            lyapunovPBox.Image = null;
-            routines.lyapunov = null;
-            routines.deleteTempFiles();
-        }
-
-
-        private void mainForm_FormClosing(object sender, FormClosingEventArgs e) {
-            cleanUp();
-        }
-
-
-        private void pointsNum_ValueChanged(object sender, EventArgs e) {
-            if (this.useTimeCheckbox.Checked) {
-                refreshTimeSeries();
-                sourceStepTxt.Text = string.Format(CultureInfo.InvariantCulture, "{0:F8}", routines.sourceData.Step);
-            }
-        }
-
-
-        private double GetDoubleFromUI(NumericUpDown field)
+        private void useTimeCheckbox_CheckedChanged(object sender, EventArgs e)
         {
-            return Convert.ToDouble(field.Value, CultureInfo.InvariantCulture);
+            if (this.useTimeCheckbox.Checked)
+            {
+                RefreshTimeSeries();
+                sourceStepTxt.Text = string.Format(CultureInfo.InvariantCulture, "{0:F8}", routines.sourceData.Step);
+            }
+            else
+            {
+                sourceStepTxt.Text = string.Empty;
+            }
+        }
+
+        private void CleanUp()
+        {
+            routines.sourceData = null;
+            signal_plotPBox.Image = null;
+            poincareMapPBox.Image = null;
+            wav_plotPBox.Image = null;
+            fft_plotPBox.Image = null;
+            le_plotPBox.Image = null;
+            routines.lyapunov = null;
+            routines.DeleteTempFiles();
+        }
+
+        private void mainForm_FormClosing(object sender, FormClosingEventArgs e) =>
+            CleanUp();
+
+        private void pointsNum_ValueChanged(object sender, EventArgs e)
+        {
+            if (this.useTimeCheckbox.Checked)
+            {
+                RefreshTimeSeries();
+                sourceStepTxt.Text = string.Format(CultureInfo.InvariantCulture, "{0:F8}", routines.sourceData.Step);
+            }
+        }
+
+        private PreviewForm GetPreviewForm(string title)
+        {
+            var form = new PreviewForm(
+                title,
+                this.numPreviewWidth.ToInt(),
+                this.numPreviewHeight.ToInt());
+
+            form.Show();
+
+            return form;
         }
     }
 }
