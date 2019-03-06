@@ -38,15 +38,15 @@ namespace NeuralNetwork {
 
             Logger.LogInfo(taskParams.GetInfoFull(), true);
 
-            Console.Title = "Signal: " + NeuralOutput.FileName + " | " + taskParams.ActFunction.GetName();
+            Console.Title = "Signal: " + NeuralOutput.FileName + " | " + taskParams.ActFunction.Name;
             Console.WriteLine("\nStarting...");
 
             Charts.NeuralAnimation = new Animation();
 
-            Calculations calc = new Calculations(NeuralNet.Params);
+            Calculations calc = new Calculations(task.Params);
 
-            NeuralNet.LoggingMethod = calc.LoggingEvent;
-            NeuralNet.EndCycleMethod = calc.EndCycleEvent;
+            task.LoggingMethod = calc.LoggingEvent;
+            task.EndCycleMethod = calc.EndCycleEvent;
 
             task.RunTask();
 

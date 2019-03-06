@@ -2,42 +2,43 @@
 using NeuralNet.Entities;
 using System;
 using MathLib;
+using DeepLearn.NeuralNetwork.Networks;
 
-namespace NeuralNetwork {
-    public class NeuralNet {
+namespace NeuralNetwork
+{
+    public class NeuralNet : ThreeLayerNetwork<InputNeuron, HiddenNeuron, OutputNeuron>
+    {
+        public BenettinResult Task_Result;
+        public NeuralNetParams Params;
+        public NeuralNetEquations System_Equations;
 
-        public static BenettinResult Task_Result;
-        public static NeuralNetParams Params;
-        public static NeuralNetEquations System_Equations;
-
-        public static InputNeuron[] NeuronsInput;
-        public static HiddenNeuron[] NeuronsHidden;
-        public static OutputNeuron NeuronOutput;
-        public static BiasNeuron NeuronBias;
-        public static BiasNeuron NeuronConstant;
+        public InputNeuron[] NeuronsInput;
+        public HiddenNeuron[] NeuronsHidden;
+        public OutputNeuron NeuronOutput;
+        public BiasNeuron NeuronBias;
+        public BiasNeuron NeuronConstant;
 
         //----- input data
-        private static long nmax;  //lines in file
-        public static double[] xdata;
+        private long nmax;  //lines in file
+        public double[] xdata;
 
         //----- pre-calculated constants
-        private static double TEN_POW_MIN_PRUNING;      
-        private static double MIN_D5_DIV_D;
-        private static double NMAX_MINUS_D_XMAX_POW_E;
+        private double tenPowMinPruning;      
+        private double minD5DivD;
+        private double nmaxSubDXmaxPowE;
 
-        private static int neurons, dims;
-        private static int countnd = 0;    //Allows for introducing n and d gradually
+        private int neurons, dims;
+        private int countnd = 0;    //Allows for introducing n and d gradually
 
-        private static double ddw;
+        private double ddw;
 
         //counters
-        public static int _c, successCount;
+        public int _c, successCount;
 
-        private static int improved = 0;
-        private static int seed;
+        private int improved = 0;
+        private int seed;
 
-        private static bool AdditionalNeuron;
-
+        private bool AdditionalNeuron;
 
         public NeuralNet(NeuralNetParams taskParams, double[] array) {
             Params = taskParams;
@@ -47,16 +48,14 @@ namespace NeuralNetwork {
         }
 
 
-        public static MyMethodDelegate LoggingMethod = null;
-        public static MyMethodDelegate EndCycleMethod = null;
+        public MyMethodDelegate LoggingMethod = null;
+        public MyMethodDelegate EndCycleMethod = null;
         public delegate void MyMethodDelegate();
 
         public void InvokeMethodForNeuralNet(MyMethodDelegate method) {
             method.DynamicInvoke();
         }
         
-
-
         public void RunTask() {
 
             while (successCount < Params.Trainings) {
@@ -99,10 +98,10 @@ namespace NeuralNetwork {
                     if (Params.Pruning == 0)
                     {
                         foreach (InputNeuron neuron in NeuronsInput)
-                            foreach (Synapse synapse in neuron.Outputs)
+                            foreach (NewSynapse synapse in neuron.Outputs)
                                 synapse.Prune = false;
 
-                        foreach (Synapse synapse in NeuronConstant.Outputs)
+                        foreach (NewSynapse synapse in NeuronConstant.Outputs)
                             synapse.Prune = false;
                     }
                         
@@ -145,7 +144,7 @@ namespace NeuralNetwork {
                         for (int j = 0; j < dims; j++) {
                 
                             //Reduce neighborhood for large j by a factor of 1-32
-                            double dj = 1d / Math.Pow(2, MIN_D5_DIV_D * j);
+                            double dj = 1d / Math.Pow(2, minD5DivD * j);
 
                             NeuronsInput[j].CalculateWeight(i, ddw * dj, pc);
                 
@@ -188,7 +187,7 @@ namespace NeuralNetwork {
                     }
 
                     //"Mean-square" error (even for e&<>2)
-                    e1 = Math.Pow(e1 / NMAX_MINUS_D_XMAX_POW_E, 2 / Params.ErrorsExponent);
+                    e1 = Math.Pow(e1 / nmaxSubDXmaxPowE, 2 / Params.ErrorsExponent);
 
                     #endregion
 
@@ -256,11 +255,11 @@ namespace NeuralNetwork {
                             {
                                 double aBest = NeuronsInput[j].Memory[i];
                                 double bBest = NeuronsHidden[i].Memory[0];
-                                if (aBest != 0 && Math.Abs(aBest * bBest) < TEN_POW_MIN_PRUNING)
+                                if (aBest != 0 && Math.Abs(aBest * bBest) < tenPowMinPruning)
                                     NeuronsInput[j].Outputs[i].Prune = true;
                             }
 
-                            if (NeuronConstant.Memory[i] != 0 && Math.Abs(NeuronConstant.Memory[i] * NeuronsHidden[i].Memory[0]) < TEN_POW_MIN_PRUNING)
+                            if (NeuronConstant.Memory[i] != 0 && Math.Abs(NeuronConstant.Memory[i] * NeuronsHidden[i].Memory[0]) < tenPowMinPruning)
                                 NeuronConstant.Outputs[i].Prune = true;
                         }
                 }
@@ -314,9 +313,9 @@ namespace NeuralNetwork {
 
             ConstructNetwork();
 
-            TEN_POW_MIN_PRUNING = Math.Pow(10, -Params.Pruning);
-            MIN_D5_DIV_D = Math.Min(Params.Dimensions, 5) / Params.Dimensions;
-            NMAX_MINUS_D_XMAX_POW_E = (nmax - Params.Dimensions) * Math.Pow(xmax, Params.ErrorsExponent);
+            tenPowMinPruning = Math.Pow(10, -Params.Pruning);
+            minD5DivD = Math.Min(Params.Dimensions, 5) / Params.Dimensions;
+            nmaxSubDXmaxPowE = (nmax - Params.Dimensions) * Math.Pow(xmax, Params.ErrorsExponent);
             
             neurons = Params.Neurons;
             dims = Params.Dimensions;
@@ -325,7 +324,7 @@ namespace NeuralNetwork {
         }
 
 
-        private static void ConstructNetwork()
+        public override void ConstructNetwork()
         {
             //random = new Random();
             Neuron.Randomizer = new Random();
@@ -355,14 +354,14 @@ namespace NeuralNetwork {
 
             // init output layer
             NeuronOutput = new OutputNeuron(Params.Neurons, Params.Nudge);
-            NeuronOutput.Outputs[0] = new Synapse();
+            NeuronOutput.Outputs[0] = new NewSynapse();
 
 
             //Connect input and hidden layer neurons
             for (int i = 0; i < Params.Dimensions; i++)
                 for(int j = 0; j < Params.Neurons; j++)
                 {
-                    Synapse synapse = new Synapse();
+                    NewSynapse synapse = new NewSynapse();
                     NeuronsInput[i].Outputs[j] = synapse;
                     NeuronsHidden[j].Inputs[i] = synapse;
                 }
@@ -372,7 +371,7 @@ namespace NeuralNetwork {
             
             for (int i = 0; i < Params.Neurons; i++)
             {
-                Synapse constantSynapse = new Synapse();
+                NewSynapse constantSynapse = new NewSynapse();
                 NeuronConstant.Outputs[i] = constantSynapse;
                 NeuronsHidden[i].BiasInput = constantSynapse;
             }
@@ -381,13 +380,13 @@ namespace NeuralNetwork {
             //Connect hidden and output layer neurons
             for (int i = 0; i < Params.Neurons; i++)
             {
-                Synapse synapse = new Synapse();
+                NewSynapse synapse = new NewSynapse();
                 NeuronsHidden[i].Outputs[0] = synapse;
                 NeuronOutput.Inputs[i] = synapse;
             }
 
             //Connect constant and hidden neurons bias inputs
-            Synapse biasSynapse = new Synapse();
+            NewSynapse biasSynapse = new NewSynapse();
             NeuronBias.Outputs[0] = biasSynapse;
             NeuronOutput.BiasInput = biasSynapse;
         }

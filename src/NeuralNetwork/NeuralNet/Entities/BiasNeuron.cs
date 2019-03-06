@@ -8,14 +8,14 @@ namespace NeuralNet.Entities
 
         public BiasNeuron(int outputsCount)
         {
-            Outputs = new Synapse[outputsCount];
+            Outputs = new NewSynapse[outputsCount];
             Memory = new double[outputsCount];
             Best = new double[outputsCount];
         }
 
         public BiasNeuron(int outputsCount, double nudge)
         {
-            Outputs = new Synapse[outputsCount];
+            Outputs = new NewSynapse[outputsCount];
             Memory = new double[outputsCount];
             Best = new double[outputsCount];
             Nudge = nudge;

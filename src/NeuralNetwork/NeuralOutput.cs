@@ -48,8 +48,8 @@ namespace NeuralNetwork {
 
         public static void SaveDebugInfoToFile(double ebest, BenettinResult result, double _le, InputNeuron[] inputs, OutputNeuron outputNeuron, HiddenNeuron[] hiddenNeurons, BiasNeuron constant, BiasNeuron bias) {
 
-            int d = hiddenNeurons[1].Inputs.Length;
-            int n = outputNeuron.Inputs.Length;
+            int d = hiddenNeurons[1].Inputs.Count;
+            int n = outputNeuron.Inputs.Count;
 
             StringBuilder debug = new StringBuilder();
 

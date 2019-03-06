@@ -1,206 +1,135 @@
 ﻿using System;
 
-namespace NeuralNetwork {
+namespace NeuralNetwork
+{
+    public class BinaryShiftFunction : ActivationFunction
+    {
+        public override string Name => "Binary shift";
 
-    public class BinaryShiftFunction : ActivationFunction {
+        public override double Phi(double arg) => arg % 1d;
 
-        public override double Phi(double arg) {
-            return arg % 1d;
-        }
-
-
-        public override double Dphi(double arg) {
-            return 1d;
-        }
-
-        public override string GetName() {
-            return "Binary shift";
-        }
+        public override double Dphi(double arg) => 1d;
     }
 
+    public class GaussianFunction : ActivationFunction
+    {
+        public override string Name => "Gaussian";
 
-    public class GaussianFunction : ActivationFunction {
+        public override double Phi(double arg) => arg * (1d - arg);
 
-        public override double Phi(double arg) {
-            return arg * (1d - arg);
-        }
-
-
-        public override double Dphi(double arg) {
-            return 1d - 2d * arg;
-        }
-
-        public override string GetName() {
-            return "Gaussian";
-        }
+        public override double Dphi(double arg) => 1d - 2d * arg;
     }
 
+    public class GaussianDerivativeFunction : ActivationFunction
+    {
+        public override string Name => "Gaussian Derivative";
 
-    public class GaussianDerivativeFunction : ActivationFunction {
+        public override double Phi(double arg) => -arg * Math.Exp(-arg * arg);
 
-        public override double Phi(double arg) {
-            return -arg * Math.Exp(-arg * arg);
-        }
-
-
-        public override double Dphi(double arg) {
-            return (2d * arg - 1d) * Math.Exp(-arg * arg);
-        }
-
-        public override string GetName() {
-            return "Gaussian Derivative";
-        }
+        public override double Dphi(double arg) => (2d * arg - 1d) * Math.Exp(-arg * arg);
     }
 
+    public class LogisticFunction : ActivationFunction
+    {
+        public override string Name => "Logistic";
 
-    public class LogisticFunction : ActivationFunction {
+        public override double Phi(double arg) => arg * (1d - arg);
 
-        public override double Phi(double arg) {
-            return arg * (1d - arg);
-        }
-
-
-        public override double Dphi(double arg) {
-            return 1d - 2d * arg;
-        }
-
-        public override string GetName() {
-            return "Logistic";
-        }
+        public override double Dphi(double arg) => 1d - 2d * arg;
     }
 
+    public class LinearFunction : ActivationFunction
+    {
+        public override string Name => "Linear";
 
-    public class LinearFunction : ActivationFunction {
+        public override double Phi(double arg) => arg;
 
-        public override double Phi(double arg) {
-            return arg;
-        }
-
-
-        public override double Dphi(double arg) {
-            return 2d * arg;
-        }
-
-        public override string GetName() {
-            return "Linear";
-        }
+        public override double Dphi(double arg) => 2d * arg;
     }
 
+    public class PiecewiseLinearFunction : ActivationFunction
+    {
+        public override string Name => "Piecewise Linear";
 
-    public class PiecewiseLinearFunction : ActivationFunction {
+        public override double Phi(double arg) => 
+            Math.Abs(arg) < 1d ? arg : Math.Sign(arg);
 
-        public override double Phi(double arg) {
-            if (Math.Abs(arg) < 1d)
-                return arg;
-            else 
-                return Math.Sign(arg);
-        }
-
-
-        public override double Dphi(double arg) {
-            if (Math.Abs(arg) < 1d)
-                return 1;
-            else
-                return 0;
-        }
-
-        public override string GetName() {
-            return "Piecewise Linear";
-        }
+        public override double Dphi(double arg) =>
+            Math.Abs(arg) < 1d ? 1 : 0;
     }
 
+    public class ExponentialFunction : ActivationFunction
+    {
+        public override string Name => "Exponential";
 
-    public class ExponentialFunction : ActivationFunction {
+        public override double Phi(double arg) => Math.Exp(arg);
 
-        public override double Phi(double arg) {
-            return Math.Exp(arg);
-        }
-
-
-        public override double Dphi(double arg) {
-            return Math.Exp(arg);
-        }
-
-        public override string GetName() {
-            return "Exponential";
-        }
+        public override double Dphi(double arg) => Math.Exp(arg);
     }
 
+    public class CosineFunction : ActivationFunction
+    {
+        public override string Name => "Cosine";
 
-    public class CosineFunction : ActivationFunction {
+        public override double Phi(double arg) => Math.Cos(arg);
 
-        public override double Phi(double arg) {
-            return Math.Cos(arg);
-        }
-
-
-        public override double Dphi(double arg) {
-            return Math.Cos(arg);
-        }
-
-        public override string GetName() {
-            return "Cosine";
-        }
+        public override double Dphi(double arg) => Math.Cos(arg);
     }
 
+    public class SigmoidFunction : ActivationFunction
+    {
+        public override string Name => "Sigmoid";
 
-    public class SigmoidFunction : ActivationFunction {
-
-        public override double Phi(double arg) {
-            if (arg < -44d) {
+        public override double Phi(double arg)
+        {
+            if (arg < -44d)
+            {
                 return 0d;
             }
-            else if (arg > 44d) {
+            else if (arg > 44d)
+            {
                 return 1d;
             }
-            else {
+            else
+            {
                 return 1d / (1d + Math.Exp(-arg));
             }
         }
 
-
-        public override double Dphi(double arg) {
-            if (Math.Abs(arg) > 44d) {
+        public override double Dphi(double arg)
+        {
+            if (Math.Abs(arg) > 44d)
+            {
                 return 0d;
             }
-            else {
+            else
+            {
                 double argExp = Math.Exp(arg);
                 double _v = (1d + argExp);
                 return argExp / (_v * _v);
             }
         }
-
-        public override string GetName() {
-            return "Sigmoid";
-        }
     }
 
+    public class HyperbolicTangentFunction : ActivationFunction
+    {
+        public override string Name => "Hyperbolic tangent";
 
-    public class HyperbolicTangentFunction : ActivationFunction {
+        public override double Phi(double arg) =>
+            arg < 22d ?  
+            1d - 2d / (Math.Exp(2d * arg) + 1d) : 
+            Math.Sign(arg);
 
-        public override double Phi(double arg) {
-            if (arg < 22d) {
-                return 1d - 2d / (Math.Exp(2d * arg) + 1d);
-            }
-            else {
-                return Math.Sign(arg);
-            }
-        }
-
-
-        public override double Dphi(double arg) {
+        public override double Dphi(double arg)
+        {
             double tmp = Sech(arg);
             return tmp * tmp;
         }
-
-
-        public override string GetName() {
-            return "Hyperbolic tangent";
-        }
     }
 
-
-    public class PolynomialSixOrderFunction : ActivationFunction {
+    public class PolynomialSixOrderFunction : ActivationFunction
+    {
+        public override string Name => "Polynomial (6 order)";
 
         public PolynomialSixOrderFunction()
         {
@@ -208,35 +137,27 @@ namespace NeuralNetwork {
             InitNetworkLayer();
         }
 
-
-        public override double Phi(double arg) {
-            return Neuron.Outputs[0].Weight + 
+        public override double Phi(double arg) => 
+            Neuron.Outputs[0].Weight + 
                 arg * (Neuron.Outputs[1].Weight + 
                     arg * (Neuron.Outputs[2].Weight + 
                         arg * (Neuron.Outputs[3].Weight + 
                             arg * (Neuron.Outputs[4].Weight + 
                                 arg * (Neuron.Outputs[5].Weight + 
                                     arg * Neuron.Outputs[6].Weight)))));
-        }
 
-
-        public override double Dphi(double arg) {
-            return Neuron.Outputs[1].Weight + 
+        public override double Dphi(double arg) =>
+            Neuron.Outputs[1].Weight + 
                 arg * (2d * Neuron.Outputs[2].Weight + 
                     arg * (3d * Neuron.Outputs[3].Weight + 
                         arg * (4d * Neuron.Outputs[4].Weight + 
                             arg * (5d * Neuron.Outputs[5].Weight + 
                                 arg * 6d * Neuron.Outputs[6].Weight))));
-        }
-
-
-        public override string GetName() {
-            return "Polynomial (6 order)";
-        }
     }
 
-
-    public class RationalFunction : ActivationFunction {
+    public class RationalFunction : ActivationFunction
+    {
+        public override string Name => "Rational";
 
         public RationalFunction()
         {
@@ -244,8 +165,8 @@ namespace NeuralNetwork {
             InitNetworkLayer();
         }
 
-        public override double Phi(double arg) {
-            return (Neuron.Outputs[0].Weight + 
+        public override double Phi(double arg) =>
+            (Neuron.Outputs[0].Weight + 
                 arg * (Neuron.Outputs[1].Weight + 
                     arg * (Neuron.Outputs[2].Weight + 
                         arg * Neuron.Outputs[3].Weight))) 
@@ -253,10 +174,9 @@ namespace NeuralNetwork {
                 arg * (Neuron.Outputs[4].Weight + 
                     arg * (Neuron.Outputs[5].Weight + 
                         arg * Neuron.Outputs[6].Weight)));
-        }
 
-
-        public override double Dphi(double arg) {
+        public override double Dphi(double arg)
+        {
             double f = Neuron.Outputs[0].Weight + 
                 arg * (Neuron.Outputs[1].Weight + 
                     arg * (Neuron.Outputs[2].Weight + 
@@ -276,14 +196,11 @@ namespace NeuralNetwork {
 
             return (g * df - f * dg) / (g * g);
         }
-
-        public override string GetName() {
-            return "Rational";
-        }
     }
 
-
-    public class SpecialFunction : ActivationFunction {
+    public class SpecialFunction : ActivationFunction
+    {
+        public override string Name => "Special";
 
         public SpecialFunction()
         {
@@ -291,30 +208,23 @@ namespace NeuralNetwork {
             InitNetworkLayer();
         }
 
-        public override double Phi(double arg) {
-            if (Math.Abs(arg) < 22d)
-                return Neuron.Outputs[0].Weight + 
+        public override double Phi(double arg) =>
+            Math.Abs(arg) < 22d ?
+            
+            Neuron.Outputs[0].Weight + 
                     arg * (Neuron.Outputs[1].Weight + 
                         arg * Neuron.Outputs[2].Weight) +
                     Neuron.Outputs[3].Weight * 
-                        (1d - 2d / (Math.Exp(2d * arg) + 1d));
-            else
-                return Neuron.Outputs[0].Weight + 
+                        (1d - 2d / (Math.Exp(2d * arg) + 1d)) :
+                
+            Neuron.Outputs[0].Weight + 
                     arg * (Neuron.Outputs[1].Weight + 
                         arg * Neuron.Outputs[2].Weight) +
                             Neuron.Outputs[3].Weight * Math.Sign(arg);
-        }
 
-
-        public override double Dphi(double arg) {
-            return Neuron.Outputs[1].Weight + 
+        public override double Dphi(double arg) =>
+            Neuron.Outputs[1].Weight + 
                 arg * 2d * Neuron.Outputs[2].Weight +
                     Neuron.Outputs[3].Weight * Math.Pow(Sech(arg), 2);
-        }
-
-
-        public override string GetName() {
-            return "Special";
-        }
     }
 }

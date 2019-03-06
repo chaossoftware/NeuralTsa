@@ -1,4 +1,6 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using DeepLearn.NeuralNetwork.Base;
 using NeuralNetwork;
 
 namespace NeuralNet.Entities
@@ -6,35 +8,32 @@ namespace NeuralNet.Entities
     public class HiddenNeuron : Neuron
     {
         public static ActivationFunction Function;
-        public Synapse[] Inputs;
-        public Synapse BiasInput;
-
+        public NewSynapse BiasInput;
 
         public HiddenNeuron(int inputsCount, int outputsCount)
         {
-            Inputs = new Synapse[inputsCount];
-            Outputs = new Synapse[outputsCount];
+            Inputs = new NewSynapse[inputsCount];
+            Outputs = new NewSynapse[outputsCount];
             Memory = new double[outputsCount];
             Best = new double[outputsCount];
         }
 
         public HiddenNeuron(int inputsCount, int outputsCount, double nudge)
         {
-            Inputs = new Synapse[inputsCount];
-            Outputs = new Synapse[outputsCount];
+            Inputs = new NewSynapse[inputsCount];
+            Outputs = new NewSynapse[outputsCount];
             Memory = new double[outputsCount];
             Best = new double[outputsCount];
             Nudge = nudge;
         }
 
-        public override void ProcessInputs()
+        public override void Process()
         {
             double arg = BiasInput.Weight;// + Inputs.Select(;
-            foreach (Synapse synapse in Inputs)
+            foreach (NewSynapse synapse in Inputs)
                 arg += synapse.Signal;
 
-
-            foreach (Synapse synapse in Outputs)
+            foreach (NewSynapse synapse in Outputs)
                 synapse.Signal = synapse.Weight * Function.Phi(arg);
         }
     }

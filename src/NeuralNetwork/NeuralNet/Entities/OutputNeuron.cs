@@ -1,33 +1,33 @@
 ﻿
+using System.Collections.Generic;
+
 namespace NeuralNet.Entities
 {
     public class OutputNeuron : Neuron
     {
-        public Synapse[] Inputs;
-        public Synapse BiasInput;
-
+        public NewSynapse BiasInput;
 
         public OutputNeuron(int inputsCount)
         {
-            Outputs = new Synapse[1];
+            Outputs = new NewSynapse[1];
             Memory = new double[1];
             Best = new double[1];
-            Inputs = new Synapse[inputsCount];
+            Inputs = new NewSynapse[inputsCount];
         }
 
         public OutputNeuron(int inputsCount, double nudge)
         {
-            Outputs = new Synapse[1];
+            Outputs = new NewSynapse[1];
             Memory = new double[1];
             Best = new double[1];
-            Inputs = new Synapse[inputsCount];
+            Inputs = new NewSynapse[inputsCount];
             Nudge = nudge;
         }
 
-        public override void ProcessInputs()
+        public override void Process()
         {
             double arg = BiasInput.Weight;
-            foreach (Synapse synapse in Inputs)
+            foreach (NewSynapse synapse in Inputs)
                 arg += synapse.Signal;
 
             Outputs[0].Signal = arg;

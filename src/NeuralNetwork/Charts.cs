@@ -20,7 +20,7 @@ namespace NeuralNetwork
 
         public static Bitmap DrawNetworkState(int height, HiddenNeuron[] hiddenNeurons, long iteration) {
 
-            int Dims = hiddenNeurons[0].Inputs.Length;
+            int Dims = hiddenNeurons[0].Inputs.Count;
             int Neurons = hiddenNeurons.Length;
 
             int maxItems = Math.Max(Dims, Neurons);
