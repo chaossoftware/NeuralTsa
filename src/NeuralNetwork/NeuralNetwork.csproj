@@ -58,7 +58,7 @@
     <Compile Include="NeuralNet\Entities\InputNeuron.cs" />
     <Compile Include="NeuralNet\Entities\Neuron.cs" />
     <Compile Include="NeuralNet\Entities\OutputNeuron.cs" />
-    <Compile Include="NeuralNet\Entities\NewSynapse.cs" />
+    <Compile Include="NeuralNet\Entities\PruneSynapse.cs" />
     <Compile Include="NeuralNet\NeuralNet.cs" />
     <Compile Include="NeuralNet\NeuralNetEquations.cs" />
     <Compile Include="NeuralNet\NeuralNetParams.cs" />

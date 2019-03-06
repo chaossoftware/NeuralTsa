@@ -2,15 +2,15 @@
 
 namespace NeuralNet.Entities
 {
-    public class NewSynapse : Synapse
+    public class PruneSynapse : Synapse
     {
-        public NewSynapse(int sourceIndex, int destinationIndex) 
+        public PruneSynapse(int sourceIndex, int destinationIndex) 
             : base(sourceIndex, destinationIndex)
         {
             Prune = false;
         }
 
-        public NewSynapse(int sourceIndex, int destinationIndex, double weight)
+        public PruneSynapse(int sourceIndex, int destinationIndex, double weight)
             : base(sourceIndex, destinationIndex, weight)
         {
             Prune = false;
@@ -20,7 +20,7 @@ namespace NeuralNet.Entities
 
         public override object Clone()
         {
-            var synapseCopy = new NewSynapse(this.IndexSource, this.IndexDestination)
+            var synapseCopy = new PruneSynapse(this.IndexSource, this.IndexDestination)
             {
                 Weight = this.Weight,
                 Signal = this.Signal,

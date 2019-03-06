@@ -5,7 +5,7 @@ using DeepLearn.NeuralNetwork.Base;
 
 namespace NeuralNet.Entities
 {
-    public abstract class Neuron : INeuron<Neuron>
+    public abstract class Neuron<N> : INeuron<N> where N : Neuron<N>
     {
         public static Random Randomizer;
 
@@ -13,9 +13,15 @@ namespace NeuralNet.Entities
         public double[] Best;
         public double Nudge;
 
-        public List<NewSynapse> Inputs { get; set; }
+        protected Neuron()
+        {
+            this.Inputs = new List<PruneSynapse>();
+            this.Outputs = new List<PruneSynapse>();
+        }
 
-        public List<NewSynapse> Outputs { get; set; }
+        public List<PruneSynapse> Inputs { get; set; }
+
+        public List<PruneSynapse> Outputs { get; set; }
 
         public virtual void CalculateWeight(int index, double pertrubation)
         {

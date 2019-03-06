@@ -5,35 +5,27 @@ using NeuralNetwork;
 
 namespace NeuralNet.Entities
 {
-    public class HiddenNeuron : Neuron
+    public class HiddenNeuron : Neuron<HiddenNeuron>
     {
         public static ActivationFunction Function;
-        public NewSynapse BiasInput;
+        public PruneSynapse BiasInput;
 
-        public HiddenNeuron(int inputsCount, int outputsCount)
+        public HiddenNeuron() : base()
         {
-            Inputs = new NewSynapse[inputsCount];
-            Outputs = new NewSynapse[outputsCount];
-            Memory = new double[outputsCount];
-            Best = new double[outputsCount];
         }
 
-        public HiddenNeuron(int inputsCount, int outputsCount, double nudge)
+        public HiddenNeuron(double nudge) : base()
         {
-            Inputs = new NewSynapse[inputsCount];
-            Outputs = new NewSynapse[outputsCount];
-            Memory = new double[outputsCount];
-            Best = new double[outputsCount];
             Nudge = nudge;
         }
 
         public override void Process()
         {
             double arg = BiasInput.Weight;// + Inputs.Select(;
-            foreach (NewSynapse synapse in Inputs)
+            foreach (PruneSynapse synapse in Inputs)
                 arg += synapse.Signal;
 
-            foreach (NewSynapse synapse in Outputs)
+            foreach (PruneSynapse synapse in Outputs)
                 synapse.Signal = synapse.Weight * Function.Phi(arg);
         }
     }

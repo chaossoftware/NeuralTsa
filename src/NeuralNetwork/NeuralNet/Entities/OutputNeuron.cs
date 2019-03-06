@@ -3,31 +3,23 @@ using System.Collections.Generic;
 
 namespace NeuralNet.Entities
 {
-    public class OutputNeuron : Neuron
+    public class OutputNeuron : Neuron<OutputNeuron>
     {
-        public NewSynapse BiasInput;
+        public PruneSynapse BiasInput;
 
-        public OutputNeuron(int inputsCount)
+        public OutputNeuron() : base()
         {
-            Outputs = new NewSynapse[1];
-            Memory = new double[1];
-            Best = new double[1];
-            Inputs = new NewSynapse[inputsCount];
         }
 
-        public OutputNeuron(int inputsCount, double nudge)
+        public OutputNeuron(double nudge) : base()
         {
-            Outputs = new NewSynapse[1];
-            Memory = new double[1];
-            Best = new double[1];
-            Inputs = new NewSynapse[inputsCount];
             Nudge = nudge;
         }
 
         public override void Process()
         {
             double arg = BiasInput.Weight;
-            foreach (NewSynapse synapse in Inputs)
+            foreach (PruneSynapse synapse in Inputs)
                 arg += synapse.Signal;
 
             Outputs[0].Signal = arg;

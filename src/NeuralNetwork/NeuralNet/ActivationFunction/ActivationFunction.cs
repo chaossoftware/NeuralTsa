@@ -25,10 +25,10 @@ namespace NeuralNetwork
         protected void InitNetworkLayer()
         {
             Neuron = new InputNeuron(7);
-            Neuron.Outputs = new NewSynapse[7];
+            Neuron.Outputs = new PruneSynapse[7];
 
             for (int i = 0; i < 7; i++)
-                Neuron.Outputs[i] = new NewSynapse();
+                Neuron.Outputs[i] = new PruneSynapse();
         }
     }
 }

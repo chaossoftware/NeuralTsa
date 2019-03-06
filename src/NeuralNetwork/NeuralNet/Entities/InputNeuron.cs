@@ -1,29 +1,21 @@
 ﻿
 namespace NeuralNet.Entities
 {
-    public class InputNeuron: Neuron
+    public class InputNeuron : Neuron<InputNeuron>
     {
-        public InputNeuron(int outputsCount)
+        public InputNeuron() : base()
         {
-            Outputs = new NewSynapse[outputsCount];
-            Memory = new double[outputsCount];
-            Best = new double[outputsCount];
-            Input = 0;
         }
 
-        public InputNeuron(int outputsCount, double nudge)
+        public InputNeuron(double nudge) : base()
         {
-            Outputs = new NewSynapse[outputsCount];
-            Memory = new double[outputsCount];
-            Best = new double[outputsCount];
             Nudge = nudge;
-            Input = 0;
         }
 
         public override void Process()
         {
-            foreach (NewSynapse synapse in Outputs)
-                synapse.Signal = Input * synapse.Weight;
+            foreach (PruneSynapse synapse in Outputs)
+                synapse.Signal = Inputs[0].Signal * synapse.Weight;
         }
     }
 }

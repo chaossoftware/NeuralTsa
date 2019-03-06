@@ -40,7 +40,9 @@ namespace NeuralNetwork
 
         private bool AdditionalNeuron;
 
-        public NeuralNet(NeuralNetParams taskParams, double[] array) {
+        public NeuralNet(NeuralNetParams taskParams, double[] array) 
+            : base(taskParams.Dimensions, taskParams.Neurons, 1)
+        {
             Params = taskParams;
             AdditionalNeuron = Params.ActFunction.AdditionalNeuron;
             System_Equations = new NeuralNetEquations(Params.Dimensions, Params.Neurons, Params.ActFunction);
@@ -98,10 +100,10 @@ namespace NeuralNetwork
                     if (Params.Pruning == 0)
                     {
                         foreach (InputNeuron neuron in NeuronsInput)
-                            foreach (NewSynapse synapse in neuron.Outputs)
+                            foreach (PruneSynapse synapse in neuron.Outputs)
                                 synapse.Prune = false;
 
-                        foreach (NewSynapse synapse in NeuronConstant.Outputs)
+                        foreach (PruneSynapse synapse in NeuronConstant.Outputs)
                             synapse.Prune = false;
                     }
                         
@@ -330,11 +332,13 @@ namespace NeuralNetwork
             Neuron.Randomizer = new Random();
 
             // init input layer
-            NeuronsInput = new InputNeuron[Params.Dimensions];
             for (int i = 0; i < Params.Dimensions; i++)
             {
-                InputNeuron neuron = new InputNeuron(Params.Neurons, Params.Nudge);
-                NeuronsInput[i] = neuron;
+                var neuron = new InputNeuron(Params.Nudge);
+                neuron.Memory = new double[Params.Neurons];
+                neuron.Best = new double[Params.Neurons];
+                neuron.Inputs.Add(new PruneSynapse(i, i, 1));
+                this.InputLayer.Neurons[i] = neuron;
             }
 
             // init constant neuron
@@ -342,26 +346,30 @@ namespace NeuralNetwork
 
             // init hidden layer
             HiddenNeuron.Function = Params.ActFunction;
-            NeuronsHidden = new HiddenNeuron[Params.Neurons];
+
             for (int i = 0; i < Params.Neurons; i++)
             {
-                HiddenNeuron neuron = new HiddenNeuron(Params.Dimensions, 1, Params.Nudge);
-                NeuronsHidden[i] = neuron;
+                var neuron = new HiddenNeuron(Params.Nudge);
+                neuron.Memory = new double[1];
+                neuron.Best = new double[1];
+                this.HiddenLayer.Neurons[i] = neuron;
             }
 
             // init bias neuron
             NeuronBias = new BiasNeuron(1, Params.Nudge);
 
             // init output layer
-            NeuronOutput = new OutputNeuron(Params.Neurons, Params.Nudge);
-            NeuronOutput.Outputs[0] = new NewSynapse();
-
+            var outNeuron = new OutputNeuron(Params.Nudge);
+            outNeuron.Memory = new double[1];
+            outNeuron.Best = new double[1];
+            outNeuron.Outputs.Add(new PruneSynapse(0, 0, 1));
+            this.HiddenLayer.Neurons[0] = outNeuron;
 
             //Connect input and hidden layer neurons
             for (int i = 0; i < Params.Dimensions; i++)
                 for(int j = 0; j < Params.Neurons; j++)
                 {
-                    NewSynapse synapse = new NewSynapse();
+                    PruneSynapse synapse = new PruneSynapse();
                     NeuronsInput[i].Outputs[j] = synapse;
                     NeuronsHidden[j].Inputs[i] = synapse;
                 }
@@ -371,7 +379,7 @@ namespace NeuralNetwork
             
             for (int i = 0; i < Params.Neurons; i++)
             {
-                NewSynapse constantSynapse = new NewSynapse();
+                PruneSynapse constantSynapse = new PruneSynapse();
                 NeuronConstant.Outputs[i] = constantSynapse;
                 NeuronsHidden[i].BiasInput = constantSynapse;
             }
@@ -380,15 +388,25 @@ namespace NeuralNetwork
             //Connect hidden and output layer neurons
             for (int i = 0; i < Params.Neurons; i++)
             {
-                NewSynapse synapse = new NewSynapse();
+                PruneSynapse synapse = new PruneSynapse();
                 NeuronsHidden[i].Outputs[0] = synapse;
                 NeuronOutput.Inputs[i] = synapse;
             }
 
             //Connect constant and hidden neurons bias inputs
-            NewSynapse biasSynapse = new NewSynapse();
+            PruneSynapse biasSynapse = new PruneSynapse();
             NeuronBias.Outputs[0] = biasSynapse;
             NeuronOutput.BiasInput = biasSynapse;
+        }
+
+        public override object Clone()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Process()
+        {
+            throw new NotImplementedException();
         }
     }
 }
