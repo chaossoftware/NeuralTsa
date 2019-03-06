@@ -1,6 +1,6 @@
 ﻿using System;
 using MathLib.DrawEngine.Charts;
-using MathLib.NeuralNetwork;
+using NeuralNetwork;
 using System.Drawing.Imaging;
 using System.Drawing;
 using MathLib;

@@ -1,8 +1,9 @@
 ﻿using MathLib.MathMethods.Lyapunov;
-using MathLib.NeuralNet.Entities;
+using NeuralNet.Entities;
 using System;
+using MathLib;
 
-namespace MathLib.NeuralNetwork {
+namespace NeuralNetwork {
     public class NeuralNet {
 
         public static BenettinResult Task_Result;

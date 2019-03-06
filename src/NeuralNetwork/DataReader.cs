@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 using System.Globalization;
-using MathLib.NeuralNetwork;
+using NeuralNetwork;
 
 namespace NeuralNetwork
 {

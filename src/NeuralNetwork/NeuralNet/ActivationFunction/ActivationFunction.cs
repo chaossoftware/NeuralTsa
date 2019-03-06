@@ -1,7 +1,7 @@
-﻿using MathLib.NeuralNet.Entities;
+﻿using NeuralNet.Entities;
 using System;
 
-namespace MathLib.NeuralNetwork {
+namespace NeuralNetwork {
 
     public abstract class ActivationFunction {
 

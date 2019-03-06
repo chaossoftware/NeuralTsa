@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MathLib.NeuralNetwork {
+namespace NeuralNetwork {
 
     public class BinaryShiftFunction : ActivationFunction {
 

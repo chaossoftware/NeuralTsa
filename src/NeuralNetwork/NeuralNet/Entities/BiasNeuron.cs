@@ -1,34 +1,29 @@
 ﻿
 using System;
 
-namespace MathLib.NeuralNet.Entities
+namespace NeuralNet.Entities
 {
-    public class InputNeuron : Neuron
+    public class BiasNeuron : Neuron
     {
-        public double Input;
 
-
-        public InputNeuron(int outputsCount)
+        public BiasNeuron(int outputsCount)
         {
             Outputs = new Synapse[outputsCount];
             Memory = new double[outputsCount];
             Best = new double[outputsCount];
-            Input = 0;
         }
 
-        public InputNeuron(int outputsCount, double nudge)
+        public BiasNeuron(int outputsCount, double nudge)
         {
             Outputs = new Synapse[outputsCount];
             Memory = new double[outputsCount];
             Best = new double[outputsCount];
             Nudge = nudge;
-            Input = 0;
         }
 
         public override void ProcessInputs()
         {
-            foreach (Synapse synapse in Outputs)
-                synapse.Signal = Input * synapse.Weight;
+            throw new Exception("Bias neuron has no inputs, so not able to process something");
         }
     }
 }

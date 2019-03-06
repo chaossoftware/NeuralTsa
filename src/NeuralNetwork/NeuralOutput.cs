@@ -1,6 +1,6 @@
 ﻿using MathLib.IO;
 using MathLib.MathMethods.Lyapunov;
-using MathLib.NeuralNet.Entities;
+using NeuralNet.Entities;
 using MathLib.Transform;
 using System;
 using System.Globalization;

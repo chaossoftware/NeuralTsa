@@ -1,8 +1,8 @@
 ﻿using System;
 using MathLib.MathMethods.Solvers;
-using MathLib.NeuralNet.Entities;
+using NeuralNet.Entities;
 
-namespace MathLib.NeuralNetwork {
+namespace NeuralNetwork {
     public class NeuralNetEquations : SystemEquations
     {
 

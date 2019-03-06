@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using System.Globalization;
 
-namespace MathLib.NeuralNetwork {
+namespace NeuralNetwork {
 
     /// <summary>
     /// Class Describing parameters of Neural network

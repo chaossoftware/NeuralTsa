@@ -1,7 +1,7 @@
 ﻿
-using MathLib.NeuralNetwork;
+using NeuralNetwork;
 
-namespace MathLib.NeuralNet.Entities
+namespace NeuralNet.Entities
 {
     public class HiddenNeuron : Neuron
     {

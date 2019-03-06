@@ -36,6 +36,10 @@
     <StartupObject>NeuralNetwork.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DeepLearn.NeuralNetwork, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\DeepLearn.NeuralNetwork.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -47,6 +51,17 @@
     <Compile Include="Calculations.cs" />
     <Compile Include="Charts.cs" />
     <Compile Include="DataReader.cs" />
+    <Compile Include="NeuralNet\ActivationFunction\ActivationFunction.cs" />
+    <Compile Include="NeuralNet\ActivationFunction\Functions.cs" />
+    <Compile Include="NeuralNet\Entities\BiasNeuron.cs" />
+    <Compile Include="NeuralNet\Entities\HiddenNeuron.cs" />
+    <Compile Include="NeuralNet\Entities\InputNeuron.cs" />
+    <Compile Include="NeuralNet\Entities\Neuron.cs" />
+    <Compile Include="NeuralNet\Entities\OutputNeuron.cs" />
+    <Compile Include="NeuralNet\Entities\Synapse.cs" />
+    <Compile Include="NeuralNet\NeuralNet.cs" />
+    <Compile Include="NeuralNet\NeuralNetEquations.cs" />
+    <Compile Include="NeuralNet\NeuralNetParams.cs" />
     <Compile Include="NeuralOutput.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -71,6 +86,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Lib\DeepLearn.NeuralNetwork.dll" />
     <Content Include="neural_config.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>

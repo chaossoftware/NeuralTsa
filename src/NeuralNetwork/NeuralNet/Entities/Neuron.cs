@@ -1,7 +1,7 @@
 ﻿
 using System;
 
-namespace MathLib.NeuralNet.Entities
+namespace NeuralNet.Entities
 {
     public abstract class Neuron
     {

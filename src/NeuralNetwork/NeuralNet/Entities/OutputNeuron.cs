@@ -1,5 +1,5 @@
 ﻿
-namespace MathLib.NeuralNet.Entities
+namespace NeuralNet.Entities
 {
     public class OutputNeuron : Neuron
     {
