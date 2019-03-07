@@ -1,7 +1,7 @@
 ﻿
 namespace NeuralNet.Entities
 {
-    public class InputNeuron : Neuron<InputNeuron>
+    public class InputNeuron : NudgeNeuron<InputNeuron>
     {
         public InputNeuron() : base()
         {

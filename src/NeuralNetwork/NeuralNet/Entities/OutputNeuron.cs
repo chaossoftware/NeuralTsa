@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace NeuralNet.Entities
 {
-    public class OutputNeuron : Neuron<OutputNeuron>
+    public class OutputNeuron : NudgeNeuron<OutputNeuron>
     {
         public PruneSynapse BiasInput;
 

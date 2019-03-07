@@ -2,7 +2,7 @@
 
 namespace NeuralNet.Entities
 {
-    public class BiasNeuron : Neuron<BiasNeuron>
+    public class BiasNeuron : NudgeNeuron<BiasNeuron>
     {
         public BiasNeuron() : base()
         {
@@ -15,7 +15,7 @@ namespace NeuralNet.Entities
 
         public override void Process()
         {
-            throw new Exception("Bias neuron has no inputs, so not able to process something");
+            throw new NotSupportedException("Bias neuron has no inputs, so not able to process something");
         }
     }
 }

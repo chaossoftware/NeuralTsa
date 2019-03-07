@@ -1,9 +1,9 @@
 ﻿using NeuralNet.Entities;
 using System;
+using System.Collections.Generic;
 
 namespace NeuralNetwork
 {
-
     public abstract class ActivationFunction
     {
         public abstract string Name { get; }
@@ -24,11 +24,11 @@ namespace NeuralNetwork
 
         protected void InitNetworkLayer()
         {
-            Neuron = new InputNeuron(7);
-            Neuron.Outputs = new PruneSynapse[7];
+            Neuron = new InputNeuron();
+            Neuron.Outputs = new List<PruneSynapse>(7);
 
             for (int i = 0; i < 7; i++)
-                Neuron.Outputs[i] = new PruneSynapse();
+                Neuron.Outputs[i] = new PruneSynapse(i, i);
         }
     }
 }

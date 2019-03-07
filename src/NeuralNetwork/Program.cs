@@ -34,23 +34,23 @@ namespace NeuralNetwork {
             poincare.Plot().Save(NeuralOutput.PoincarePlotFileName, ImageFormat.Png);
 
             NeuralNetParams taskParams = dr.LoadNeuralNetParams();
-            NeuralNet task = new NeuralNet(taskParams, sd.TimeSeries.YValues);
+            SciNeuralNet neuralNet = new SciNeuralNet(taskParams, sd.TimeSeries.YValues);
 
             Logger.LogInfo(taskParams.GetInfoFull(), true);
 
             Console.Title = "Signal: " + NeuralOutput.FileName + " | " + taskParams.ActFunction.Name;
             Console.WriteLine("\nStarting...");
 
-            Charts.NeuralAnimation = new Animation();
+            //Charts.NeuralAnimation = new Animation();
 
-            Calculations calc = new Calculations(task.Params);
+            Calculations calc = new Calculations(neuralNet.Params);
 
-            task.LoggingMethod = calc.LoggingEvent;
-            task.EndCycleMethod = calc.EndCycleEvent;
+            neuralNet.CycleComplete += calc.LogCycle;
+            neuralNet.EpochComplete += calc.PerformCalculations;
 
-            task.RunTask();
+            neuralNet.Process();
 
-            Charts.NeuralAnimation.SaveAnimation(NeuralOutput.BasePath + "_neural_anim.gif");
+            //Charts.NeuralAnimation.SaveAnimation(NeuralOutput.BasePath + "_neural_anim.gif");
         }
     }
 }

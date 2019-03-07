@@ -251,24 +251,24 @@ namespace NeuralNetwork {
 
 
 
-        public void LoggingEvent() {
-            Charts.NeuralAnimation.AddFrame(Charts.DrawNetworkState(800, NeuralNet.NeuronsHidden, NeuralNet.Params.CMax * NeuralNet.successCount + NeuralNet._c));
-            Console.WriteLine("{0}\tE: {1:0.#####e-0}", NeuralNet._c, NeuralNet.NeuronOutput.Memory[0]);
+        public void LogCycle(SciNeuralNet net) {
+            //Charts.NeuralAnimation.AddFrame(Charts.DrawNetworkState(800, net.NeuronsHidden, net.Params.CMax * net.successCount + net._c));
+            Console.WriteLine("{0}\tE: {1:0.#####e-0}", net._c, net.OutputLayer.Neurons[0].Memory[0]);
         }
 
 
-        public void EndCycleEvent() {
-            double _le = CalculateLargestLyapunovExponent(NeuralNet.xdata, NeuralNet.NeuronsInput, NeuralNet.NeuronsHidden, NeuralNet.NeuronOutput, NeuralNet.NeuronConstant, NeuralNet.NeuronBias);
+        public void PerformCalculations(SciNeuralNet net) {
+            double _le = CalculateLargestLyapunovExponent(net.xdata, net.InputLayer.Neurons, net.HiddenLayer.Neurons, net.OutputLayer.Neurons[0], net.NeuronConstant, net.NeuronBias);
             Console.WriteLine("\nLLE = {0:F5}\n\n", _le);
 
-            NeuralNet.Task_Result = CalculateLyapunovSpectrum(NeuralNet.xdata, NeuralNet.NeuronsInput, NeuralNet.NeuronsHidden, NeuralNet.System_Equations, NeuralNet.NeuronConstant, NeuralNet.NeuronBias);
+            net.Task_Result = CalculateLyapunovSpectrum(net.xdata, net.InputLayer.Neurons, net.HiddenLayer.Neurons, net.System_Equations, net.NeuronConstant, net.NeuronBias);
 
-            ConstructAttractor(NeuralNet.xdata, NeuralNet.NeuronsInput, NeuralNet.NeuronsHidden, NeuralNet.NeuronOutput, NeuralNet.NeuronConstant, NeuralNet.NeuronBias);
-            Prediction(NeuralNet.xdata, NeuralNet.NeuronsInput, NeuralNet.NeuronsHidden, NeuralNet.Params.PtsToPredict, NeuralNet.NeuronConstant, NeuralNet.NeuronBias);
+            ConstructAttractor(net.xdata, net.InputLayer.Neurons, net.HiddenLayer.Neurons, net.OutputLayer.Neurons[0], net.NeuronConstant, net.NeuronBias);
+            Prediction(net.xdata, net.InputLayer.Neurons, net.HiddenLayer.Neurons, net.Params.PtsToPredict, net.NeuronConstant, net.NeuronBias);
 
-            NeuralOutput.SaveDebugInfoToFile(NeuralNet.NeuronOutput.Memory[0], NeuralNet.Task_Result, _le, NeuralNet.NeuronsInput, NeuralNet.NeuronOutput, NeuralNet.NeuronsHidden, NeuralNet.NeuronConstant, NeuralNet.NeuronBias);
+            NeuralOutput.SaveDebugInfoToFile(net.OutputLayer.Neurons[0].Memory[0], net.Task_Result, _le, net.InputLayer.Neurons, net.OutputLayer.Neurons[0], net.HiddenLayer.Neurons, net.NeuronConstant, net.NeuronBias);
 
-            Charts.DrawNetworkState(1080, NeuralNet.NeuronsHidden, NeuralNet.successCount * Task_Params.CMax).Save(NeuralOutput.NetworkPlotPlotFileName, ImageFormat.Png);
+            //Charts.DrawNetworkState(1080, net.NeuronsHidden, net.successCount * Task_Params.CMax).Save(NeuralOutput.NetworkPlotPlotFileName, ImageFormat.Png);
         }
 
     }

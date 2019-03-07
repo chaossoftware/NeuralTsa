@@ -5,7 +5,7 @@ using NeuralNetwork;
 
 namespace NeuralNet.Entities
 {
-    public class HiddenNeuron : Neuron<HiddenNeuron>
+    public class HiddenNeuron : NudgeNeuron<HiddenNeuron>
     {
         public static ActivationFunction Function;
         public PruneSynapse BiasInput;

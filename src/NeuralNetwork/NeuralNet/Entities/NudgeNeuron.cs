@@ -1,19 +1,13 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using DeepLearn.NeuralNetwork.Base;
+using NeuralNetwork;
 
 namespace NeuralNet.Entities
 {
-    public abstract class Neuron<N> : INeuron<N> where N : Neuron<N>
+    public abstract class NudgeNeuron<N> : INeuron<N> where N : NudgeNeuron<N>
     {
-        public static Random Randomizer;
-
-        public double[] Memory;
-        public double[] Best;
-        public double Nudge;
-
-        protected Neuron()
+        protected NudgeNeuron()
         {
             this.Inputs = new List<PruneSynapse>();
             this.Outputs = new List<PruneSynapse>();
@@ -22,6 +16,12 @@ namespace NeuralNet.Entities
         public List<PruneSynapse> Inputs { get; set; }
 
         public List<PruneSynapse> Outputs { get; set; }
+
+        public double[] Memory { get; set; }
+
+        public double[] Best { get; set; }
+
+        public double Nudge { get; set; }
 
         public virtual void CalculateWeight(int index, double pertrubation)
         {
@@ -32,7 +32,7 @@ namespace NeuralNet.Entities
         {
             Outputs[index].Weight = Memory[index];
 
-            if(Randomizer.NextDouble() < lowerThan)
+            if(NeuronRandomizer.Randomizer.NextDouble() < lowerThan)
                 Outputs[index].Weight += pertrubation * (Gauss2() - Nudge * Math.Sign(Memory[index]));
         }
 
@@ -77,8 +77,8 @@ namespace NeuralNet.Entities
             double v1, v2, _arg;
             do
             {
-                v1 = 2d * Randomizer.NextDouble() - 1d;
-                v2 = 2d * Randomizer.NextDouble() - 1d;
+                v1 = 2d * NeuronRandomizer.Randomizer.NextDouble() - 1d;
+                v2 = 2d * NeuronRandomizer.Randomizer.NextDouble() - 1d;
                 _arg = v1 * v1 + v2 * v2;
             }
             while (_arg >= 1d || _arg == 0d);

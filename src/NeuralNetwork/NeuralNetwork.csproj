@@ -56,12 +56,13 @@
     <Compile Include="NeuralNet\Entities\BiasNeuron.cs" />
     <Compile Include="NeuralNet\Entities\HiddenNeuron.cs" />
     <Compile Include="NeuralNet\Entities\InputNeuron.cs" />
-    <Compile Include="NeuralNet\Entities\Neuron.cs" />
+    <Compile Include="NeuralNet\Entities\NudgeNeuron.cs" />
     <Compile Include="NeuralNet\Entities\OutputNeuron.cs" />
     <Compile Include="NeuralNet\Entities\PruneSynapse.cs" />
-    <Compile Include="NeuralNet\NeuralNet.cs" />
+    <Compile Include="NeuralNet\SciNeuralNet.cs" />
     <Compile Include="NeuralNet\NeuralNetEquations.cs" />
     <Compile Include="NeuralNet\NeuralNetParams.cs" />
+    <Compile Include="NeuralNet\NeuronRandomizer.cs" />
     <Compile Include="NeuralOutput.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
