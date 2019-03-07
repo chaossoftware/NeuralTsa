@@ -261,12 +261,12 @@ namespace NeuralNetwork {
             double _le = CalculateLargestLyapunovExponent(net.xdata, net.InputLayer.Neurons, net.HiddenLayer.Neurons, net.OutputLayer.Neurons[0], net.NeuronConstant, net.NeuronBias);
             Console.WriteLine("\nLLE = {0:F5}\n\n", _le);
 
-            net.Task_Result = CalculateLyapunovSpectrum(net.xdata, net.InputLayer.Neurons, net.HiddenLayer.Neurons, net.System_Equations, net.NeuronConstant, net.NeuronBias);
+            net.Benettin = CalculateLyapunovSpectrum(net.xdata, net.InputLayer.Neurons, net.HiddenLayer.Neurons, net.SystemEquations, net.NeuronConstant, net.NeuronBias);
 
             ConstructAttractor(net.xdata, net.InputLayer.Neurons, net.HiddenLayer.Neurons, net.OutputLayer.Neurons[0], net.NeuronConstant, net.NeuronBias);
             Prediction(net.xdata, net.InputLayer.Neurons, net.HiddenLayer.Neurons, net.Params.PtsToPredict, net.NeuronConstant, net.NeuronBias);
 
-            NeuralOutput.SaveDebugInfoToFile(net.OutputLayer.Neurons[0].Memory[0], net.Task_Result, _le, net.InputLayer.Neurons, net.OutputLayer.Neurons[0], net.HiddenLayer.Neurons, net.NeuronConstant, net.NeuronBias);
+            NeuralOutput.SaveDebugInfoToFile(net.OutputLayer.Neurons[0].Memory[0], net.Benettin, _le, net.InputLayer.Neurons, net.OutputLayer.Neurons[0], net.HiddenLayer.Neurons, net.NeuronConstant, net.NeuronBias);
 
             //Charts.DrawNetworkState(1080, net.NeuronsHidden, net.successCount * Task_Params.CMax).Save(NeuralOutput.NetworkPlotPlotFileName, ImageFormat.Png);
         }

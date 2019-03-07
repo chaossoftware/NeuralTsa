@@ -8,24 +8,9 @@ namespace NeuralNetwork
     /// </summary>
     public class NeuralNetParams
     {
-        public readonly double Eta = 0.999;                 //Learning rate
-        public readonly long CMax = 1000000;                //Number of iterations
-        public readonly int BiasTerm = 1;                   //0 for bias term; otherwise 1
-        public readonly int ConstantTerm = 0;               //0 for constant term; otherwise 1
-        public readonly double MaxPertrubation = 2;         //Maximum perturbation
-        public readonly double Nudge = 0.5;                 //Amount to nudge the parameters back toward zero
-        public readonly int Pruning = 0;                    //Pruning level (0 = no pruning)
-        public readonly double TestingInterval = 1e4;       //Interval for testing neural net results
-        
-        public readonly int Neurons;                        //Neurons count
-        public readonly int Dimensions;                     //System dimensions
-        public readonly int ErrorsExponent;                 //Exponent of errors
-        public readonly int Trainings;                      //Number of successful trainings to complete calculation
-        public readonly int PtsToPredict;                   //Number of points to predict
-        public readonly ActivationFunction ActFunction;     //Activation function
-
         public NeuralNetParams(int neurons, int dimensions, int errorsExponent, int trainings, 
-            int ptsToPredict, ActivationFunction actFunction) {
+            int ptsToPredict, ActivationFunction actFunction)
+        {
             Neurons = neurons;
             Dimensions = dimensions;
             ErrorsExponent = errorsExponent;
@@ -36,8 +21,8 @@ namespace NeuralNetwork
 
         public NeuralNetParams(int neurons, int dimensions, int errorsExponent, int trainings, 
             int ptsToPredict, ActivationFunction actFunction, double eta, long cmax, int biasTerm, 
-            int constantTerm, double maxPertrubation, double nudge, int pruning, double testingInterval) {
-
+            int constantTerm, double maxPertrubation, double nudge, int pruning, double testingInterval)
+        {
             Neurons = neurons;
             Dimensions = dimensions;
             ErrorsExponent = errorsExponent;
@@ -54,6 +39,48 @@ namespace NeuralNetwork
             Pruning = pruning;
             TestingInterval = testingInterval;
         }
+
+        //Learning rate
+        public double Eta { get; private set; } = 0.999;
+
+        //Number of iterations
+        public long CMax { get; private set; } = 1000000;
+
+        //0 for bias term; otherwise 1
+        public int BiasTerm { get; private set; } = 1;
+
+        //0 for constant term; otherwise 1
+        public int ConstantTerm { get; private set; } = 0;
+
+        //Maximum perturbation
+        public double MaxPertrubation { get; private set; } = 2;
+
+        //Amount to nudge the parameters back toward zero
+        public double Nudge { get; private set; } = 0.5;
+
+        //Pruning level (0 = no pruning)
+        public int Pruning { get; private set; } = 0;
+
+        //Interval for testing neural net results
+        public double TestingInterval { get; private set; } = 1e4;
+
+        //Neurons count
+        public int Neurons { get; private set; }
+
+        //System dimensions
+        public int Dimensions { get; private set; }
+
+        //Exponent of errors
+        public int ErrorsExponent { get; private set; }
+
+        //Number of successful trainings to complete calculation
+        public int Trainings { get; private set; }
+
+        //Number of points to predict
+        public int PtsToPredict { get; private set; }
+
+        //Activation function
+        public ActivationFunction ActFunction { get; private set; }
 
         public string GetInfoShort() => 
             new StringBuilder()
