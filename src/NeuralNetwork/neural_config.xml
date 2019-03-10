@@ -8,7 +8,7 @@
 		trainingsCount="1" 
 		pointsToPredict="0"
 	/>
-  <!-- Activation functions: Logistic , Sigmoid  ,Gaussian , Gaussian_derivative , Cosine , Exponential , Linear , Piecewise_linear , Hyperbolic_tangent , Binary_shift , Polynomial , Rational , Special-->
+  <!-- Activation functions: Logistic , Sigmoid , Gaussian , Gaussian_derivative , Cosine , Exponential , Linear , Piecewise_linear , Hyperbolic_tangent , Binary_shift , Polynomial , Rational , Special-->
 	
 	<LowLevelParams 
 		learningRate="0.999"
@@ -30,16 +30,16 @@
 	<!-- Interval for testing neural net results (default 1e4) -->
  
 	<FilesToAnalyse>
-    <!--file path="Test\henon" dataColumn="1" start="" end="" pts=""/-->
     <file path="TestData\henon" dataColumn="1" start="" end="" pts=""/>
 	</FilesToAnalyse>
 
-
   <Output>
     <reconstructedSignal pts=""/>
-    <wav lengthSeconds="2"/>
-    <reconstructedPoincare pts="1e5"/>
-    <model3D pts="1e5"/>
+    <wav build="yes" lengthSeconds="2"/>
+    <reconstructedPoincare build="yes" pts="1e5"/>
+    <model3D build="yes" pts="1e5"/>
+    <plots build="yes" width="640" height="360"/>
+    <animation build="yes" width="360" height="640"/>
   </Output>
 	
 </config>

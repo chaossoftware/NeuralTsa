@@ -1,5 +1,4 @@
-﻿
-namespace NeuralNet.Entities
+﻿namespace NeuralAnalyser.NeuralNet.Entities
 {
     public class InputNeuron : NudgeNeuron<InputNeuron>
     {

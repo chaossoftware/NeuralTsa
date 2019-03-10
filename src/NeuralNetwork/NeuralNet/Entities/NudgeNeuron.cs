@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using DeepLearn.NeuralNetwork.Base;
-using NeuralNetwork;
 
-namespace NeuralNet.Entities
+namespace NeuralAnalyser.NeuralNet.Entities
 {
     public abstract class NudgeNeuron<N> : INeuron<N> where N : NudgeNeuron<N>
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NeuralNetwork
+namespace NeuralAnalyser.NeuralNet.Activation
 {
     public class BinaryShiftFunction : ActivationFunction
     {

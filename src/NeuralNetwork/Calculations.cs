@@ -1,15 +1,16 @@
-﻿using MathLib;
+﻿using System;
+using System.Drawing;
+using System.Drawing.Imaging;
+using MathLib;
 using MathLib.Data;
+using MathLib.DrawEngine;
 using MathLib.DrawEngine.Charts;
 using MathLib.MathMethods.Lyapunov;
 using MathLib.MathMethods.Orthogonalization;
-using NeuralNet.Entities;
-using System;
-using System.Drawing;
-using System.Drawing.Imaging;
-using MathLib.DrawEngine;
+using NeuralAnalyser.NeuralNet;
+using NeuralAnalyser.NeuralNet.Entities;
 
-namespace NeuralNetwork
+namespace NeuralAnalyser
 {
     internal class Calculations
     {
@@ -103,6 +104,7 @@ namespace NeuralNetwork
 
             result = lyap.GetResults();
             result.LeSpectrumInTime = leInTime;
+
             NeuralOutput.CreateLeInTimeFile(leInTime);
 
             return result;

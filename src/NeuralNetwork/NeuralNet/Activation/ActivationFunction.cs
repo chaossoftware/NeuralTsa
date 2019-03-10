@@ -1,8 +1,8 @@
-﻿using NeuralNet.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using NeuralAnalyser.NeuralNet.Entities;
 
-namespace NeuralNetwork
+namespace NeuralAnalyser.NeuralNet.Activation
 {
     public abstract class ActivationFunction
     {

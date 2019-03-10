@@ -1,7 +1,8 @@
 ﻿using System.Text;
 using System.Globalization;
+using NeuralAnalyser.NeuralNet.Activation;
 
-namespace NeuralNetwork
+namespace NeuralAnalyser.NeuralNet
 {
     /// <summary>
     /// Class Describing parameters of Neural network

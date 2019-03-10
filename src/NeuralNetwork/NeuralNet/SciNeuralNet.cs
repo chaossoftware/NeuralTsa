@@ -1,9 +1,9 @@
 ﻿using System;
 using DeepLearn.NeuralNetwork.Networks;
 using MathLib;
-using NeuralNet.Entities;
+using NeuralAnalyser.NeuralNet.Entities;
 
-namespace NeuralNetwork
+namespace NeuralAnalyser.NeuralNet
 {
     public class SciNeuralNet : ThreeLayerNetwork<InputNeuron, HiddenNeuron, OutputNeuron, PruneSynapse>
     {
@@ -53,7 +53,6 @@ namespace NeuralNetwork
         {
             while (successCount < Params.Trainings)
             {
-
                 if (OutputLayer.Neurons[0].Best[0] == 0)
                 {
                     OutputLayer.Neurons[0].Memory[0] = Params.TestingInterval;
@@ -63,7 +62,6 @@ namespace NeuralNetwork
                     OutputLayer.Neurons[0].Memory[0] = 10 * OutputLayer.Neurons[0].Best[0];
                     ddw = Math.Min(Params.MaxPertrubation, Math.Sqrt(OutputLayer.Neurons[0].Best[0]));
                 }
-
 
                 #region "update memory with best results"
 
@@ -87,7 +85,6 @@ namespace NeuralNetwork
                 }
 
                 #endregion
-
 
                 int nMul_DSubCtAdd1_AddNAdd1 = neurons * (dims - Params.ConstantTerm + 1) + neurons + 1;
 
@@ -137,10 +134,7 @@ namespace NeuralNetwork
                             NeuronConstant.CalculateWeight(i, ddw, pc);
 
                             //This connection has been pruned
-                            if (NeuronConstant.Outputs[i].Prune)
-                            {
-                                NeuronConstant.Outputs[i].Weight = 0;
-                            }
+                            NeuronConstant.Outputs[i].PruneIfMarked();
                         }
 
                         for (int j = 0; j < dims; j++)
@@ -149,12 +143,9 @@ namespace NeuralNetwork
                             double dj = 1d / Math.Pow(2, minD5DivD * j);
 
                             InputLayer.Neurons[j].CalculateWeight(i, ddw * dj, pc);
-                
+
                             //This connection has been pruned
-                            if (InputLayer.Neurons[j].Outputs[i].Prune)
-                            {
-                                InputLayer.Neurons[j].Outputs[i].Weight = 0;
-                            }
+                            InputLayer.Neurons[j].Outputs[i].PruneIfMarked();
                         }
                     }
 
@@ -247,9 +238,8 @@ namespace NeuralNetwork
                         Console.WriteLine("Error during logging neural network cycle:\n" + ex);
                     }
 
-                    if(OutputLayer.Neurons[0].Memory[0] > OutputLayer.Neurons[0].Best[0] && OutputLayer.Neurons[0].Best[0] != 0)
+                    if (OutputLayer.Neurons[0].Memory[0] > OutputLayer.Neurons[0].Best[0] && OutputLayer.Neurons[0].Best[0] != 0)
                         continue;
-
 
                     // same for Activation function neuron if needed
                     if (AdditionalNeuron)
@@ -257,9 +247,9 @@ namespace NeuralNetwork
                         Params.ActFunction.Neuron.MemoryToWeights();
                     }
 
-     		
                     //Mark the weakconnections for pruning
-                    if (Params.Pruning != 0) 
+                    if (Params.Pruning != 0)
+                    {
                         for (int i = 0; i < Params.Neurons; i++)
                         {
                             for (int j = 0; j < Params.Dimensions; j++)
@@ -273,14 +263,13 @@ namespace NeuralNetwork
                             if (NeuronConstant.Memory[i] != 0 && Math.Abs(NeuronConstant.Memory[i] * this.HiddenLayer.Neurons[i].Memory[0]) < tenPowNegativePruning)
                                 NeuronConstant.Outputs[i].Prune = true;
                         }
+                    }
                 }
-
 
                 if (++countnd % 2 != 0)
                     neurons = Math.Min(neurons + 1, Params.Neurons); //Increase the number of neurons slowly
                 else
                     dims = Math.Min(dims + 1, Params.Dimensions); //And then increase the number of dimensions
-
 
                 #region "Save best weights"
 
@@ -302,7 +291,6 @@ namespace NeuralNetwork
                 }
 
                 #endregion
-
 
                 successCount++;
 

@@ -1,11 +1,12 @@
 ﻿using System;
 using MathLib.MathMethods.Solvers;
-using NeuralNet.Entities;
+using NeuralAnalyser.NeuralNet.Activation;
+using NeuralAnalyser.NeuralNet.Entities;
 
-namespace NeuralNetwork {
+namespace NeuralAnalyser.NeuralNet
+{
     public class NeuralNetEquations : SystemEquations
     {
-
         private readonly ActivationFunction Activation_Function;
         private readonly int Neurons;
 

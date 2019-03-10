@@ -6,8 +6,9 @@ using System.Threading;
 using MathLib;
 using MathLib.Data;
 using MathLib.DrawEngine.Charts;
+using NeuralAnalyser.NeuralNet;
 
-namespace NeuralNetwork
+namespace NeuralAnalyser
 {
     public class Program
     {
@@ -16,7 +17,7 @@ namespace NeuralNetwork
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
 
-            var reader = new DataReader();
+            var reader = new ConfigReader();
             var file = reader.GetFiles()[0];
             var data = new SourceData(file.FileName);
 

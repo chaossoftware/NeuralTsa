@@ -1,14 +1,16 @@
 ﻿using MathLib.IO;
 using MathLib.MathMethods.Lyapunov;
-using NeuralNet.Entities;
 using MathLib.Transform;
 using System;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using NeuralAnalyser.NeuralNet.Entities;
 
-namespace NeuralNetwork {
-    class NeuralOutput {
+namespace NeuralAnalyser
+{
+    internal class NeuralOutput
+    {
 
         public static string FileName;
         public static string OutDirectory;
@@ -23,7 +25,6 @@ namespace NeuralNetwork {
         public static string NetworkPlotPlotFileName { get { return OutDirectory + "\\" + FileName + "_network_plot.png"; } }
         public static string LeInTimeFileName { get { return BasePath + "_leInTime.le"; } }
 
-
         public static bool saveModel = true;
         public static int modelPts = 100000;
 
@@ -35,8 +36,10 @@ namespace NeuralNetwork {
 
         public static bool saveLeInTime = true;
 
-        public static void Init(string fileName) {
+        public static void Init(string fileName)
+        {
             OutDirectory = fileName + "_out";
+
             if (!Directory.Exists(OutDirectory))
                 Directory.CreateDirectory(OutDirectory);
 
@@ -44,7 +47,6 @@ namespace NeuralNetwork {
 
             Logger.Init(LogFileName);
         }
-
 
         public static void SaveDebugInfoToFile(double ebest, BenettinResult result, double _le, InputNeuron[] inputs, OutputNeuron outputNeuron, HiddenNeuron[] hiddenNeurons, BiasNeuron constant, BiasNeuron bias) {
 
@@ -88,7 +90,8 @@ namespace NeuralNetwork {
         /// <param name="xt">array of points X coordinates</param>
         /// <param name="yt">array of points Y coordinates</param>
         /// <param name="zt">array of points Z coordinates</param>
-        public static void Create3dModelFile(double[] xt, double[] yt, double[] zt) {
+        public static void Create3dModelFile(double[] xt, double[] yt, double[] zt)
+        {
             if (saveModel)
             {
                 string filePath = BasePath + "_model.ply";
@@ -96,12 +99,12 @@ namespace NeuralNetwork {
             }
         }
 
-
         /// <summary>
         /// Create file "sound" of attractor in WAV format
         /// </summary>
         /// <param name="yt">Y coordinates of attractor points</param>
-        public static void CreateWavFile(double[] yt) {
+        public static void CreateWavFile(double[] yt)
+        {
             if (saveWav)
             {
                 string filePath = BasePath + "_sound.wav";
@@ -109,44 +112,45 @@ namespace NeuralNetwork {
             }
         }
 
-
         /// <summary>
         /// Create file with predicted points coordinates
         /// Plot predicted signal
         /// </summary>
         /// <param name="predictedPoints">predicted points array</param>
-        public static void CreatePredictedDataFile(double[] predictedPoints) {
+        public static void CreatePredictedDataFile(double[] predictedPoints)
+        {
+            var prediction = new StringBuilder();
 
-            StringBuilder prediction = new StringBuilder();
-
-            foreach (double predictedPoint in predictedPoints) 
+            foreach (double predictedPoint in predictedPoints)
+            {
                 prediction.AppendFormat(CultureInfo.InvariantCulture, "{0:F10}\n", predictedPoint);
+            }
 
             DataWriter.CreateDataFile(BasePath + ".predict", prediction.ToString());
         }
 
+        public static void CreateLeInTimeFile(double[,] leInTime)
+        {
+            if (saveLeInTime)
+            {
+                var le = new StringBuilder();
 
-        public static void CreateLeInTimeFile(double[,] leInTime) {
+                for (int i = 0; i < leInTime.GetLength(1); i++)
+                {
+                    for (int j = 0; j < leInTime.GetLength(0); j++)
+                        le.AppendFormat(CultureInfo.InvariantCulture, "{0:F5}\t", leInTime[j, i]);
+                    le.Append("\n");
+                }
 
-            if (!saveLeInTime) return;
-
-            StringBuilder le = new StringBuilder();
-
-            for (int i = 0; i < leInTime.GetLength(1); i++) {
-                for (int j = 0; j < leInTime.GetLength(0); j++)
-                    le.AppendFormat(CultureInfo.InvariantCulture, "{0:F5}\t", leInTime[j, i]);
-                le.Append("\n");
+                DataWriter.CreateDataFile(LeInTimeFileName, le.ToString());
             }
-
-            DataWriter.CreateDataFile(LeInTimeFileName, le.ToString());
         }
     }
 
 
-    public class Logger {
-
+    public class Logger
+    {
         private static string LogFile;
-
 
         /// <summary>
         /// Logger initialization:
@@ -154,13 +158,15 @@ namespace NeuralNetwork {
         /// - Setting name for log-file
         /// </summary>
         /// <param name="fileName"></param>
-        public static void Init(string fileName) {
+        public static void Init(string fileName)
+        {
             File.Delete(fileName);
             File.Create(fileName).Close();
             LogFile = fileName;
         }
 
-        public static void LogInfo(string info, bool withTimestamp = false) {
+        public static void LogInfo(string info, bool withTimestamp = false)
+        {
             if (withTimestamp)
                 info = GetCurrentTime() + info;
             using (StreamWriter file = new StreamWriter(LogFile, true)) {
@@ -168,13 +174,11 @@ namespace NeuralNetwork {
             }
         }
 
-
         /// <summary>
         /// Get current date-time
         /// </summary>
         /// <returns>current date-time in format: "ShortDate - LongTime"</returns>
-        private static string GetCurrentTime() {
-            return DateTime.Now.ToShortDateString() + " - " + DateTime.Now.ToLongTimeString() + "\n";
-        }
+        private static string GetCurrentTime() => 
+            DateTime.Now.ToShortDateString() + " - " + DateTime.Now.ToLongTimeString() + "\n";
     }
 }

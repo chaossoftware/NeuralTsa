@@ -1,6 +1,6 @@
 ﻿using DeepLearn.NeuralNetwork.Base.Entities;
 
-namespace NeuralNet.Entities
+namespace NeuralAnalyser.NeuralNet.Entities
 {
     public class PruneSynapse : Synapse
     {
@@ -17,6 +17,14 @@ namespace NeuralNet.Entities
         }
 
         public bool Prune { get; set; }
+
+        public void PruneIfMarked()
+        {
+            if (this.Prune)
+            {
+                this.Weight = 0;
+            }
+        }
 
         public override object Clone()
         {

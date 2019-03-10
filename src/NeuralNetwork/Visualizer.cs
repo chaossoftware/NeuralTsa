@@ -4,9 +4,10 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Linq;
 using MathLib.DrawEngine;
-using NeuralNet.Entities;
+using NeuralAnalyser.NeuralNet;
+using NeuralAnalyser.NeuralNet.Entities;
 
-namespace NeuralNetwork
+namespace NeuralAnalyser
 {
     public class Visualizer
     {
@@ -42,7 +43,7 @@ namespace NeuralNetwork
 
         public Bitmap DrawBrain(SciNeuralNet net)
         {
-            var iteration = net.successCount * net.Params.CMax;
+            var iteration = net.current + net.successCount * net.Params.CMax;
             var g = Graphics.FromImage(bitmap);
             var gp = new GraphicsPath();
 

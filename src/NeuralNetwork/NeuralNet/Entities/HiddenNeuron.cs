@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using DeepLearn.NeuralNetwork.Base;
-using NeuralNetwork;
+﻿using NeuralAnalyser.NeuralNet.Activation;
 
-namespace NeuralNet.Entities
+namespace NeuralAnalyser.NeuralNet.Entities
 {
     public class HiddenNeuron : NudgeNeuron<HiddenNeuron>
     {
@@ -21,7 +18,7 @@ namespace NeuralNet.Entities
 
         public override void Process()
         {
-            double arg = BiasInput.Weight;// + Inputs.Select(;
+            double arg = BiasInput.Weight;
             foreach (PruneSynapse synapse in Inputs)
                 arg += synapse.Signal;
 

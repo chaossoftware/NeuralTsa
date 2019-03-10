@@ -1,7 +1,4 @@
-﻿
-using System.Collections.Generic;
-
-namespace NeuralNet.Entities
+﻿namespace NeuralAnalyser.NeuralNet.Entities
 {
     public class OutputNeuron : NudgeNeuron<OutputNeuron>
     {

@@ -7,8 +7,8 @@
     <ProjectGuid>{CA380EF7-0E34-4141-B31C-14AE4187A213}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NeuralNetwork</RootNamespace>
-    <AssemblyName>NeuralNetwork</AssemblyName>
+    <RootNamespace>NeuralAnalyser</RootNamespace>
+    <AssemblyName>NeuralAnalyser</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -33,7 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>NeuralNetwork.Program</StartupObject>
+    <StartupObject>NeuralAnalyser.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DeepLearn.NeuralNetwork, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -49,9 +49,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Calculations.cs" />
-    <Compile Include="DataReader.cs" />
-    <Compile Include="NeuralNet\ActivationFunction\ActivationFunction.cs" />
-    <Compile Include="NeuralNet\ActivationFunction\Functions.cs" />
+    <Compile Include="ConfigReader.cs" />
+    <Compile Include="NeuralNet\Activation\ActivationFunction.cs" />
+    <Compile Include="NeuralNet\Activation\Functions.cs" />
     <Compile Include="NeuralNet\Entities\BiasNeuron.cs" />
     <Compile Include="NeuralNet\Entities\HiddenNeuron.cs" />
     <Compile Include="NeuralNet\Entities\InputNeuron.cs" />
