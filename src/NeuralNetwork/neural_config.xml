@@ -1,24 +1,24 @@
 <config>
 
 	<NeuralNetParams 
-		neurons="4" 
-		dimensions="2" 
+		neurons="8" 
+		dimensions="4" 
 		activationFunction="Logistic" 
 		errorExponent="2" 
-		trainingsCount="50" 
+		trainingsCount="1" 
 		pointsToPredict="0"
 	/>
   <!-- Activation functions: Logistic , Sigmoid  ,Gaussian , Gaussian_derivative , Cosine , Exponential , Linear , Piecewise_linear , Hyperbolic_tangent , Binary_shift , Polynomial , Rational , Special-->
 	
 	<LowLevelParams 
 		learningRate="0.999"
-		cycleSize="1e6"
+		cycleSize="1e4"
 		biasTerm="1" 
 		constantTerm="0" 
 		maxPertrubation="2" 
 		nudge="0.5" 
 		pruning="0" 
-		testingInterval="1e5"
+		testingInterval="1e2"
 	/>
 	<!-- Learning rate (default 0.999)-->
 	<!-- Number of iterations per cycle (default 1e6)-->

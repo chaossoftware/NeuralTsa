@@ -1,16 +1,12 @@
 ﻿using System;
 using DeepLearn.NeuralNetwork.Networks;
 using MathLib;
-using MathLib.MathMethods.Lyapunov;
 using NeuralNet.Entities;
 
 namespace NeuralNetwork
 {
     public class SciNeuralNet : ThreeLayerNetwork<InputNeuron, HiddenNeuron, OutputNeuron, PruneSynapse>
     {
-        public BiasNeuron NeuronBias;
-        public BiasNeuron NeuronConstant;
-
         //----- input data
         private long nmax;  //lines in file
         public double[] xdata;
@@ -26,19 +22,18 @@ namespace NeuralNetwork
         private double ddw;
 
         //counters
-        public int _c, successCount;
+        public int current, successCount;
 
         private int improved = 0;
         private int seed;
 
         private bool AdditionalNeuron;
 
-        public SciNeuralNet(NeuralNetParams taskParams, double[] array) 
+        public SciNeuralNet(NeuralNetParameters taskParams, double[] array) 
             : base(taskParams.Dimensions, taskParams.Neurons, 1)
         {
             Params = taskParams;
             AdditionalNeuron = Params.ActFunction.AdditionalNeuron;
-            SystemEquations = new NeuralNetEquations(Params.Dimensions, Params.Neurons, Params.ActFunction);
             Init(array);
         }
 
@@ -48,11 +43,11 @@ namespace NeuralNetwork
 
         public event NeuralNetEvent EpochComplete;
 
-        public BenettinResult Benettin { get; set; }
+        public NeuralNetParameters Params { get; set; }
 
-        public NeuralNetParams Params { get; set; }
+        public BiasNeuron NeuronBias { get; set; }
 
-        public NeuralNetEquations SystemEquations { get; set; }
+        public BiasNeuron NeuronConstant { get; set; }
 
         public override void Process()
         {
@@ -96,7 +91,7 @@ namespace NeuralNetwork
 
                 int nMul_DSubCtAdd1_AddNAdd1 = neurons * (dims - Params.ConstantTerm + 1) + neurons + 1;
 
-                for (_c = 1; _c <= Params.CMax; _c++)
+                for (current = 1; current <= Params.CMax; current++)
                 {
                     if (Params.Pruning == 0)
                     {
@@ -120,15 +115,18 @@ namespace NeuralNetwork
                             prunes++;
                     }
 
-
                     //Probability of changing a given parameter at each trial
                     //1 / Sqrt(neurons * (dims - Task_Params.ConstantTerm + 1) + neurons + 1 - prunes)
                     double pc = 1d / Math.Sqrt(nMul_DSubCtAdd1_AddNAdd1 - prunes); 
 
                     if (Params.BiasTerm == 0)
+                    {
                         NeuronBias.CalculateWeight(0, ddw);
+                    }
                     else
+                    {
                         NeuronBias.Outputs[0].Weight = 0;
+                    }
 
                     for (int i = 0; i < neurons; i++)
                     {
@@ -140,7 +138,9 @@ namespace NeuralNetwork
 
                             //This connection has been pruned
                             if (NeuronConstant.Outputs[i].Prune)
+                            {
                                 NeuronConstant.Outputs[i].Weight = 0;
+                            }
                         }
 
                         for (int j = 0; j < dims; j++)
@@ -152,7 +152,9 @@ namespace NeuralNetwork
                 
                             //This connection has been pruned
                             if (InputLayer.Neurons[j].Outputs[i].Prune)
-                                InputLayer.Neurons[j].Outputs[i].Weight = 0; 
+                            {
+                                InputLayer.Neurons[j].Outputs[i].Weight = 0;
+                            }
                         }
                     }
 
@@ -233,7 +235,7 @@ namespace NeuralNetwork
                     NeuronRandomizer.Randomizer = new Random(seed);
         
                     //Testing is costly - don't do it too often
-                    if (_c % Params.TestingInterval != 0)
+                    if (current % Params.TestingInterval != 0)
                         continue;
 
                     try
@@ -340,7 +342,6 @@ namespace NeuralNetwork
 
             ddw = Params.MaxPertrubation;
         }
-
 
         public override void ConstructNetwork()
         {

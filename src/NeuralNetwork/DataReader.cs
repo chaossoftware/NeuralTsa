@@ -27,7 +27,7 @@ namespace NeuralNetwork
         }
 
 
-        public NeuralNetParams LoadNeuralNetParams() {
+        public NeuralNetParameters LoadNeuralNetParams() {
             int neurons, dimensions, errorExponent, trainings, ptsToPredict;
             string activationFunction;
 
@@ -66,7 +66,7 @@ namespace NeuralNetwork
             Double.TryParse(llParamsObject.Attribute("testingInterval").Value, NumberStyles.Float,
                 CultureInfo.InvariantCulture, out testingInterval);
 
-            return new NeuralNetParams(neurons, dimensions, errorExponent, trainings, ptsToPredict, 
+            return new NeuralNetParameters(neurons, dimensions, errorExponent, trainings, ptsToPredict, 
                 GetActivationFunction(activationFunction), eta, cmax, biasTerm, constantTerm,
                 maxPertrubation, nudge, pruning, testingInterval);
         }

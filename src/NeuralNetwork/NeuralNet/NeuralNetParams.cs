@@ -6,9 +6,9 @@ namespace NeuralNetwork
     /// <summary>
     /// Class Describing parameters of Neural network
     /// </summary>
-    public class NeuralNetParams
+    public class NeuralNetParameters
     {
-        public NeuralNetParams(int neurons, int dimensions, int errorsExponent, int trainings, 
+        public NeuralNetParameters(int neurons, int dimensions, int errorsExponent, int trainings, 
             int ptsToPredict, ActivationFunction actFunction)
         {
             Neurons = neurons;
@@ -19,7 +19,7 @@ namespace NeuralNetwork
             ActFunction = actFunction;
         }
 
-        public NeuralNetParams(int neurons, int dimensions, int errorsExponent, int trainings, 
+        public NeuralNetParameters(int neurons, int dimensions, int errorsExponent, int trainings, 
             int ptsToPredict, ActivationFunction actFunction, double eta, long cmax, int biasTerm, 
             int constantTerm, double maxPertrubation, double nudge, int pruning, double testingInterval)
         {
