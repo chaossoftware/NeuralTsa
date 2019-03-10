@@ -49,7 +49,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Calculations.cs" />
-    <Compile Include="ConfigReader.cs" />
+    <Compile Include="Configuration\Config.cs" />
+    <Compile Include="Configuration\OutputParameters.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="NeuralNet\Activation\ActivationFunction.cs" />
     <Compile Include="NeuralNet\Activation\Functions.cs" />
     <Compile Include="NeuralNet\Entities\BiasNeuron.cs" />
@@ -60,9 +62,8 @@
     <Compile Include="NeuralNet\Entities\PruneSynapse.cs" />
     <Compile Include="NeuralNet\SciNeuralNet.cs" />
     <Compile Include="NeuralNet\NeuralNetEquations.cs" />
-    <Compile Include="NeuralNet\NeuralNetParams.cs" />
+    <Compile Include="Configuration\NeuralNetParams.cs" />
     <Compile Include="NeuralNet\NeuronRandomizer.cs" />
-    <Compile Include="NeuralOutput.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Visualizer.cs" />

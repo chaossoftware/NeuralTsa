@@ -11,9 +11,6 @@ namespace NeuralAnalyser
 {
     public class Visualizer
     {
-        private Font font = new Font(new FontFamily("Cambria Math"), 13f);
-        private SolidBrush textBrush = new SolidBrush(Color.Black);
-
         private readonly Brush brushInactiveNeuron = Brushes.WhiteSmoke;
         private readonly Brush brushBackground = Brushes.WhiteSmoke;
         private readonly Brush brushNeuronMain = Brushes.Crimson;
@@ -43,16 +40,13 @@ namespace NeuralAnalyser
 
         public Bitmap DrawBrain(SciNeuralNet net)
         {
-            var iteration = net.current + net.successCount * net.Params.CMax;
             var g = Graphics.FromImage(bitmap);
             var gp = new GraphicsPath();
 
             g.SmoothingMode = SmoothingMode.AntiAlias;
-            g.TextRenderingHint = TextRenderingHint.AntiAlias;
 
             g.FillRectangle(Brushes.WhiteSmoke, new Rectangle(new Point(0, 0), bitmap.Size));
-            g.DrawString(string.Format("Neurons: {0} ; Dimensions: {1}\nIteration: {2:N0}", net.Params.Neurons, net.Params.Dimensions, iteration), font, textBrush, 0f, 0f);
-
+            
             int inputsCount = net.InputLayer.Neurons.Length;
             int hiddenCount = net.HiddenLayer.Neurons.Length;
             int outputsCount = net.OutputLayer.Neurons.Length;
@@ -112,6 +106,7 @@ namespace NeuralAnalyser
                 var sourceCenter = GetItemCenter(i, yOffset3, xCenter3);
                 var pointStart = new PointF(bitmap.Width, sourceCenter.Y);
                 var thickness = GetSynapseThickness(net.OutputLayer.Neurons[i].Outputs[0].Signal, minSynapseValue, maxSynapseValue);
+                thickness = Math.Min(thickness, neuronSize);
 
                 DrawSynapse(g, pointStart, sourceCenter, thickness);
                 DrawNeuron(g, gp, net.OutputLayer.Neurons[i], sourceCenter);

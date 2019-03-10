@@ -1,8 +1,8 @@
 <config>
 
 	<NeuralNetParams 
-		neurons="8" 
-		dimensions="4" 
+		neurons="4" 
+		dimensions="2" 
 		activationFunction="Logistic" 
 		errorExponent="2" 
 		trainingsCount="1" 
@@ -34,12 +34,13 @@
 	</FilesToAnalyse>
 
   <Output>
-    <reconstructedSignal pts=""/>
-    <wav build="yes" lengthSeconds="2"/>
-    <reconstructedPoincare build="yes" pts="1e5"/>
-    <model3D build="yes" pts="1e5"/>
-    <plots build="yes" width="640" height="360"/>
-    <animation build="yes" width="360" height="640"/>
+    <reconstructedSignal points="1e5"/>
+    <wav build="true"/>
+    <reconstructedPoincare build="true"/>
+    <model3D build="true"/>
+    <plots build="true" width="640" height="360"/>
+    <animation build="true" width="480" height="480"/>
+    <leInTime build="true"/>
   </Output>
 	
 </config>

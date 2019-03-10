@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
+using System.IO;
 using System.Threading;
 using MathLib;
 using MathLib.Data;
 using MathLib.DrawEngine.Charts;
+using NeuralAnalyser.Configuration;
 using NeuralAnalyser.NeuralNet;
 
 namespace NeuralAnalyser
@@ -17,36 +18,40 @@ namespace NeuralAnalyser
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
 
-            var reader = new ConfigReader();
-            var file = reader.GetFiles()[0];
-            var data = new SourceData(file.FileName);
+            var config = new Config();
+            var data = new SourceData(config.File.FileName);
 
-            data.SetTimeSeries(file.DataColumn - 1, 0, data.Length - 1, 1, false);
+            data.SetTimeSeries(config.File.DataColumn - 1, 0, data.Length - 1, 1, false);
 
-            NeuralOutput.Init(file.FileName);
+            if (!Directory.Exists(config.Output.OutDirectory))
+            {
+                Directory.CreateDirectory(config.Output.OutDirectory);
+            }
 
-            var signal = new SignalPlot(data.TimeSeries, new Size(848, 480), 1);
-            signal.Plot().Save(NeuralOutput.SignalPlotFileName, ImageFormat.Png);
+            Logger.Init(config.Output.LogFileName);
 
-            var poincare = new MapPlot(Ext.GeneratePseudoPoincareMapData(data.TimeSeries.YValues), new Size(848, 480), 1);
-            poincare.Plot().Save(NeuralOutput.PoincarePlotFileName, ImageFormat.Png);
+            new SignalPlot(data.TimeSeries, config.Output.PlotsSize, 1)
+                .Plot().Save(config.Output.SignalPlotFileName, ImageFormat.Png);
 
-            var neuralNetParameters = reader.LoadNeuralNetParams();
+            new MapPlot(Ext.GeneratePseudoPoincareMapData(data.TimeSeries.YValues), config.Output.PlotsSize, 1)
+                .Plot().Save(config.Output.PoincarePlotFileName, ImageFormat.Png);
+
+            var neuralNetParameters = config.NeuralNet;
             var neuralNet = new SciNeuralNet(neuralNetParameters, data.TimeSeries.YValues);
 
             Logger.LogInfo(neuralNetParameters.GetInfoFull(), true);
 
-            Console.Title = "Signal: " + NeuralOutput.FileName + " | " + neuralNetParameters.ActFunction.Name;
+            Console.Title = "Signal: " + config.Output.FileName + " | " + neuralNetParameters.ActFunction.Name;
             Console.WriteLine("\nStarting...");
 
-            var calculations = new Calculations(neuralNetParameters);
+            var calculations = new Calculations(neuralNetParameters, config.Output);
 
             neuralNet.CycleComplete += calculations.LogCycle;
             neuralNet.EpochComplete += calculations.PerformCalculations;
 
             neuralNet.Process();
 
-            calculations.Visualizator.NeuralAnimation.SaveAnimation(NeuralOutput.BasePath + "_neural_anim.gif");
+            calculations.Visualizator.NeuralAnimation.SaveAnimation(config.Output.AnimationFileName);
         }
     }
 }

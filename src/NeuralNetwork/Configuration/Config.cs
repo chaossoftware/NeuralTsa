@@ -1,23 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.Xml.Linq;
-using NeuralAnalyser.NeuralNet;
 using NeuralAnalyser.NeuralNet.Activation;
 
-namespace NeuralAnalyser
+namespace NeuralAnalyser.Configuration
 {
-    public class ConfigReader
+    public class Config
     {
         public const string OptionsFile = "neural_config.xml";
 
-        private XDocument config = null;
+        private XDocument configFile = null;
 
-        private XDocument Config
+        public NeuralNetParameters NeuralNet { get; protected set; }
+
+        public OutputParameters Output { get; protected set; }
+
+        public DataFile File { get; protected set; }
+
+        private XDocument ConfigFile
         {
             get
             {
-                if (config == null)
+                if (configFile == null)
                 {
                     try
                     {
@@ -29,13 +34,20 @@ namespace NeuralAnalyser
                     }
                 }
 
-                return config;
+                return configFile;
             }
         }
 
-        public NeuralNetParameters LoadNeuralNetParams()
+        public Config()
         {
-            var xParams = Config.Root.Element("NeuralNetParams");
+            LoadNeuralNetParams();
+            LoadFile();
+            LoadOutParams();
+        }
+
+        private void LoadNeuralNetParams()
+        {
+            var xParams = ConfigFile.Root.Element("NeuralNetParams");
 
             var neurons = int.Parse(xParams.Attribute("neurons").Value, 
                 NumberStyles.Integer, CultureInfo.InvariantCulture);
@@ -54,7 +66,7 @@ namespace NeuralAnalyser
             var ptsToPredict = int.Parse(xParams.Attribute("pointsToPredict").Value, 
                 NumberStyles.Integer, CultureInfo.InvariantCulture);
 
-            var xLowParams = Config.Root.Element("LowLevelParams");
+            var xLowParams = ConfigFile.Root.Element("LowLevelParams");
 
             var eta = double.Parse(xLowParams.Attribute("learningRate").Value, 
                 NumberStyles.Float, CultureInfo.InvariantCulture);
@@ -80,13 +92,15 @@ namespace NeuralAnalyser
             var testingInterval = double.Parse(xLowParams.Attribute("testingInterval").Value, 
                 NumberStyles.Float, CultureInfo.InvariantCulture);
 
-            return new NeuralNetParameters(neurons, dimensions, errorExponent, trainings, ptsToPredict, 
+            NeuralNet = new NeuralNetParameters(neurons, dimensions, errorExponent, trainings, ptsToPredict, 
                 GetActivationFunction(activationFunction), eta, cmax, biasTerm, constantTerm,
                 maxPertrubation, nudge, pruning, testingInterval);
         }
 
-        private ActivationFunction GetActivationFunction(string functionName) {
-            switch (functionName.ToLower()) {
+        private ActivationFunction GetActivationFunction(string functionName)
+        {
+            switch (functionName.ToLower())
+            {
                 case "binary_shift":
                     return new BinaryShiftFunction();
                 case "gaussian":
@@ -118,30 +132,60 @@ namespace NeuralAnalyser
             }
         }
 
-        public List<DataFile> GetFiles()
+        private void LoadOutParams()
         {
-            var files = new List<DataFile>();
+            Output = new OutputParameters(File.FileName);
 
-            var fileObject = Config.Root.Element("FilesToAnalyse");
+            var xParams = ConfigFile.Root.Element("Output");
 
+            var xWav = xParams.Element("wav");
+            var xReconstructedSignal = xParams.Element("reconstructedSignal");
+            var xReconstructedPoincare = xParams.Element("reconstructedPoincare");
+            var xModel3D = xParams.Element("model3D");
+            var xPlots = xParams.Element("plots");
+            var xAnimation = xParams.Element("animation");
+            var xLeInTime = xParams.Element("leInTime");
+
+            Output.SaveWav = bool.Parse(xWav.Attribute("build").Value);
+
+            Output.PredictedSignalPts = int.Parse(xReconstructedSignal.Attribute("points").Value,
+                NumberStyles.Float, CultureInfo.InvariantCulture);
+
+            Output.SaveModel = bool.Parse(xModel3D.Attribute("build").Value);
+
+            Output.SaveLeInTime = bool.Parse(xLeInTime.Attribute("build").Value);
+
+            Output.PlotsSize = new Size(
+                int.Parse(xPlots.Attribute("width").Value,
+                NumberStyles.Integer, CultureInfo.InvariantCulture),
+                int.Parse(xPlots.Attribute("height").Value,
+                NumberStyles.Integer, CultureInfo.InvariantCulture));
+
+            Output.SaveAnimation = bool.Parse(xAnimation.Attribute("build").Value);
+            Output.AnimationSize = new Size(
+                int.Parse(xAnimation.Attribute("width").Value,
+                NumberStyles.Integer, CultureInfo.InvariantCulture),
+                int.Parse(xAnimation.Attribute("height").Value,
+                NumberStyles.Integer, CultureInfo.InvariantCulture));
+        }
+
+        private void LoadFile()
+        {
             try
             {
-                foreach (XElement file in fileObject.Elements())
-                {
-                    string fName = file.Attribute("path").Value;
+                var xFile = ConfigFile.Root.Element("FilesToAnalyse").Element("file");
 
-                    var dataColumn = int.Parse(file.Attribute("dataColumn").Value, 
-                        NumberStyles.Integer, CultureInfo.InvariantCulture);
+                string fName = xFile.Attribute("path").Value;
 
-                    files.Add(new DataFile(fName, dataColumn));
-                }
+                var dataColumn = int.Parse(xFile.Attribute("dataColumn").Value, 
+                    NumberStyles.Integer, CultureInfo.InvariantCulture);
+
+                File = new DataFile(fName, dataColumn);
             }
             catch
             {
                 throw new ArgumentException("Unable to read files list");
             }
-
-            return files;
         }
     }
 

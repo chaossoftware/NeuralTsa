@@ -1,6 +1,7 @@
 ﻿using System;
 using DeepLearn.NeuralNetwork.Networks;
 using MathLib;
+using NeuralAnalyser.Configuration;
 using NeuralAnalyser.NeuralNet.Entities;
 
 namespace NeuralAnalyser.NeuralNet
@@ -247,7 +248,7 @@ namespace NeuralAnalyser.NeuralNet
                         Params.ActFunction.Neuron.MemoryToWeights();
                     }
 
-                    //Mark the weakconnections for pruning
+                    //Mark the weak connections for pruning
                     if (Params.Pruning != 0)
                     {
                         for (int i = 0; i < Params.Neurons; i++)
