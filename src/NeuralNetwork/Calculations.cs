@@ -23,14 +23,12 @@ namespace NeuralAnalyser
     {
         private const double Perturbation = 1e-8; //Perturbation size
 
-        private double perturbationDivSqrtD;
-        private double perturbationSqr; //Pertrubation^2
-        private NeuralNetParameters netParams;
-        private OutputParameters outParams;
-        private BenettinResult benettin;
-        private NeuralNetEquations systemEquations;
-
-        private List<double> errors = new List<double>() { 1 };
+        private readonly double perturbationDivSqrtD;
+        private readonly double perturbationSqr; //Pertrubation^2
+        private readonly NeuralNetParameters netParams;
+        private readonly OutputParameters outParams;
+        private readonly NeuralNetEquations systemEquations;
+        private readonly List<double> errors = new List<double>() { 1 };
 
         public Visualizer Visualizator { get; set; }
 
@@ -49,7 +47,6 @@ namespace NeuralAnalyser
             perturbationSqr = Math.Pow(Perturbation, 2);
             perturbationDivSqrtD = Perturbation / Math.Sqrt(parameters.Dimensions);
             systemEquations = new NeuralNetEquations(parameters.Dimensions, parameters.Neurons, parameters.ActFunction);
-            
         }
 
         public void LogCycle(SciNeuralNet net)
@@ -57,7 +54,6 @@ namespace NeuralAnalyser
             if (outParams.SaveAnimation)
             {
                 this.Visualizator.NeuralAnimation.AddFrame(PrepareAnimationFrame(net));
-                //this.Visualizator.NeuralAnimation.AddFrame(Visualizator.DrawBrain(net));
             }
 
             Console.WriteLine("{0}\tE: {1:0.#####e-0}", net.current, net.OutputLayer.Neurons[0].Memory[0]);
@@ -71,8 +67,7 @@ namespace NeuralAnalyser
             Console.WriteLine("LLE = {0:F5}", lle);
             Console.WriteLine("----------------------------------\n\n");
 
-
-            benettin = CalculateLyapunovSpectrum(net, systemEquations);
+            var benettin = CalculateLyapunovSpectrum(net, systemEquations);
 
             ConstructAttractor(net);
 
@@ -83,7 +78,7 @@ namespace NeuralAnalyser
 
             SaveDebugInfoToFile(net, benettin, lle);
 
-            Visualizator.DrawBrain(net).Save(outParams.NetworkPlotPlotFileName, ImageFormat.Png);
+            Visualizator.DrawBrain(net).Save(outParams.NetPlotFile, ImageFormat.Png);
         }
 
         private Bitmap PrepareAnimationFrame(SciNeuralNet net)
@@ -97,11 +92,12 @@ namespace NeuralAnalyser
             plot.AddDataSeries(new Timeseries(new double[] { 0, 0 }), Color.Black);
             plot.AddDataSeries(new Timeseries(new double[] { 1, 1 }), Color.Black);
             plot.AddDataSeries(new Timeseries(errors.ToArray()), Color.Blue);
+            plot.LabelY = "Training error";
+            plot.LabelX = "Training cycle";
             var chart = plot.Plot();
 
             var stringFormat = new StringFormat();
             stringFormat.Alignment = StringAlignment.Far;
-            //stringFormat.LineAlignment = StringAlignment.Center;
             var font = new Font(new FontFamily("Cambria Math"), 13f);
             var textBrush = new SolidBrush(Color.Black);
 
@@ -119,47 +115,51 @@ namespace NeuralAnalyser
 
         private BenettinResult CalculateLyapunovSpectrum(SciNeuralNet net, NeuralNetEquations systemEquations)
         {
+            int dim = systemEquations.EquationsCount;
+            int dimPlusOne = systemEquations.TotalEquationsCount;
 
-            int Dim = systemEquations.EquationsCount;
-            int DimPlusOne = systemEquations.TotalEquationsCount;
-
-            Orthogonalization Ort = new ModifiedGrammSchmidt(Dim);
-            BenettinMethod lyap = new BenettinMethod(Dim);
+            var ort = new ModifiedGrammSchmidt(dim);
+            var lyap = new BenettinMethod(dim);
             BenettinResult result;
 
             double time = 0;                 //time
             int irate = 1;                   //integration steps per reorthonormalization
-            int io = net.xdata.Length - Dim - 1;     //number of iterations of the Map
+            int io = net.xdata.Length - dim - 1;     //number of iterations of the Map
 
-            double[,] x = new double[DimPlusOne, Dim];
-            double[,] xnew = new double[DimPlusOne, Dim];
-            double[,] v = new double[DimPlusOne, Dim];
-            double[] znorm = new double[Dim];
+            double[,] x = new double[dimPlusOne, dim];
+            double[,] xnew;// = new double[DimPlusOne, Dim];
+            double[,] v = new double[dimPlusOne, dim];
+            double[] znorm = new double[dim];
 
-            double[,] leInTime = new double[Dim, io];
+            double[,] leInTime = new double[dim, io];
 
             systemEquations.Init(v, net.xdata);
 
-            for (int m = 0; m < io; m++) {
-                for (int j = 0; j < irate; j++) {
-
+            for (int m = 0; m < io; m++)
+            {
+                for (int j = 0; j < irate; j++)
+                {
                     Array.Copy(v, x, v.Length);
 
                     //Use actual data rather than iterated data
-                    for (int i = 0; i < Dim; i++)
-                        x[0, i] = net.xdata[Dim - i + m - 1];
+                    for (int i = 0; i < dim; i++)
+                    {
+                        x[0, i] = net.xdata[dim - i + m - 1];
+                    }
 
-                    xnew = systemEquations.Derivs(x, Get2DArray(net.HiddenLayer.Neurons, net.InputLayer.Neurons, net.NeuronConstant), Get1DArray(net.HiddenLayer.Neurons), net.NeuronBias.Outputs[0].Weight, net.NeuronConstant);
+                    xnew = systemEquations.Derivs(x, Get2DArray(net.HiddenLayer.Neurons, net.InputLayer.Neurons), Get1DArray(net.HiddenLayer.Neurons), net.NeuronBias.Outputs[0].Weight, net.NeuronConstant);
                     Array.Copy(xnew, v, xnew.Length);
 
                     time++;
                 }
 
-                Ort.Perform(v, znorm);
+                ort.Perform(v, znorm);
                 lyap.calculateLE(znorm, time);
 
-                for (int k = 0; k < Dim; k++) {
-                    if (znorm[k] > 0) {
+                for (int k = 0; k < dim; k++)
+                {
+                    if (znorm[k] > 0)
+                    {
                         leInTime[k, m] = Math.Log(znorm[k]);
                     }
                 }
@@ -176,13 +176,18 @@ namespace NeuralAnalyser
             return result;
         }
 
-        private double[,] Get2DArray(HiddenNeuron[] neurons, InputNeuron[] inputs, BiasNeuron constant)
+        private double[,] Get2DArray(HiddenNeuron[] neurons, InputNeuron[] inputs)
         {
             double[,] arr = new double[neurons.Length, inputs.Length];
 
             for (int i = 0; i < neurons.Length; i++)
+            {
                 for (int j = 0; j < inputs.Length; j++)
+                {
                     arr[i, j] = inputs[j].Outputs[i].Weight;
+
+                }
+            }
 
             return arr;
         }
@@ -192,7 +197,9 @@ namespace NeuralAnalyser
             double[] arr = new double[neurons.Length];
 
             for (int i = 0; i < neurons.Length; i++)
-                    arr[i] = neurons[i].Outputs[0].Weight;
+            {
+                arr[i] = neurons[i].Outputs[0].Weight;
+            }
 
             return arr;
         }
@@ -207,21 +214,25 @@ namespace NeuralAnalyser
 
             double _arg, x;
             double[] dx = new double[netParams.Dimensions];
+            double ltot = 0d;
 
             for (int j = 0; j < netParams.Dimensions; j++)
+            {
                 dx[j] = perturbationDivSqrtD;
-
-            double _ltot = 0d;
+            }
 
             for (int k = netParams.Dimensions; k < nmax; k++)
             {
                 x = net.NeuronBias.Outputs[0].Weight;
+
                 for (int i = 0; i < netParams.Neurons; i++)
                 {
                     _arg = net.NeuronConstant.Outputs[i].Weight;
 
                     for (int j = 0; j < netParams.Dimensions; j++)
+                    {
                         _arg += net.InputLayer.Neurons[j].Outputs[i].Weight * net.xdata[k - j - 1];
+                    }
 
                     x += net.HiddenLayer.Neurons[i].Outputs[0].Weight * netParams.ActFunction.Phi(_arg);
                 }
@@ -233,7 +244,9 @@ namespace NeuralAnalyser
                     _arg = net.NeuronConstant.Outputs[i].Weight;
 
                     for (int j = 0; j < netParams.Dimensions; j++)
+                    {
                         _arg += net.InputLayer.Neurons[j].Outputs[i].Weight * (net.xdata[k - j - 1] + dx[j]);
+                    }
 
                     xe += net.HiddenLayer.Neurons[i].Outputs[0].Weight * netParams.ActFunction.Phi(_arg);
                 }
@@ -251,17 +264,19 @@ namespace NeuralAnalyser
                 rs = Math.Sqrt(rs / perturbationSqr);
 
                 for (int j = 0; j < netParams.Dimensions; j++)
+                {
                     dx[j] /= rs;
+                }
 
-                _ltot += Math.Log(rs);
+                ltot += Math.Log(rs);
             }
 
-            return _ltot / (nmax - netParams.Dimensions);
+            return ltot / (nmax - netParams.Dimensions);
         }
 
         private void ConstructAttractor(SciNeuralNet net)
         {
-            long pts = 50000;
+            long pts = outParams.PredictedSignalPts;
 
             double[] xt = new double[pts];
             double[] yt = new double[pts];
@@ -269,7 +284,9 @@ namespace NeuralAnalyser
             double[] xlast = new double[netParams.Dimensions + 1];
 
             for (int j = 0; j <= netParams.Dimensions; j++)
+            {
                 xlast[j] = net.xdata[net.xdata.Length - 1 - j];
+            }
 
             for (long t = 1; t < pts; t++)
             {
@@ -280,13 +297,17 @@ namespace NeuralAnalyser
                     double _arg = net.NeuronConstant.Best[i];
 
                     for (int j = 0; j < netParams.Dimensions; j++)
+                    {
                         _arg += net.InputLayer.Neurons[j].Best[i] * xlast[j - 1 + 1];
+                    }
 
                     xnew += net.HiddenLayer.Neurons[i].Best[0] * netParams.ActFunction.Phi(_arg);
                 }
 
                 for (int j = netParams.Dimensions; j > 0; j--)
+                {
                     xlast[j] = xlast[j - 1];
+                }
 
                 yt[t] = xnew;
                 xlast[0] = xnew;
@@ -297,35 +318,35 @@ namespace NeuralAnalyser
 
             try
             {
-                double[] constructedSignal = new double[net.xdata.Length];
+                var constructedSignal = new double[net.xdata.Length];
                 Array.Copy(xt, constructedSignal, net.xdata.Length);
 
-                new SignalPlot(new Timeseries(constructedSignal), outParams.PlotsSize, 1)
+                new SignalPlot(new Timeseries(constructedSignal), outParams.PlotsSize)
                     .Plot()
-                    .Save(outParams.ReconstructedSignalPlotFileName, ImageFormat.Png);
+                    .Save(outParams.ReconstructedSignalPlotFile, ImageFormat.Png);
 
-                new MapPlot(Ext.GeneratePseudoPoincareMapData(xt), outParams.PlotsSize, 1)
+                new MapPlot(Ext.GeneratePseudoPoincareMapData(xt), outParams.PlotsSize)
                     .Plot()
-                    .Save(outParams.ReconstructedPoincarePlotFileName, ImageFormat.Png);
+                    .Save(outParams.ReconstructedPoincarePlotFile, ImageFormat.Png);
             }
-            catch
+            catch (Exception ex)
             {
-                Console.WriteLine("Prediction was not succeeded, unable to build charts");
+                Console.WriteLine("Prediction was not succeeded, unable to build charts: " + ex);
             }
 
             if (outParams.SaveModel)
             {
-                Model3D.Create3dPlyModelFile(outParams.ModelFileName, xt, yt, zt);
+                Model3D.Create3dPlyModelFile(outParams.ModelFile, xt, yt, zt);
             }
 
             if (outParams.SaveWav)
             {
-                Sound.CreateWavFile(outParams.WavFileName, yt);
+                Sound.CreateWavFile(outParams.WavFile, yt);
             }
         }
 
-        private void Prediction(SciNeuralNet net) {
-
+        private void Prediction(SciNeuralNet net)
+        {
             var pointsToPredict = net.Params.PtsToPredict;
 
             double[] xpred = new double[pointsToPredict + netParams.Dimensions];
@@ -355,8 +376,8 @@ namespace NeuralAnalyser
                 xpred[k] = _xpred;
             }
 
-            var prediction = new SignalPlot(new Timeseries(xpred), outParams.PlotsSize, 1);
-            prediction.Plot().Save(outParams.PredictedSignalPlotFileName, ImageFormat.Png);
+            new SignalPlot(new Timeseries(xpred), outParams.PlotsSize)
+                .Plot().Save(outParams.ReconstructedSignalPlotFile, ImageFormat.Png);
 
             var pred = new StringBuilder();
 
@@ -365,7 +386,7 @@ namespace NeuralAnalyser
                 pred.AppendFormat(CultureInfo.InvariantCulture, "{0:" + NumFormat.General + "}\n", predictedPoint);
             }
 
-            DataWriter.CreateDataFile(outParams.PredictFileName, prediction.ToString());
+            DataWriter.CreateDataFile(outParams.PredictFile, pred.ToString());
         }
 
         private void SaveDebugInfoToFile(SciNeuralNet net, BenettinResult benettin, double lle)
@@ -380,7 +401,7 @@ namespace NeuralAnalyser
 
             for (int i = 0; i < net.Params.Neurons; i++)
             {
-                debug.AppendFormat("Neuron {0} :\t\t\t", i + 1);
+                debug.AppendFormat("Neuron {0} :\t\t", i + 1);
             }
 
             debug.AppendLine();
@@ -428,7 +449,7 @@ namespace NeuralAnalyser
                 le.AppendLine();
             }
 
-            DataWriter.CreateDataFile(outParams.LeInTimeFileName, le.ToString());
+            DataWriter.CreateDataFile(outParams.LeInTimeFile, le.ToString());
         }
     }
 }

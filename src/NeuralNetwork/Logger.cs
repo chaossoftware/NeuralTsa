@@ -3,7 +3,7 @@ using System.IO;
 
 namespace NeuralAnalyser
 {
-    public class Logger
+    public static class Logger
     {
         private static string LogFile;
 

@@ -28,13 +28,13 @@ namespace NeuralAnalyser
                 Directory.CreateDirectory(config.Output.OutDirectory);
             }
 
-            Logger.Init(config.Output.LogFileName);
+            Logger.Init(config.Output.LogFile);
 
             new SignalPlot(data.TimeSeries, config.Output.PlotsSize, 1)
-                .Plot().Save(config.Output.SignalPlotFileName, ImageFormat.Png);
+                .Plot().Save(config.Output.SignalPlotFile, ImageFormat.Png);
 
             new MapPlot(Ext.GeneratePseudoPoincareMapData(data.TimeSeries.YValues), config.Output.PlotsSize, 1)
-                .Plot().Save(config.Output.PoincarePlotFileName, ImageFormat.Png);
+                .Plot().Save(config.Output.PoincarePlotFile, ImageFormat.Png);
 
             var neuralNetParameters = config.NeuralNet;
             var neuralNet = new SciNeuralNet(neuralNetParameters, data.TimeSeries.YValues);
@@ -51,7 +51,7 @@ namespace NeuralAnalyser
 
             neuralNet.Process();
 
-            calculations.Visualizator.NeuralAnimation.SaveAnimation(config.Output.AnimationFileName);
+            calculations.Visualizator.NeuralAnimation.SaveAnimation(config.Output.AnimationFile);
         }
     }
 }

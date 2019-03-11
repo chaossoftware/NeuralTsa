@@ -33,28 +33,26 @@ namespace NeuralAnalyser.Configuration
 
         public Size AnimationSize { get; set; } = new Size(360, 640);
 
-        public string LogFileName => Path.Combine(OutDirectory, "log.txt");
+        public string LogFile => Path.Combine(OutDirectory, "log.txt");
 
-        public string SignalPlotFileName => Path.Combine(OutDirectory, FileName + "_signal.png");
+        public string SignalPlotFile => Path.Combine(OutDirectory, FileName + "_signal.png");
 
-        public string PoincarePlotFileName => Path.Combine(OutDirectory, FileName + "_poincare.png");
+        public string PoincarePlotFile => Path.Combine(OutDirectory, FileName + "_poincare.png");
 
-        public string PredictFileName => Path.Combine(OutDirectory, FileName + ".predict");
+        public string PredictFile => Path.Combine(OutDirectory, FileName + ".predict");
 
-        public string ReconstructedSignalPlotFileName => Path.Combine(OutDirectory, FileName + "_reconstructed_signal.png");
+        public string ReconstructedSignalPlotFile => Path.Combine(OutDirectory, FileName + "_reconstructed_signal.png");
 
-        public string ReconstructedPoincarePlotFileName => Path.Combine(OutDirectory, FileName + "_reconstructed_poincare.png");
+        public string ReconstructedPoincarePlotFile => Path.Combine(OutDirectory, FileName + "_reconstructed_poincare.png");
 
-        public string PredictedSignalPlotFileName => Path.Combine(OutDirectory, FileName + "_reconstructed_signal.png");
+        public string NetPlotFile => Path.Combine(OutDirectory, FileName + "_network_plot.png");
 
-        public string NetworkPlotPlotFileName => Path.Combine(OutDirectory, FileName + "_network_plot.png");
+        public string LeInTimeFile => Path.Combine(OutDirectory, FileName + "_leInTime.le");
 
-        public string LeInTimeFileName => Path.Combine(OutDirectory, FileName + "_leInTime.le");
+        public string ModelFile => Path.Combine(OutDirectory, FileName + "_model.ply");
 
-        public string ModelFileName => Path.Combine(OutDirectory, FileName + "_model.ply");
+        public string WavFile => Path.Combine(OutDirectory, FileName + "_sound.wav");
 
-        public string WavFileName => Path.Combine(OutDirectory, FileName + "_sound.wav");
-
-        public string AnimationFileName => Path.Combine(OutDirectory, FileName + "_neural_anim.gif");
+        public string AnimationFile => Path.Combine(OutDirectory, FileName + "_neural_anim.gif");
     }
 }
