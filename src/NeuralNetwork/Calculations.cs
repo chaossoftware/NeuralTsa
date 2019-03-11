@@ -28,6 +28,9 @@ namespace NeuralAnalyser
         private readonly NeuralNetParameters netParams;
         private readonly OutputParameters outParams;
         private readonly NeuralNetEquations systemEquations;
+
+        private readonly List<double[]> errorsHistory = new List<double[]>();
+
         private readonly List<double> errors = new List<double>() { 1 };
 
         public Visualizer Visualizator { get; set; }
@@ -79,19 +82,31 @@ namespace NeuralAnalyser
             SaveDebugInfoToFile(net, benettin, lle);
 
             Visualizator.DrawBrain(net).Save(outParams.NetPlotFile, ImageFormat.Png);
+
+            if (outParams.SaveAnimation)
+            {
+                errorsHistory.Add(errors.ToArray());
+                errors.Clear();
+                errors.Add(1);
+            }
         }
 
         private Bitmap PrepareAnimationFrame(SciNeuralNet net)
         {
-            errors.Add(Math.Min(net.OutputLayer.Neurons[0].Memory[0], 1));
+            errors.Add(Math.Min(Math.Log10(net.OutputLayer.Neurons[0].Memory[0]), 1));
 
             var result = new Bitmap(outParams.AnimationSize.Width * 2, outParams.AnimationSize.Height);
             var netImg = Visualizator.DrawBrain(net);
 
             var plot = new MultiSignalPlot(outParams.AnimationSize, 1);
-            plot.AddDataSeries(new Timeseries(new double[] { 0, 0 }), Color.Black);
-            plot.AddDataSeries(new Timeseries(new double[] { 1, 1 }), Color.Black);
+
+            foreach (var tSeries in errorsHistory)
+            {
+                plot.AddDataSeries(new Timeseries(tSeries), Color.LightBlue);
+            }
+
             plot.AddDataSeries(new Timeseries(errors.ToArray()), Color.Blue);
+
             plot.LabelY = "Training error";
             plot.LabelX = "Training cycle";
             var chart = plot.Plot();
