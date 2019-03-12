@@ -34,6 +34,8 @@ namespace NeuralAnalyser
 
         private readonly List<double> errors = new List<double>();
 
+        private Bitmap poincare = null;
+
         public Visualizer Visualizator { get; set; }
 
         public Calculations(NeuralNetParameters parameters, OutputParameters outParameters)
@@ -93,6 +95,12 @@ namespace NeuralAnalyser
 
         private Bitmap PrepareAnimationFrame(SciNeuralNet net)
         {
+            if (poincare == null)
+            {
+                var size = new Size(outParams.AnimationSize.Width * 2, outParams.AnimationSize.Width);
+                poincare = new MapPlot(Ext.GeneratePseudoPoincareMapData(net.xdata), size, 1).Plot();
+            }
+
             var error = Math.Log10(net.OutputLayer.Neurons[0].Memory[0]);
             error = Math.Min(error, 0);
             error = Math.Max(error, -10);
@@ -104,7 +112,7 @@ namespace NeuralAnalyser
 
             errors.Add(error);
 
-            var result = new Bitmap(outParams.AnimationSize.Width * 2, outParams.AnimationSize.Height);
+            var result = new Bitmap(outParams.AnimationSize.Width * 2, outParams.AnimationSize.Height + outParams.AnimationSize.Width);
             var netImg = Visualizator.DrawBrain(net);
 
             var plot = new MultiSignalPlot(outParams.AnimationSize, 1);
@@ -133,6 +141,7 @@ namespace NeuralAnalyser
                 g.TextRenderingHint = TextRenderingHint.AntiAlias;
                 g.DrawImage(netImg, new Point(0, 0));
                 g.DrawImage(chart, new Point(outParams.AnimationSize.Width, 0));
+                g.DrawImage(poincare, new Point(0, outParams.AnimationSize.Height));
 
                 g.DrawString(string.Format("Dimensions: {1}\nNeurons: {0}\nIteration: {2:N0}", net.Params.Neurons, net.Params.Dimensions, net.current + net.successCount * net.Params.CMax), font, textBrush, outParams.AnimationSize.Width * 2, 0f, stringFormat);
             }
@@ -369,6 +378,23 @@ namespace NeuralAnalyser
             if (outParams.SaveWav)
             {
                 Sound.CreateWavFile(outParams.WavFile, yt);
+            }
+
+            if (outParams.SaveAnimation)
+            {
+                var size = new Size(outParams.AnimationSize.Width * 2, outParams.AnimationSize.Width);
+
+                try
+                {
+                    var plot = new MultiMapPlot(size, 1);
+                    plot.AddDataSeries(Ext.GeneratePseudoPoincareMapData(xt), Color.SteelBlue);
+                    plot.AddDataSeries(Ext.GeneratePseudoPoincareMapData(net.xdata), Color.OrangeRed);
+                    poincare = plot.Plot();
+                }
+                catch
+                {
+                    poincare = new MapPlot(Ext.GeneratePseudoPoincareMapData(net.xdata), size, 1).Plot();
+                }
             }
         }
 

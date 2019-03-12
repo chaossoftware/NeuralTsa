@@ -51,7 +51,10 @@ namespace NeuralAnalyser
 
             neuralNet.Process();
 
-            calculations.Visualizator.NeuralAnimation.SaveAnimation(config.Output.AnimationFile);
+            if (config.Output.SaveAnimation)
+            {
+                calculations.Visualizator.NeuralAnimation.SaveAnimation(config.Output.AnimationFile);
+            }
         }
     }
 }
