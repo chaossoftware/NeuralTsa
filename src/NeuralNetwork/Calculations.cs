@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using MathLib;
 using MathLib.Data;
@@ -31,7 +32,7 @@ namespace NeuralAnalyser
 
         private readonly List<double[]> errorsHistory = new List<double[]>();
 
-        private readonly List<double> errors = new List<double>() { 1 };
+        private readonly List<double> errors = new List<double>();
 
         public Visualizer Visualizator { get; set; }
 
@@ -87,18 +88,29 @@ namespace NeuralAnalyser
             {
                 errorsHistory.Add(errors.ToArray());
                 errors.Clear();
-                errors.Add(1);
             }
         }
 
         private Bitmap PrepareAnimationFrame(SciNeuralNet net)
         {
-            errors.Add(Math.Min(Math.Log10(net.OutputLayer.Neurons[0].Memory[0]), 1));
+            var error = Math.Log10(net.OutputLayer.Neurons[0].Memory[0]);
+            error = Math.Min(error, 0);
+            error = Math.Max(error, -10);
+
+            if (!errors.Any())
+            {
+                errors.Add(error);
+            }
+
+            errors.Add(error);
 
             var result = new Bitmap(outParams.AnimationSize.Width * 2, outParams.AnimationSize.Height);
             var netImg = Visualizator.DrawBrain(net);
 
             var plot = new MultiSignalPlot(outParams.AnimationSize, 1);
+
+            plot.AddDataSeries(new Timeseries(new double[] { 0, 0 }), Color.Black);
+            plot.AddDataSeries(new Timeseries(new double[] { -10, -10 }), Color.Black);
 
             foreach (var tSeries in errorsHistory)
             {
@@ -107,13 +119,13 @@ namespace NeuralAnalyser
 
             plot.AddDataSeries(new Timeseries(errors.ToArray()), Color.Blue);
 
-            plot.LabelY = "Training error";
-            plot.LabelX = "Training cycle";
+            plot.LabelY = "Training error (Log10)";
+            plot.LabelX = "cycle #";
             var chart = plot.Plot();
 
             var stringFormat = new StringFormat();
             stringFormat.Alignment = StringAlignment.Far;
-            var font = new Font(new FontFamily("Cambria Math"), 13f);
+            var font = new Font(new FontFamily("Cambria Math"), 11f);
             var textBrush = new SolidBrush(Color.Black);
 
             using (Graphics g = Graphics.FromImage(result))
