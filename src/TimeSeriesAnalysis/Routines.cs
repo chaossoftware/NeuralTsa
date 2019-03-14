@@ -42,13 +42,14 @@ namespace TimeSeriesAnalysis
             }
             else
             {
-                lyap = new MultiSignalPlot(size, 1);
+                lyap = new MultiSignalPlot(size);
                 ((MultiSignalPlot)lyap).AddDataSeries(lyapunov.slope, Color.SteelBlue);
                 var markerSeries = new Timeseries();
                 markerSeries.AddDataPoint(lyapunov.slope.DataPoints[startPoint].X, lyapunov.slope.DataPoints[startPoint].Y);
                 markerSeries.AddDataPoint(lyapunov.slope.DataPoints[range - 1].X, lyapunov.slope.DataPoints[range - 1].Y);
                 ((MultiSignalPlot)lyap).AddDataSeries(markerSeries, Color.Red);
                 lyap.LabelY = "Slope";
+                lyap.LabelX = "t";
 
                 result = string.Format("{0:F5}",
                     (lyapunov.slope.DataPoints[endPoint].Y - lyapunov.slope.DataPoints[startPoint].Y) / (lyapunov.slope.DataPoints[endPoint].X - lyapunov.slope.DataPoints[startPoint].X)

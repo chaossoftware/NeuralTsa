@@ -115,7 +115,7 @@ namespace NeuralAnalyser
             var result = new Bitmap(outParams.AnimationSize.Width * 2, outParams.AnimationSize.Height + outParams.AnimationSize.Width);
             var netImg = Visualizator.DrawBrain(net);
 
-            var plot = new MultiSignalPlot(outParams.AnimationSize, 1);
+            var plot = new MultiSignalPlot(outParams.AnimationSize);
 
             plot.AddDataSeries(new Timeseries(new double[] { 0, 0 }), Color.Black);
             plot.AddDataSeries(new Timeseries(new double[] { -10, -10 }), Color.Black);
@@ -386,7 +386,7 @@ namespace NeuralAnalyser
 
                 try
                 {
-                    var plot = new MultiMapPlot(size, 1);
+                    var plot = new MultiMapPlot(size);
                     plot.AddDataSeries(Ext.GeneratePseudoPoincareMapData(xt), Color.SteelBlue);
                     plot.AddDataSeries(Ext.GeneratePseudoPoincareMapData(net.xdata), Color.OrangeRed);
                     poincare = plot.Plot();
