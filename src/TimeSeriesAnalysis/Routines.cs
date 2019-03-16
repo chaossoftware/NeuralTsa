@@ -22,8 +22,8 @@ namespace TimeSeriesAnalysis
                 LabelX = "t"
             };
         
-        public MapPlot GetPoincarePlot(Size size, int thickness) =>
-            new MapPlot(PseudoPoincareMap.GetMapDataFrom(sourceData.TimeSeries.YValues), size, thickness);
+        public ScatterPlot GetPoincarePlot(Size size, int thickness) =>
+            new ScatterPlot(size, PseudoPoincareMap.GetMapDataFrom(sourceData.TimeSeries.YValues), Color.SteelBlue, thickness);
 
         public PlotObject GetLyapunovPlot(Size size, int thickness, int startPoint, int endPoint, bool isWolf, out string result)
         {

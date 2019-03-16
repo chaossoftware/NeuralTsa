@@ -36,7 +36,7 @@ namespace NeuralAnalyser
                 LabelX = "t"
             }.Plot().Save(config.Output.SignalPlotFile, ImageFormat.Png);
 
-            new MapPlot(PseudoPoincareMap.GetMapDataFrom(data.TimeSeries.YValues), config.Output.PlotsSize, 1)
+            new ScatterPlot(config.Output.PlotsSize, PseudoPoincareMap.GetMapDataFrom(data.TimeSeries.YValues))
                 .Plot().Save(config.Output.PoincarePlotFile, ImageFormat.Png);
 
             var neuralNetParameters = config.NeuralNet;
