@@ -20,7 +20,7 @@ namespace TimeSeriesAnalysis
             new SignalPlot(sourceData.TimeSeries, size, thickness);
         
         public MapPlot GetPoincarePlot(Size size, int thickness) =>
-            new MapPlot(Ext.GeneratePseudoPoincareMapData(sourceData.TimeSeries.YValues), size, thickness);
+            new MapPlot(PseudoPoincareMap.GetMapDataFrom(sourceData.TimeSeries.YValues), size, thickness);
 
         public PlotObject GetLyapunovPlot(Size size, int thickness, int startPoint, int endPoint, bool isWolf, out string result)
         {
@@ -34,7 +34,7 @@ namespace TimeSeriesAnalysis
 
                 for (int i = startPoint; i < range; i++)
                 {
-                    plotSeries.AddDataPoint(lyapunov.slope.DataPoints[i].X, lyapunov.slope.DataPoints[i].Y);
+                    plotSeries.AddDataPoint(lyapunov.Slope.DataPoints[i].X, lyapunov.Slope.DataPoints[i].Y);
                 }
 
                 lyap = new SignalPlot(plotSeries, size, 1);
@@ -43,16 +43,16 @@ namespace TimeSeriesAnalysis
             else
             {
                 lyap = new MultiSignalPlot(size);
-                ((MultiSignalPlot)lyap).AddDataSeries(lyapunov.slope, Color.SteelBlue);
+                ((MultiSignalPlot)lyap).AddDataSeries(lyapunov.Slope, Color.SteelBlue);
                 var markerSeries = new Timeseries();
-                markerSeries.AddDataPoint(lyapunov.slope.DataPoints[startPoint].X, lyapunov.slope.DataPoints[startPoint].Y);
-                markerSeries.AddDataPoint(lyapunov.slope.DataPoints[range - 1].X, lyapunov.slope.DataPoints[range - 1].Y);
+                markerSeries.AddDataPoint(lyapunov.Slope.DataPoints[startPoint].X, lyapunov.Slope.DataPoints[startPoint].Y);
+                markerSeries.AddDataPoint(lyapunov.Slope.DataPoints[range - 1].X, lyapunov.Slope.DataPoints[range - 1].Y);
                 ((MultiSignalPlot)lyap).AddDataSeries(markerSeries, Color.Red);
                 lyap.LabelY = "Slope";
                 lyap.LabelX = "t";
 
                 result = string.Format("{0:F5}",
-                    (lyapunov.slope.DataPoints[endPoint].Y - lyapunov.slope.DataPoints[startPoint].Y) / (lyapunov.slope.DataPoints[endPoint].X - lyapunov.slope.DataPoints[startPoint].X)
+                    (lyapunov.Slope.DataPoints[endPoint].Y - lyapunov.Slope.DataPoints[startPoint].Y) / (lyapunov.Slope.DataPoints[endPoint].X - lyapunov.Slope.DataPoints[startPoint].X)
                 );
             }
             return lyap;

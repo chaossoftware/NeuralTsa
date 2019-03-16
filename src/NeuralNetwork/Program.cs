@@ -6,6 +6,7 @@ using System.Threading;
 using MathLib;
 using MathLib.Data;
 using MathLib.DrawEngine.Charts;
+using MathLib.Transform;
 using NeuralAnalyser.Configuration;
 using NeuralAnalyser.NeuralNet;
 
@@ -33,7 +34,7 @@ namespace NeuralAnalyser
             new SignalPlot(data.TimeSeries, config.Output.PlotsSize, 1)
                 .Plot().Save(config.Output.SignalPlotFile, ImageFormat.Png);
 
-            new MapPlot(Ext.GeneratePseudoPoincareMapData(data.TimeSeries.YValues), config.Output.PlotsSize, 1)
+            new MapPlot(PseudoPoincareMap.GetMapDataFrom(data.TimeSeries.YValues), config.Output.PlotsSize, 1)
                 .Plot().Save(config.Output.PoincarePlotFile, ImageFormat.Png);
 
             var neuralNetParameters = config.NeuralNet;

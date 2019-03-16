@@ -98,7 +98,7 @@ namespace NeuralAnalyser
             if (poincare == null)
             {
                 var size = new Size(outParams.AnimationSize.Width * 2, outParams.AnimationSize.Width);
-                poincare = new MapPlot(Ext.GeneratePseudoPoincareMapData(net.xdata), size, 1).Plot();
+                poincare = new MapPlot(PseudoPoincareMap.GetMapDataFrom(net.xdata), size, 1).Plot();
             }
 
             var error = Math.Log10(net.OutputLayer.Neurons[0].Memory[0]);
@@ -361,7 +361,7 @@ namespace NeuralAnalyser
                     .Plot()
                     .Save(outParams.ReconstructedSignalPlotFile, ImageFormat.Png);
 
-                new MapPlot(Ext.GeneratePseudoPoincareMapData(xt), outParams.PlotsSize)
+                new MapPlot(PseudoPoincareMap.GetMapDataFrom(xt), outParams.PlotsSize)
                     .Plot()
                     .Save(outParams.ReconstructedPoincarePlotFile, ImageFormat.Png);
             }
@@ -387,13 +387,13 @@ namespace NeuralAnalyser
                 try
                 {
                     var plot = new MultiMapPlot(size);
-                    plot.AddDataSeries(Ext.GeneratePseudoPoincareMapData(xt), Color.SteelBlue);
-                    plot.AddDataSeries(Ext.GeneratePseudoPoincareMapData(net.xdata), Color.OrangeRed);
+                    plot.AddDataSeries(PseudoPoincareMap.GetMapDataFrom(xt), Color.SteelBlue);
+                    plot.AddDataSeries(PseudoPoincareMap.GetMapDataFrom(net.xdata), Color.OrangeRed);
                     poincare = plot.Plot();
                 }
                 catch
                 {
-                    poincare = new MapPlot(Ext.GeneratePseudoPoincareMapData(net.xdata), size, 1).Plot();
+                    poincare = new MapPlot(PseudoPoincareMap.GetMapDataFrom(net.xdata), size, 1).Plot();
                 }
             }
         }
