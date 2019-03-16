@@ -3,7 +3,6 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Threading;
-using MathLib;
 using MathLib.Data;
 using MathLib.DrawEngine.Charts;
 using MathLib.Transform;
@@ -31,8 +30,11 @@ namespace NeuralAnalyser
 
             Logger.Init(config.Output.LogFile);
 
-            new SignalPlot(data.TimeSeries, config.Output.PlotsSize, 1)
-                .Plot().Save(config.Output.SignalPlotFile, ImageFormat.Png);
+            new LinePlot(config.Output.PlotsSize, data.TimeSeries)
+            {
+                LabelY = "f(t)",
+                LabelX = "t"
+            }.Plot().Save(config.Output.SignalPlotFile, ImageFormat.Png);
 
             new MapPlot(PseudoPoincareMap.GetMapDataFrom(data.TimeSeries.YValues), config.Output.PlotsSize, 1)
                 .Plot().Save(config.Output.PoincarePlotFile, ImageFormat.Png);

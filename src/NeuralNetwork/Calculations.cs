@@ -6,7 +6,6 @@ using System.Drawing.Text;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using MathLib;
 using MathLib.Data;
 using MathLib.DrawEngine;
 using MathLib.DrawEngine.Charts;
@@ -115,7 +114,7 @@ namespace NeuralAnalyser
             var result = new Bitmap(outParams.AnimationSize.Width * 2, outParams.AnimationSize.Height + outParams.AnimationSize.Width);
             var netImg = Visualizator.DrawBrain(net);
 
-            var plot = new MultiSignalPlot(outParams.AnimationSize);
+            var plot = new LinePlot(outParams.AnimationSize);
 
             plot.AddDataSeries(new Timeseries(new double[] { 0, 0 }), Color.Black);
             plot.AddDataSeries(new Timeseries(new double[] { -10, -10 }), Color.Black);
@@ -357,8 +356,11 @@ namespace NeuralAnalyser
                 var constructedSignal = new double[net.xdata.Length];
                 Array.Copy(xt, constructedSignal, net.xdata.Length);
 
-                new SignalPlot(new Timeseries(constructedSignal), outParams.PlotsSize)
-                    .Plot()
+                new LinePlot(outParams.PlotsSize, new Timeseries(constructedSignal))
+                {
+                    LabelY = "f(t)",
+                    LabelX = "t"
+                }.Plot()
                     .Save(outParams.ReconstructedSignalPlotFile, ImageFormat.Png);
 
                 new MapPlot(PseudoPoincareMap.GetMapDataFrom(xt), outParams.PlotsSize)
@@ -429,8 +431,11 @@ namespace NeuralAnalyser
                 xpred[k] = _xpred;
             }
 
-            new SignalPlot(new Timeseries(xpred), outParams.PlotsSize)
-                .Plot().Save(outParams.ReconstructedSignalPlotFile, ImageFormat.Png);
+            new LinePlot(outParams.PlotsSize, new Timeseries(xpred))
+            {
+                LabelY = "f(t)",
+                LabelX = "t"
+            }.Plot().Save(outParams.ReconstructedSignalPlotFile, ImageFormat.Png);
 
             var pred = new StringBuilder();
 

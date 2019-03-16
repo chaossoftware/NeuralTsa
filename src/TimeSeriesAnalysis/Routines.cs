@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
-using MathLib;
 using MathLib.Data;
 using MathLib.DrawEngine.Charts;
 using MathLib.MathMethods.Lyapunov;
@@ -16,8 +15,12 @@ namespace TimeSeriesAnalysis
 
         public LyapunovMethod lyapunov;
 
-        public SignalPlot GetSignalPlot(Size size, float thickness, bool withTime, int startPoint, int endPoint) =>
-            new SignalPlot(sourceData.TimeSeries, size, thickness);
+        public LinePlot GetSignalPlot(Size size, float thickness, bool withTime, int startPoint, int endPoint) =>
+            new LinePlot(size, sourceData.TimeSeries, Color.SteelBlue, thickness)
+            {
+                LabelY = "f(t)",
+                LabelX = "t"
+            };
         
         public MapPlot GetPoincarePlot(Size size, int thickness) =>
             new MapPlot(PseudoPoincareMap.GetMapDataFrom(sourceData.TimeSeries.YValues), size, thickness);
@@ -37,17 +40,17 @@ namespace TimeSeriesAnalysis
                     plotSeries.AddDataPoint(lyapunov.Slope.DataPoints[i].X, lyapunov.Slope.DataPoints[i].Y);
                 }
 
-                lyap = new SignalPlot(plotSeries, size, 1);
+                lyap = new LinePlot(size, plotSeries);
                 lyap.LabelY = "LE";
             }
             else
             {
-                lyap = new MultiSignalPlot(size);
-                ((MultiSignalPlot)lyap).AddDataSeries(lyapunov.Slope, Color.SteelBlue);
+                lyap = new LinePlot(size);
+                ((LinePlot)lyap).AddDataSeries(lyapunov.Slope, Color.SteelBlue);
                 var markerSeries = new Timeseries();
                 markerSeries.AddDataPoint(lyapunov.Slope.DataPoints[startPoint].X, lyapunov.Slope.DataPoints[startPoint].Y);
                 markerSeries.AddDataPoint(lyapunov.Slope.DataPoints[range - 1].X, lyapunov.Slope.DataPoints[range - 1].Y);
-                ((MultiSignalPlot)lyap).AddDataSeries(markerSeries, Color.Red);
+                ((LinePlot)lyap).AddDataSeries(markerSeries, Color.Red);
                 lyap.LabelY = "Slope";
                 lyap.LabelX = "t";
 
@@ -58,11 +61,11 @@ namespace TimeSeriesAnalysis
             return lyap;
         }
 
-        public SignalPlot GetFourierPlot(Size size, int thickness, double statrFreq, double endFreq, double dt, bool logScale)
+        public LinePlot GetFourierPlot(Size size, int thickness, double statrFreq, double endFreq, double dt, bool logScale)
         {
             var fourierSeries = Fourier.GetFourier(sourceData.TimeSeries.YValues, statrFreq, endFreq, dt, Convert.ToInt32(logScale));
 
-            return new SignalPlot(fourierSeries, size, thickness)
+            return new LinePlot(size, fourierSeries, Color.SteelBlue, thickness)
             {
                 LabelY = "F(ω)",
                 LabelX = "ω"
