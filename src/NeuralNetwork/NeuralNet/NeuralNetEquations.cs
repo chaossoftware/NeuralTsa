@@ -1,4 +1,5 @@
 ﻿using System;
+using DeepLearn.NeuralNetwork.Activation;
 using MathLib.MathMethods.Solvers;
 using NeuralAnalyser.NeuralNet.Activation;
 using NeuralAnalyser.NeuralNet.Entities;

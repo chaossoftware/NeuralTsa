@@ -2,6 +2,7 @@
 using DeepLearn.NeuralNetwork.Networks;
 using MathLib;
 using NeuralAnalyser.Configuration;
+using NeuralAnalyser.NeuralNet.Activation;
 using NeuralAnalyser.NeuralNet.Entities;
 
 namespace NeuralAnalyser.NeuralNet
@@ -34,7 +35,7 @@ namespace NeuralAnalyser.NeuralNet
             : base(taskParams.Dimensions, taskParams.Neurons, 1)
         {
             Params = taskParams;
-            AdditionalNeuron = Params.ActFunction.AdditionalNeuron;
+            AdditionalNeuron = Params.ActFunction is ComplexActivationFunction;
             Init(array);
         }
 
@@ -80,9 +81,9 @@ namespace NeuralAnalyser.NeuralNet
                 // same for Activation function neuron if needed
                 if (AdditionalNeuron)
                 {
-                    Params.ActFunction.Neuron.BestToMemory();
-                    if (Params.ActFunction.Neuron.Memory[0] == 0)
-                        Params.ActFunction.Neuron.Memory[0] = 1;
+                    (Params.ActFunction as ComplexActivationFunction).Neuron.BestToMemory();
+                    if ((Params.ActFunction as ComplexActivationFunction).Neuron.Memory[0] == 0)
+                        (Params.ActFunction as ComplexActivationFunction).Neuron.Memory[0] = 1;
                 }
 
                 #endregion
@@ -155,7 +156,7 @@ namespace NeuralAnalyser.NeuralNet
                     {
                         for (int j = 0; j < 7; j++)
                         {
-                            Params.ActFunction.Neuron.CalculateWeight(j, ddw, pc);
+                            (Params.ActFunction as ComplexActivationFunction).Neuron.CalculateWeight(j, ddw, pc);
                         }
                     }
 
@@ -204,7 +205,7 @@ namespace NeuralAnalyser.NeuralNet
 
                         // same for Activation function neuron if needed
                         if (AdditionalNeuron)
-                            Params.ActFunction.Neuron.WeightsToMemory();
+                            (Params.ActFunction as ComplexActivationFunction).Neuron.WeightsToMemory();
                     }
                     else if (ddw > 0 && improved == 0)
                     {
@@ -245,7 +246,7 @@ namespace NeuralAnalyser.NeuralNet
                     // same for Activation function neuron if needed
                     if (AdditionalNeuron)
                     {
-                        Params.ActFunction.Neuron.MemoryToWeights();
+                        (Params.ActFunction as ComplexActivationFunction).Neuron.MemoryToWeights();
                     }
 
                     //Mark the weak connections for pruning
@@ -287,8 +288,8 @@ namespace NeuralAnalyser.NeuralNet
                 // same for Activation function neuron if needed
                 if (AdditionalNeuron)
                 {
-                    Params.ActFunction.Neuron.MemoryToBest();
-                    Params.ActFunction.Neuron.BestToWeights();
+                    (Params.ActFunction as ComplexActivationFunction).Neuron.MemoryToBest();
+                    (Params.ActFunction as ComplexActivationFunction).Neuron.BestToWeights();
                 }
 
                 #endregion

@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using System.Globalization;
-using NeuralAnalyser.NeuralNet.Activation;
+using DeepLearn.NeuralNetwork.Activation;
 
 namespace NeuralAnalyser.Configuration
 {

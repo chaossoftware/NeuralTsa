@@ -37,8 +37,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DeepLearn.NeuralNetwork, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Lib\DeepLearn.NeuralNetwork.dll</HintPath>
+      <HintPath>..\packages\DeepLearn.NeuralNetwork.1.0.0\lib\net40\DeepLearn.NeuralNetwork.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -52,14 +52,14 @@
     <Compile Include="Configuration\Config.cs" />
     <Compile Include="Configuration\OutputParameters.cs" />
     <Compile Include="Logger.cs" />
-    <Compile Include="NeuralNet\Activation\ActivationFunction.cs" />
-    <Compile Include="NeuralNet\Activation\Functions.cs" />
     <Compile Include="NeuralNet\Entities\BiasNeuron.cs" />
     <Compile Include="NeuralNet\Entities\HiddenNeuron.cs" />
     <Compile Include="NeuralNet\Entities\InputNeuron.cs" />
     <Compile Include="NeuralNet\Entities\NudgeNeuron.cs" />
     <Compile Include="NeuralNet\Entities\OutputNeuron.cs" />
     <Compile Include="NeuralNet\Entities\PruneSynapse.cs" />
+    <Compile Include="NeuralNet\Functions.cs" />
+    <Compile Include="NeuralNet\Obsolete\ObsoleteNeuron.cs" />
     <Compile Include="NeuralNet\SciNeuralNet.cs" />
     <Compile Include="NeuralNet\NeuralNetEquations.cs" />
     <Compile Include="Configuration\NeuralNetParams.cs" />
@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
     <None Include="TestData\henon">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -88,7 +89,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Lib\DeepLearn.NeuralNetwork.dll" />
     <Content Include="neural_config.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>

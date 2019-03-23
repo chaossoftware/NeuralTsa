@@ -5,20 +5,20 @@
 		dimensions="2" 
 		activationFunction="Logistic" 
 		errorExponent="2" 
-		trainingsCount="1" 
+		trainingsCount="10" 
 		pointsToPredict="0"
 	/>
   <!-- Activation functions: Logistic , Sigmoid , Gaussian , Gaussian_derivative , Cosine , Exponential , Linear , Piecewise_linear , Hyperbolic_tangent , Binary_shift , Polynomial , Rational , Special-->
 	
 	<LowLevelParams 
 		learningRate="0.999"
-		cycleSize="1e4"
+		cycleSize="1e6"
 		biasTerm="1" 
 		constantTerm="0" 
 		maxPertrubation="2" 
 		nudge="0.5" 
 		pruning="0" 
-		testingInterval="1e2"
+		testingInterval="1e5"
 	/>
 	<!-- Learning rate (default 0.999)-->
 	<!-- Number of iterations per cycle (default 1e6)-->
@@ -39,7 +39,7 @@
     <reconstructedPoincare build="true"/>
     <model3D build="true"/>
     <plots build="true" width="640" height="360"/>
-    <animation build="true" width="480" height="480"/>
+    <animation build="true" width="240" height="480"/>
     <leInTime build="true"/>
   </Output>
 	

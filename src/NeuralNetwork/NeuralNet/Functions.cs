@@ -1,133 +1,27 @@
 ﻿using System;
+using System.Collections.Generic;
+using DeepLearn.NeuralNetwork.Activation;
+using NeuralAnalyser.NeuralNet.Entities;
 
 namespace NeuralAnalyser.NeuralNet.Activation
 {
-    public class BinaryShiftFunction : ActivationFunction
+    public abstract class ComplexActivationFunction : ActivationFunction
     {
-        public override string Name => "Binary shift";
+        public InputNeuron Neuron { get; set; }
 
-        public override double Phi(double arg) => arg % 1d;
+        public bool AdditionalNeuron { get; set; } = false;
 
-        public override double Dphi(double arg) => 1d;
-    }
-
-    public class GaussianFunction : ActivationFunction
-    {
-        public override string Name => "Gaussian";
-
-        public override double Phi(double arg) => arg * (1d - arg);
-
-        public override double Dphi(double arg) => 1d - 2d * arg;
-    }
-
-    public class GaussianDerivativeFunction : ActivationFunction
-    {
-        public override string Name => "Gaussian Derivative";
-
-        public override double Phi(double arg) => -arg * Math.Exp(-arg * arg);
-
-        public override double Dphi(double arg) => (2d * arg - 1d) * Math.Exp(-arg * arg);
-    }
-
-    public class LogisticFunction : ActivationFunction
-    {
-        public override string Name => "Logistic";
-
-        public override double Phi(double arg) => arg * (1d - arg);
-
-        public override double Dphi(double arg) => 1d - 2d * arg;
-    }
-
-    public class LinearFunction : ActivationFunction
-    {
-        public override string Name => "Linear";
-
-        public override double Phi(double arg) => arg;
-
-        public override double Dphi(double arg) => 2d * arg;
-    }
-
-    public class PiecewiseLinearFunction : ActivationFunction
-    {
-        public override string Name => "Piecewise Linear";
-
-        public override double Phi(double arg) => 
-            Math.Abs(arg) < 1d ? arg : Math.Sign(arg);
-
-        public override double Dphi(double arg) =>
-            Math.Abs(arg) < 1d ? 1 : 0;
-    }
-
-    public class ExponentialFunction : ActivationFunction
-    {
-        public override string Name => "Exponential";
-
-        public override double Phi(double arg) => Math.Exp(arg);
-
-        public override double Dphi(double arg) => Math.Exp(arg);
-    }
-
-    public class CosineFunction : ActivationFunction
-    {
-        public override string Name => "Cosine";
-
-        public override double Phi(double arg) => Math.Cos(arg);
-
-        public override double Dphi(double arg) => Math.Cos(arg);
-    }
-
-    public class SigmoidFunction : ActivationFunction
-    {
-        public override string Name => "Sigmoid";
-
-        public override double Phi(double arg)
+        protected void InitNetworkLayer()
         {
-            if (arg < -44d)
-            {
-                return 0d;
-            }
-            else if (arg > 44d)
-            {
-                return 1d;
-            }
-            else
-            {
-                return 1d / (1d + Math.Exp(-arg));
-            }
-        }
+            Neuron = new InputNeuron();
+            Neuron.Outputs = new List<PruneSynapse>(7);
 
-        public override double Dphi(double arg)
-        {
-            if (Math.Abs(arg) > 44d)
-            {
-                return 0d;
-            }
-            else
-            {
-                double argExp = Math.Exp(arg);
-                double _v = (1d + argExp);
-                return argExp / (_v * _v);
-            }
+            for (int i = 0; i < 7; i++)
+                Neuron.Outputs[i] = new PruneSynapse(i, i);
         }
     }
 
-    public class HyperbolicTangentFunction : ActivationFunction
-    {
-        public override string Name => "Hyperbolic tangent";
-
-        public override double Phi(double arg) =>
-            arg < 22d ?  
-            1d - 2d / (Math.Exp(2d * arg) + 1d) : 
-            Math.Sign(arg);
-
-        public override double Dphi(double arg)
-        {
-            double tmp = Sech(arg);
-            return tmp * tmp;
-        }
-    }
-
-    public class PolynomialSixOrderFunction : ActivationFunction
+    public class PolynomialSixOrderFunction : ComplexActivationFunction
     {
         public override string Name => "Polynomial (6 order)";
 
@@ -155,7 +49,7 @@ namespace NeuralAnalyser.NeuralNet.Activation
                                 arg * 6d * Neuron.Outputs[6].Weight))));
     }
 
-    public class RationalFunction : ActivationFunction
+    public class RationalFunction : ComplexActivationFunction
     {
         public override string Name => "Rational";
 
@@ -198,7 +92,7 @@ namespace NeuralAnalyser.NeuralNet.Activation
         }
     }
 
-    public class SpecialFunction : ActivationFunction
+    public class SpecialFunction : ComplexActivationFunction
     {
         public override string Name => "Special";
 

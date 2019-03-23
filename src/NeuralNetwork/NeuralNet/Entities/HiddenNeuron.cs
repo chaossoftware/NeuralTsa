@@ -1,4 +1,5 @@
-﻿using NeuralAnalyser.NeuralNet.Activation;
+﻿using DeepLearn.NeuralNetwork.Activation;
+using NeuralAnalyser.NeuralNet.Activation;
 
 namespace NeuralAnalyser.NeuralNet.Entities
 {
