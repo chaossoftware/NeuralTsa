@@ -377,7 +377,7 @@ namespace NeuralAnalyser
 
             if (outParams.SaveModel)
             {
-                Model3D.Create3dPlyModelFile(outParams.ModelFile, xt, yt, zt);
+                Model3D.Create3daModelFile(outParams.ModelFile, xt, yt, zt);
             }
 
             if (outParams.SaveWav)

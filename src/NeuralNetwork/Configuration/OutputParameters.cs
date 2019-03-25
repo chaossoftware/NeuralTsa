@@ -49,7 +49,7 @@ namespace NeuralAnalyser.Configuration
 
         public string LeInTimeFile => Path.Combine(OutDirectory, FileName + "_leInTime.le");
 
-        public string ModelFile => Path.Combine(OutDirectory, FileName + "_model.ply");
+        public string ModelFile => Path.Combine(OutDirectory, FileName + "_model.3da");
 
         public string WavFile => Path.Combine(OutDirectory, FileName + "_sound.wav");
 
