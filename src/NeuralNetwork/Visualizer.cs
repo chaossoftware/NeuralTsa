@@ -45,7 +45,7 @@ namespace NeuralAnalyser
 
             g.SmoothingMode = SmoothingMode.AntiAlias;
 
-            g.FillRectangle(Brushes.WhiteSmoke, new Rectangle(new Point(0, 0), bitmap.Size));
+            g.FillRectangle(Brushes.White, new Rectangle(new Point(0, 0), bitmap.Size));
             
             int inputsCount = net.InputLayer.Neurons.Length;
             int hiddenCount = net.HiddenLayer.Neurons.Length;
