@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using DeepLearn.NeuralNetwork.Base;
+using NewMind.NeuralNet.Base;
 
 namespace NeuralAnalyser.NeuralNet.Entities
 {

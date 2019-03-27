@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Globalization;
 using System.Xml.Linq;
-using DeepLearn.NeuralNetwork.Activation;
+using NewMind.NeuralNet.Activation;
 using NeuralAnalyser.NeuralNet.Activation;
 
 namespace NeuralAnalyser.Configuration

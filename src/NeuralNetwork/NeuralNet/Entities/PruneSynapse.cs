@@ -1,4 +1,4 @@
-﻿using DeepLearn.NeuralNetwork.Base.Entities;
+﻿using NewMind.NeuralNet.Base.Entities;
 
 namespace NeuralAnalyser.NeuralNet.Entities
 {

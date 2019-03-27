@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using DeepLearn.NeuralNetwork.Activation;
+using NewMind.NeuralNet.Activation;
 using NeuralAnalyser.NeuralNet.Entities;
 
 namespace NeuralAnalyser.NeuralNet.Activation

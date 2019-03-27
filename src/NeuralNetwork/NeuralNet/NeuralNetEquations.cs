@@ -1,7 +1,6 @@
 ﻿using System;
-using DeepLearn.NeuralNetwork.Activation;
+using NewMind.NeuralNet.Activation;
 using MathLib.MathMethods.Solvers;
-using NeuralAnalyser.NeuralNet.Activation;
 using NeuralAnalyser.NeuralNet.Entities;
 
 namespace NeuralAnalyser.NeuralNet

@@ -1,5 +1,5 @@
 ﻿using System;
-using DeepLearn.NeuralNetwork.Networks;
+using NewMind.NeuralNet.Networks;
 using MathLib;
 using NeuralAnalyser.Configuration;
 using NeuralAnalyser.NeuralNet.Activation;
