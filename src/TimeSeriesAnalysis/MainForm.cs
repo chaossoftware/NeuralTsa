@@ -359,10 +359,10 @@ namespace TimeSeriesAnalysis {
                 ((KantzMethod)routines.lyapunov).SetSlope(this.le_kantz_slopeCombo.Text);
             }
 
-            if (routines.lyapunov.slope.Length > 1)
+            if (routines.lyapunov.Slope.Length > 1)
             {
                 le_resultText.Text = routines.lyapunov.GetInfoShort();
-                le_pEndNum.Value = routines.lyapunov.slope.Length - 1;
+                le_pEndNum.Value = routines.lyapunov.Slope.Length - 1;
 
                 try
                 {

@@ -1,56 +1,63 @@
 ﻿using System;
-using MathLib.DrawEngine.Charts;
-using MathLib.NeuralNetwork;
 using System.Drawing.Imaging;
-using System.Drawing;
-using MathLib;
-using MathLib.DrawEngine;
-using System.Threading;
 using System.Globalization;
+using System.IO;
+using System.Threading;
 using MathLib.Data;
+using MathLib.DrawEngine.Charts;
+using MathLib.Transform;
+using NeuralAnalyser.Configuration;
+using NeuralAnalyser.NeuralNet;
 
-namespace NeuralNetwork {
-    class Program {
-        
-        static DataReader dr = new DataReader();
-
-        static void Main(string[] args) {
-
+namespace NeuralAnalyser
+{
+    public class Program
+    {
+        static void Main(string[] args)
+        {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
 
-            DataFile file = dr.GetFiles()[0];
+            var config = new Config();
+            var data = new SourceData(config.File.FileName);
 
-            SourceData sd = new SourceData(file.FileName);
-            sd.SetTimeSeries(file.DataColumn - 1, 0, sd.Length - 1, 1, false);
+            data.SetTimeSeries(config.File.DataColumn - 1, 0, data.Length - 1, 1, false);
 
-            NeuralOutput.Init(file.FileName);
+            if (!Directory.Exists(config.Output.OutDirectory))
+            {
+                Directory.CreateDirectory(config.Output.OutDirectory);
+            }
 
+            Logger.Init(config.Output.LogFile);
 
-            PlotObject signal = new SignalPlot(sd.TimeSeries, new Size(848, 480), 1);
-            signal.Plot().Save(NeuralOutput.SignalPlotFileName, ImageFormat.Png);
+            new LinePlot(config.Output.PlotsSize, data.TimeSeries)
+            {
+                LabelY = "f(t)",
+                LabelX = "t"
+            }.Plot().Save(config.Output.SignalPlotFile, ImageFormat.Png);
 
-            PlotObject poincare = new MapPlot(Ext.GeneratePseudoPoincareMapData(sd.TimeSeries.YValues), new Size(848, 480), 1);
-            poincare.Plot().Save(NeuralOutput.PoincarePlotFileName, ImageFormat.Png);
+            new ScatterPlot(config.Output.PlotsSize, PseudoPoincareMap.GetMapDataFrom(data.TimeSeries.YValues))
+                .Plot().Save(config.Output.PoincarePlotFile, ImageFormat.Png);
 
-            NeuralNetParams taskParams = dr.LoadNeuralNetParams();
-            NeuralNet task = new NeuralNet(taskParams, sd.TimeSeries.YValues);
+            var neuralNetParameters = config.NeuralNet;
+            var neuralNet = new SciNeuralNet(neuralNetParameters, data.TimeSeries.YValues);
 
-            Logger.LogInfo(taskParams.GetInfoFull(), true);
+            Logger.LogInfo(neuralNetParameters.GetInfoFull(), true);
 
-            Console.Title = "Signal: " + NeuralOutput.FileName + " | " + taskParams.ActFunction.GetName();
+            Console.Title = "Signal: " + config.Output.FileName + " | " + neuralNetParameters.ActFunction.Name;
             Console.WriteLine("\nStarting...");
 
-            Charts.NeuralAnimation = new Animation();
+            var calculations = new Calculations(neuralNetParameters, config.Output);
 
-            Calculations calc = new Calculations(NeuralNet.Params);
+            neuralNet.CycleComplete += calculations.LogCycle;
+            neuralNet.EpochComplete += calculations.PerformCalculations;
 
-            NeuralNet.LoggingMethod = calc.LoggingEvent;
-            NeuralNet.EndCycleMethod = calc.EndCycleEvent;
+            neuralNet.Process();
 
-            task.RunTask();
-
-            Charts.NeuralAnimation.SaveAnimation(NeuralOutput.BasePath + "_neural_anim.gif");
+            if (config.Output.SaveAnimation)
+            {
+                calculations.Visualizator.NeuralAnimation.SaveAnimation(config.Output.AnimationFile);
+            }
         }
     }
 }

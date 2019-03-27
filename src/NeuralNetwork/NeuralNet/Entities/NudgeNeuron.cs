@@ -1,17 +1,26 @@
-﻿
-using System;
+﻿using System;
+using System.Collections.Generic;
+using DeepLearn.NeuralNetwork.Base;
 
-namespace MathLib.NeuralNet.Entities
+namespace NeuralAnalyser.NeuralNet.Entities
 {
-    public abstract class Neuron
+    public abstract class NudgeNeuron<N> : INeuron<N> where N : NudgeNeuron<N>
     {
-        public static Random Randomizer;
+        protected NudgeNeuron()
+        {
+            this.Inputs = new List<PruneSynapse>();
+            this.Outputs = new List<PruneSynapse>();
+        }
 
-        public Synapse[] Outputs;
-        public double[] Memory;
-        public double[] Best;
-        public double Nudge;
+        public List<PruneSynapse> Inputs { get; set; }
 
+        public List<PruneSynapse> Outputs { get; set; }
+
+        public double[] Memory { get; set; }
+
+        public double[] Best { get; set; }
+
+        public double Nudge { get; set; }
 
         public virtual void CalculateWeight(int index, double pertrubation)
         {
@@ -22,39 +31,37 @@ namespace MathLib.NeuralNet.Entities
         {
             Outputs[index].Weight = Memory[index];
 
-            if(Randomizer.NextDouble() < lowerThan)
+            if(NeuronRandomizer.Randomizer.NextDouble() < lowerThan)
                 Outputs[index].Weight += pertrubation * (Gauss2() - Nudge * Math.Sign(Memory[index]));
         }
 
-        public abstract void ProcessInputs();
-
         public void BestToMemory()
         {
-            for(int i = 0; i < Outputs.Length; i++)
+            for(int i = 0; i < Outputs.Count; i++)
                 Memory[i] = Best[i];
         }
 
         public void WeightsToMemory()
         {
-            for (int i = 0; i < Outputs.Length; i++)
+            for (int i = 0; i < Outputs.Count; i++)
                 Memory[i] = Outputs[i].Weight;
         }
 
         public void MemoryToWeights()
         {
-            for (int i = 0; i < Outputs.Length; i++)
+            for (int i = 0; i < Outputs.Count; i++)
                 Outputs[i].Weight = Memory[i];
         }
 
         public void BestToWeights()
         {
-            for (int i = 0; i < Outputs.Length; i++)
+            for (int i = 0; i < Outputs.Count; i++)
                 Outputs[i].Weight = Best[i];
         }
 
         public void MemoryToBest()
         {
-            for (int i = 0; i < Outputs.Length; i++)
+            for (int i = 0; i < Outputs.Count; i++)
                 Best[i] = Memory[i];
         }
 
@@ -69,14 +76,23 @@ namespace MathLib.NeuralNet.Entities
             double v1, v2, _arg;
             do
             {
-                v1 = 2d * Randomizer.NextDouble() - 1d;
-                v2 = 2d * Randomizer.NextDouble() - 1d;
+                v1 = 2d * NeuronRandomizer.Randomizer.NextDouble() - 1d;
+                v2 = 2d * NeuronRandomizer.Randomizer.NextDouble() - 1d;
                 _arg = v1 * v1 + v2 * v2;
             }
             while (_arg >= 1d || _arg == 0d);
 
             return v1 * v2 * (-2d + Math.Log(_arg) / _arg);
         }
-        
+
+        public virtual void Process()
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual object Clone()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

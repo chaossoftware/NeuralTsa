@@ -5,10 +5,10 @@
 		dimensions="2" 
 		activationFunction="Logistic" 
 		errorExponent="2" 
-		trainingsCount="50" 
+		trainingsCount="10" 
 		pointsToPredict="0"
 	/>
-  <!-- Activation functions: Logistic , Sigmoid  ,Gaussian , Gaussian_derivative , Cosine , Exponential , Linear , Piecewise_linear , Hyperbolic_tangent , Binary_shift , Polynomial , Rational , Special-->
+  <!-- Activation functions: Logistic , Sigmoid , Gaussian , Gaussian_derivative , Cosine , Exponential , Linear , Piecewise_linear , Hyperbolic_tangent , Binary_shift , Polynomial , Rational , Special-->
 	
 	<LowLevelParams 
 		learningRate="0.999"
@@ -30,16 +30,17 @@
 	<!-- Interval for testing neural net results (default 1e4) -->
  
 	<FilesToAnalyse>
-    <!--file path="Test\henon" dataColumn="1" start="" end="" pts=""/-->
     <file path="TestData\henon" dataColumn="1" start="" end="" pts=""/>
 	</FilesToAnalyse>
 
-
   <Output>
-    <reconstructedSignal pts=""/>
-    <wav lengthSeconds="2"/>
-    <reconstructedPoincare pts="1e5"/>
-    <model3D pts="1e5"/>
+    <reconstructedSignal points="1e5"/>
+    <wav build="true"/>
+    <reconstructedPoincare build="true"/>
+    <model3D build="true"/>
+    <plots build="true" width="640" height="360"/>
+    <animation build="true" width="240" height="480"/>
+    <leInTime build="true"/>
   </Output>
 	
 </config>

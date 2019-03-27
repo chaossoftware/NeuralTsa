@@ -7,8 +7,8 @@
     <ProjectGuid>{CA380EF7-0E34-4141-B31C-14AE4187A213}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NeuralNetwork</RootNamespace>
-    <AssemblyName>NeuralNetwork</AssemblyName>
+    <RootNamespace>NeuralAnalyser</RootNamespace>
+    <AssemblyName>NeuralAnalyser</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -33,9 +33,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>NeuralNetwork.Program</StartupObject>
+    <StartupObject>NeuralAnalyser.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DeepLearn.NeuralNetwork, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DeepLearn.NeuralNetwork.1.0.0\lib\net40\DeepLearn.NeuralNetwork.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -45,14 +49,28 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Calculations.cs" />
-    <Compile Include="Charts.cs" />
-    <Compile Include="DataReader.cs" />
-    <Compile Include="NeuralOutput.cs" />
+    <Compile Include="Configuration\Config.cs" />
+    <Compile Include="Configuration\OutputParameters.cs" />
+    <Compile Include="Logger.cs" />
+    <Compile Include="NeuralNet\Entities\BiasNeuron.cs" />
+    <Compile Include="NeuralNet\Entities\HiddenNeuron.cs" />
+    <Compile Include="NeuralNet\Entities\InputNeuron.cs" />
+    <Compile Include="NeuralNet\Entities\NudgeNeuron.cs" />
+    <Compile Include="NeuralNet\Entities\OutputNeuron.cs" />
+    <Compile Include="NeuralNet\Entities\PruneSynapse.cs" />
+    <Compile Include="NeuralNet\Functions.cs" />
+    <Compile Include="NeuralNet\Obsolete\ObsoleteNeuron.cs" />
+    <Compile Include="NeuralNet\SciNeuralNet.cs" />
+    <Compile Include="NeuralNet\NeuralNetEquations.cs" />
+    <Compile Include="Configuration\NeuralNetParams.cs" />
+    <Compile Include="NeuralNet\NeuronRandomizer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Visualizer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
     <None Include="TestData\henon">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
