@@ -30,11 +30,18 @@ namespace TimeSeriesAnalysis
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.openFileBtn = new System.Windows.Forms.Button();
-            this.poincareMapPBox = new System.Windows.Forms.PictureBox();
             this.plotBtn = new System.Windows.Forms.Button();
-            this.signal_plotPBox = new System.Windows.Forms.PictureBox();
             this.fileNameLbl = new System.Windows.Forms.Label();
             this.saveBtn = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -57,7 +64,6 @@ namespace TimeSeriesAnalysis
             this.fourierGroup = new System.Windows.Forms.GroupBox();
             this.fft_dtNum = new System.Windows.Forms.NumericUpDown();
             this.fft_logCbox = new System.Windows.Forms.CheckBox();
-            this.fft_plotPBox = new System.Windows.Forms.PictureBox();
             this.label16 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
@@ -66,7 +72,6 @@ namespace TimeSeriesAnalysis
             this.fourierCheckbox = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.label19 = new System.Windows.Forms.Label();
-            this.le_plotPBox = new System.Windows.Forms.PictureBox();
             this.label4 = new System.Windows.Forms.Label();
             this.lyapunovRedrawBtn = new System.Windows.Forms.Button();
             this.lyap_calc_Rad_kantz = new System.Windows.Forms.RadioButton();
@@ -119,8 +124,10 @@ namespace TimeSeriesAnalysis
             this.numPreviewWidth = new System.Windows.Forms.NumericUpDown();
             this.label21 = new System.Windows.Forms.Label();
             this.numPreviewHeight = new System.Windows.Forms.NumericUpDown();
-            ((System.ComponentModel.ISupportInitialize)(this.poincareMapPBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.signal_plotPBox)).BeginInit();
+            this.chartSignal = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.chartPoincare = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.chartFft = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.chartLyapunov = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -132,11 +139,9 @@ namespace TimeSeriesAnalysis
             ((System.ComponentModel.ISupportInitialize)(this.wav_fStartNum)).BeginInit();
             this.fourierGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fft_dtNum)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.fft_plotPBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fft_fEndNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fft_fStartNum)).BeginInit();
             this.tabPage2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.le_plotPBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.le_scaleMaxNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.le_pStartNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.le_pEndNum)).BeginInit();
@@ -160,6 +165,10 @@ namespace TimeSeriesAnalysis
             ((System.ComponentModel.ISupportInitialize)(this.sourceColumnNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPreviewWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPreviewHeight)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartSignal)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartPoincare)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartFft)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartLyapunov)).BeginInit();
             this.SuspendLayout();
             // 
             // openFileBtn
@@ -173,18 +182,6 @@ namespace TimeSeriesAnalysis
             this.openFileBtn.UseVisualStyleBackColor = true;
             this.openFileBtn.Click += new System.EventHandler(this.openFileBtn_Click);
             // 
-            // poincareMapPBox
-            // 
-            this.poincareMapPBox.BackColor = System.Drawing.Color.White;
-            this.poincareMapPBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.poincareMapPBox.Cursor = System.Windows.Forms.Cursors.Cross;
-            this.poincareMapPBox.Location = new System.Drawing.Point(9, 21);
-            this.poincareMapPBox.Name = "poincareMapPBox";
-            this.poincareMapPBox.Size = new System.Drawing.Size(320, 240);
-            this.poincareMapPBox.TabIndex = 12;
-            this.poincareMapPBox.TabStop = false;
-            this.poincareMapPBox.DoubleClick += new System.EventHandler(this.poincareMapPBox_DoubleClick);
-            // 
             // plotBtn
             // 
             this.plotBtn.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -195,18 +192,6 @@ namespace TimeSeriesAnalysis
             this.plotBtn.Text = "Build charts";
             this.plotBtn.UseVisualStyleBackColor = true;
             this.plotBtn.Click += new System.EventHandler(this.plotBtn_Click);
-            // 
-            // signalPBox
-            // 
-            this.signal_plotPBox.BackColor = System.Drawing.Color.White;
-            this.signal_plotPBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.signal_plotPBox.Cursor = System.Windows.Forms.Cursors.Cross;
-            this.signal_plotPBox.Location = new System.Drawing.Point(9, 23);
-            this.signal_plotPBox.Name = "signalPBox";
-            this.signal_plotPBox.Size = new System.Drawing.Size(320, 240);
-            this.signal_plotPBox.TabIndex = 11;
-            this.signal_plotPBox.TabStop = false;
-            this.signal_plotPBox.DoubleClick += new System.EventHandler(this.signal_plotPBox_DoubleClick);
             // 
             // fileNameLbl
             // 
@@ -260,25 +245,25 @@ namespace TimeSeriesAnalysis
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.poincareMapPBox);
+            this.groupBox2.Controls.Add(this.chartPoincare);
             this.groupBox2.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.groupBox2.Location = new System.Drawing.Point(8, 309);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(340, 268);
             this.groupBox2.TabIndex = 24;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = StringData.Poincare;
+            this.groupBox2.Text = "Poincare pseudosection";
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.signal_plotPBox);
+            this.groupBox1.Controls.Add(this.chartSignal);
             this.groupBox1.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.groupBox1.Location = new System.Drawing.Point(8, 34);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(340, 269);
             this.groupBox1.TabIndex = 23;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = StringData.Signal;
+            this.groupBox1.Text = "Signal";
             // 
             // waveletGroup
             // 
@@ -300,15 +285,15 @@ namespace TimeSeriesAnalysis
             this.waveletGroup.Size = new System.Drawing.Size(532, 268);
             this.waveletGroup.TabIndex = 22;
             this.waveletGroup.TabStop = false;
-            this.waveletGroup.Text = StringData.Wavelet;
+            this.waveletGroup.Text = "Wavelet";
             // 
-            // waveletPBox
+            // wav_plotPBox
             // 
             this.wav_plotPBox.BackColor = System.Drawing.Color.White;
             this.wav_plotPBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.wav_plotPBox.Cursor = System.Windows.Forms.Cursors.Cross;
             this.wav_plotPBox.Location = new System.Drawing.Point(6, 21);
-            this.wav_plotPBox.Name = "waveletPBox";
+            this.wav_plotPBox.Name = "wav_plotPBox";
             this.wav_plotPBox.Size = new System.Drawing.Size(320, 240);
             this.wav_plotPBox.TabIndex = 25;
             this.wav_plotPBox.TabStop = false;
@@ -323,7 +308,7 @@ namespace TimeSeriesAnalysis
             this.label10.TabIndex = 31;
             this.label10.Text = "Color map:";
             // 
-            // CboxColorMap
+            // wav_colorMapCombo
             // 
             this.wav_colorMapCombo.DisplayMember = "haar";
             this.wav_colorMapCombo.FormattingEnabled = true;
@@ -331,12 +316,12 @@ namespace TimeSeriesAnalysis
             "pink",
             "parula"});
             this.wav_colorMapCombo.Location = new System.Drawing.Point(437, 49);
-            this.wav_colorMapCombo.Name = "CboxColorMap";
+            this.wav_colorMapCombo.Name = "wav_colorMapCombo";
             this.wav_colorMapCombo.Size = new System.Drawing.Size(90, 22);
             this.wav_colorMapCombo.TabIndex = 30;
             this.wav_colorMapCombo.Text = "pink";
             // 
-            // wav_nameCbox
+            // wav_nameCombo
             // 
             this.wav_nameCombo.DisplayMember = "haar";
             this.wav_nameCombo.FormattingEnabled = true;
@@ -346,7 +331,7 @@ namespace TimeSeriesAnalysis
             "gaus8",
             "cgau8"});
             this.wav_nameCombo.Location = new System.Drawing.Point(436, 21);
-            this.wav_nameCombo.Name = "wav_nameCbox";
+            this.wav_nameCombo.Name = "wav_nameCombo";
             this.wav_nameCombo.Size = new System.Drawing.Size(90, 22);
             this.wav_nameCombo.TabIndex = 29;
             this.wav_nameCombo.Text = "gaus8";
@@ -406,7 +391,7 @@ namespace TimeSeriesAnalysis
             this.label14.TabIndex = 24;
             this.label14.Text = "Starting ω:";
             // 
-            // wav_endFreq
+            // wav_fEndNum
             // 
             this.wav_fEndNum.DecimalPlaces = 2;
             this.wav_fEndNum.Increment = new decimal(new int[] {
@@ -425,7 +410,7 @@ namespace TimeSeriesAnalysis
             0,
             0,
             131072});
-            this.wav_fEndNum.Name = "wav_endFreq";
+            this.wav_fEndNum.Name = "wav_fEndNum";
             this.wav_fEndNum.Size = new System.Drawing.Size(90, 22);
             this.wav_fEndNum.TabIndex = 23;
             this.wav_fEndNum.Value = new decimal(new int[] {
@@ -434,7 +419,7 @@ namespace TimeSeriesAnalysis
             0,
             0});
             // 
-            // wav_startFreq
+            // wav_fStartNum
             // 
             this.wav_fStartNum.DecimalPlaces = 2;
             this.wav_fStartNum.Increment = new decimal(new int[] {
@@ -448,7 +433,7 @@ namespace TimeSeriesAnalysis
             0,
             0,
             0});
-            this.wav_fStartNum.Name = "wav_startFreq";
+            this.wav_fStartNum.Name = "wav_fStartNum";
             this.wav_fStartNum.Size = new System.Drawing.Size(90, 22);
             this.wav_fStartNum.TabIndex = 22;
             // 
@@ -474,9 +459,9 @@ namespace TimeSeriesAnalysis
             // 
             // fourierGroup
             // 
+            this.fourierGroup.Controls.Add(this.chartFft);
             this.fourierGroup.Controls.Add(this.fft_dtNum);
             this.fourierGroup.Controls.Add(this.fft_logCbox);
-            this.fourierGroup.Controls.Add(this.fft_plotPBox);
             this.fourierGroup.Controls.Add(this.label16);
             this.fourierGroup.Controls.Add(this.label9);
             this.fourierGroup.Controls.Add(this.label8);
@@ -489,9 +474,9 @@ namespace TimeSeriesAnalysis
             this.fourierGroup.Size = new System.Drawing.Size(532, 268);
             this.fourierGroup.TabIndex = 20;
             this.fourierGroup.TabStop = false;
-            this.fourierGroup.Text = StringData.Fourier;
+            this.fourierGroup.Text = "Fourier power spectrum";
             // 
-            // fourier_dtNum
+            // fft_dtNum
             // 
             this.fft_dtNum.DecimalPlaces = 5;
             this.fft_dtNum.Increment = new decimal(new int[] {
@@ -510,7 +495,7 @@ namespace TimeSeriesAnalysis
             0,
             0,
             327680});
-            this.fft_dtNum.Name = "fourier_dtNum";
+            this.fft_dtNum.Name = "fft_dtNum";
             this.fft_dtNum.Size = new System.Drawing.Size(90, 22);
             this.fft_dtNum.TabIndex = 26;
             this.fft_dtNum.Value = new decimal(new int[] {
@@ -519,28 +504,16 @@ namespace TimeSeriesAnalysis
             0,
             0});
             // 
-            // fourier_logCheckbox
+            // fft_logCbox
             // 
             this.fft_logCbox.AutoSize = true;
             this.fft_logCbox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.fft_logCbox.Location = new System.Drawing.Point(352, 22);
-            this.fft_logCbox.Name = "fourier_logCheckbox";
+            this.fft_logCbox.Name = "fft_logCbox";
             this.fft_logCbox.Size = new System.Drawing.Size(98, 18);
             this.fft_logCbox.TabIndex = 25;
             this.fft_logCbox.Text = "Logarithmic";
             this.fft_logCbox.UseVisualStyleBackColor = true;
-            // 
-            // fourierPBox
-            // 
-            this.fft_plotPBox.BackColor = System.Drawing.Color.White;
-            this.fft_plotPBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.fft_plotPBox.Cursor = System.Windows.Forms.Cursors.Cross;
-            this.fft_plotPBox.Location = new System.Drawing.Point(6, 21);
-            this.fft_plotPBox.Name = "fourierPBox";
-            this.fft_plotPBox.Size = new System.Drawing.Size(320, 240);
-            this.fft_plotPBox.TabIndex = 23;
-            this.fft_plotPBox.TabStop = false;
-            this.fft_plotPBox.DoubleClick += new System.EventHandler(this.fft_plotPBox_DoubleClick);
             // 
             // label16
             // 
@@ -569,7 +542,7 @@ namespace TimeSeriesAnalysis
             this.label8.TabIndex = 20;
             this.label8.Text = "Starting ω:";
             // 
-            // fourierEndFreqNum
+            // fft_fEndNum
             // 
             this.fft_fEndNum.DecimalPlaces = 2;
             this.fft_fEndNum.Increment = new decimal(new int[] {
@@ -588,7 +561,7 @@ namespace TimeSeriesAnalysis
             0,
             0,
             131072});
-            this.fft_fEndNum.Name = "fourierEndFreqNum";
+            this.fft_fEndNum.Name = "fft_fEndNum";
             this.fft_fEndNum.Size = new System.Drawing.Size(90, 22);
             this.fft_fEndNum.TabIndex = 6;
             this.fft_fEndNum.Value = new decimal(new int[] {
@@ -597,7 +570,7 @@ namespace TimeSeriesAnalysis
             0,
             0});
             // 
-            // fourierStartFreqNum
+            // fft_fStartNum
             // 
             this.fft_fStartNum.DecimalPlaces = 2;
             this.fft_fStartNum.Increment = new decimal(new int[] {
@@ -611,7 +584,7 @@ namespace TimeSeriesAnalysis
             0,
             0,
             0});
-            this.fft_fStartNum.Name = "fourierStartFreqNum";
+            this.fft_fStartNum.Name = "fft_fStartNum";
             this.fft_fStartNum.Size = new System.Drawing.Size(90, 22);
             this.fft_fStartNum.TabIndex = 5;
             // 
@@ -629,8 +602,8 @@ namespace TimeSeriesAnalysis
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.Color.Silver;
+            this.tabPage2.Controls.Add(this.chartLyapunov);
             this.tabPage2.Controls.Add(this.label19);
-            this.tabPage2.Controls.Add(this.le_plotPBox);
             this.tabPage2.Controls.Add(this.label4);
             this.tabPage2.Controls.Add(this.lyapunovRedrawBtn);
             this.tabPage2.Controls.Add(this.lyap_calc_Rad_kantz);
@@ -664,23 +637,11 @@ namespace TimeSeriesAnalysis
             // 
             this.label19.AutoSize = true;
             this.label19.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label19.Location = new System.Drawing.Point(6, 285);
+            this.label19.Location = new System.Drawing.Point(6, 192);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(174, 14);
             this.label19.TabIndex = 25;
             this.label19.Text = "Lyapunov exponent slope:";
-            // 
-            // lyapunovPBox
-            // 
-            this.le_plotPBox.BackColor = System.Drawing.Color.White;
-            this.le_plotPBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.le_plotPBox.Cursor = System.Windows.Forms.Cursors.Cross;
-            this.le_plotPBox.Location = new System.Drawing.Point(8, 307);
-            this.le_plotPBox.Name = "lyapunovPBox";
-            this.le_plotPBox.Size = new System.Drawing.Size(352, 240);
-            this.le_plotPBox.TabIndex = 13;
-            this.le_plotPBox.TabStop = false;
-            this.le_plotPBox.DoubleClick += new System.EventHandler(this.lyapunovPBox_DoubleClick);
             // 
             // label4
             // 
@@ -695,9 +656,9 @@ namespace TimeSeriesAnalysis
             // lyapunovRedrawBtn
             // 
             this.lyapunovRedrawBtn.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.lyapunovRedrawBtn.Location = new System.Drawing.Point(8, 556);
+            this.lyapunovRedrawBtn.Location = new System.Drawing.Point(6, 214);
             this.lyapunovRedrawBtn.Name = "lyapunovRedrawBtn";
-            this.lyapunovRedrawBtn.Size = new System.Drawing.Size(64, 23);
+            this.lyapunovRedrawBtn.Size = new System.Drawing.Size(100, 23);
             this.lyapunovRedrawBtn.TabIndex = 14;
             this.lyapunovRedrawBtn.Text = "Adjust";
             this.lyapunovRedrawBtn.UseVisualStyleBackColor = true;
@@ -714,7 +675,7 @@ namespace TimeSeriesAnalysis
             this.lyap_calc_Rad_kantz.Text = "Kantz";
             this.lyap_calc_Rad_kantz.UseVisualStyleBackColor = true;
             // 
-            // scaleMaxNum
+            // le_scaleMaxNum
             // 
             this.le_scaleMaxNum.DecimalPlaces = 7;
             this.le_scaleMaxNum.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -729,7 +690,7 @@ namespace TimeSeriesAnalysis
             0,
             0,
             0});
-            this.le_scaleMaxNum.Name = "scaleMaxNum";
+            this.le_scaleMaxNum.Name = "le_scaleMaxNum";
             this.le_scaleMaxNum.Size = new System.Drawing.Size(100, 22);
             this.le_scaleMaxNum.TabIndex = 11;
             this.le_scaleMaxNum.Value = new decimal(new int[] {
@@ -742,7 +703,7 @@ namespace TimeSeriesAnalysis
             // 
             this.label17.AutoSize = true;
             this.label17.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label17.Location = new System.Drawing.Point(77, 560);
+            this.label17.Location = new System.Drawing.Point(112, 218);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(40, 14);
             this.label17.TabIndex = 6;
@@ -758,23 +719,23 @@ namespace TimeSeriesAnalysis
             this.label3.TabIndex = 12;
             this.label3.Text = "Min scale:";
             // 
-            // lyapStartNum
+            // le_pStartNum
             // 
             this.le_pStartNum.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.le_pStartNum.Location = new System.Drawing.Point(123, 557);
+            this.le_pStartNum.Location = new System.Drawing.Point(158, 215);
             this.le_pStartNum.Maximum = new decimal(new int[] {
             9999999,
             0,
             0,
             0});
-            this.le_pStartNum.Name = "lyapStartNum";
+            this.le_pStartNum.Name = "le_pStartNum";
             this.le_pStartNum.Size = new System.Drawing.Size(100, 22);
             this.le_pStartNum.TabIndex = 8;
             // 
-            // lyapEndNum
+            // le_pEndNum
             // 
             this.le_pEndNum.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.le_pEndNum.Location = new System.Drawing.Point(260, 557);
+            this.le_pEndNum.Location = new System.Drawing.Point(295, 215);
             this.le_pEndNum.Maximum = new decimal(new int[] {
             9999999,
             0,
@@ -785,7 +746,7 @@ namespace TimeSeriesAnalysis
             0,
             0,
             0});
-            this.le_pEndNum.Name = "lyapEndNum";
+            this.le_pEndNum.Name = "le_pEndNum";
             this.le_pEndNum.Size = new System.Drawing.Size(100, 22);
             this.le_pEndNum.TabIndex = 9;
             this.le_pEndNum.Value = new decimal(new int[] {
@@ -811,12 +772,12 @@ namespace TimeSeriesAnalysis
             this.lyap_k_Grp.TabStop = false;
             this.lyap_k_Grp.Text = "Kantz";
             // 
-            // ComboKantzSlope
+            // le_kantz_slopeCombo
             // 
             this.le_kantz_slopeCombo.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.le_kantz_slopeCombo.FormattingEnabled = true;
             this.le_kantz_slopeCombo.Location = new System.Drawing.Point(72, 102);
-            this.le_kantz_slopeCombo.Name = "ComboKantzSlope";
+            this.le_kantz_slopeCombo.Name = "le_kantz_slopeCombo";
             this.le_kantz_slopeCombo.Size = new System.Drawing.Size(177, 22);
             this.le_kantz_slopeCombo.TabIndex = 30;
             // 
@@ -829,7 +790,7 @@ namespace TimeSeriesAnalysis
             this.lyap_k_Lbl_window.TabIndex = 21;
             this.lyap_k_Lbl_window.Text = "Theiler window:";
             // 
-            // lyap_k_Num_maxiter
+            // le_kantz_maxIterNum
             // 
             this.le_kantz_maxIterNum.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.le_kantz_maxIterNum.Location = new System.Drawing.Point(149, 21);
@@ -838,7 +799,7 @@ namespace TimeSeriesAnalysis
             0,
             0,
             0});
-            this.le_kantz_maxIterNum.Name = "lyap_k_Num_maxiter";
+            this.le_kantz_maxIterNum.Name = "le_kantz_maxIterNum";
             this.le_kantz_maxIterNum.Size = new System.Drawing.Size(100, 22);
             this.le_kantz_maxIterNum.TabIndex = 19;
             this.le_kantz_maxIterNum.Value = new decimal(new int[] {
@@ -865,7 +826,7 @@ namespace TimeSeriesAnalysis
             this.lyap_k_Lbl_scales.TabIndex = 16;
             this.lyap_k_Lbl_scales.Text = "Scales:";
             // 
-            // lyap_k_Num_window
+            // le_kantz_windowNum
             // 
             this.le_kantz_windowNum.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.le_kantz_windowNum.Location = new System.Drawing.Point(149, 48);
@@ -874,11 +835,11 @@ namespace TimeSeriesAnalysis
             0,
             0,
             0});
-            this.le_kantz_windowNum.Name = "lyap_k_Num_window";
+            this.le_kantz_windowNum.Name = "le_kantz_windowNum";
             this.le_kantz_windowNum.Size = new System.Drawing.Size(100, 22);
             this.le_kantz_windowNum.TabIndex = 20;
             // 
-            // lyap_k_Num_scales
+            // le_kantz_scalesNum
             // 
             this.le_kantz_scalesNum.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.le_kantz_scalesNum.Location = new System.Drawing.Point(149, 75);
@@ -892,7 +853,7 @@ namespace TimeSeriesAnalysis
             0,
             0,
             0});
-            this.le_kantz_scalesNum.Name = "lyap_k_Num_scales";
+            this.le_kantz_scalesNum.Name = "le_kantz_scalesNum";
             this.le_kantz_scalesNum.Size = new System.Drawing.Size(100, 22);
             this.le_kantz_scalesNum.TabIndex = 12;
             this.le_kantz_scalesNum.Value = new decimal(new int[] {
@@ -912,7 +873,7 @@ namespace TimeSeriesAnalysis
             this.startBtn.UseVisualStyleBackColor = true;
             this.startBtn.Click += new System.EventHandler(this.startBtn_Click);
             // 
-            // scaleMinNum
+            // le_scaleMinNum
             // 
             this.le_scaleMinNum.DecimalPlaces = 7;
             this.le_scaleMinNum.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -927,7 +888,7 @@ namespace TimeSeriesAnalysis
             0,
             0,
             0});
-            this.le_scaleMinNum.Name = "scaleMinNum";
+            this.le_scaleMinNum.Name = "le_scaleMinNum";
             this.le_scaleMinNum.Size = new System.Drawing.Size(100, 22);
             this.le_scaleMinNum.TabIndex = 10;
             this.le_scaleMinNum.Value = new decimal(new int[] {
@@ -940,7 +901,7 @@ namespace TimeSeriesAnalysis
             // 
             this.label18.AutoSize = true;
             this.label18.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label18.Location = new System.Drawing.Point(229, 559);
+            this.label18.Location = new System.Drawing.Point(264, 217);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(25, 14);
             this.label18.TabIndex = 7;
@@ -957,14 +918,14 @@ namespace TimeSeriesAnalysis
             this.lyap_calc_Rad_rosenstein.Text = "Rosenstein";
             this.lyap_calc_Rad_rosenstein.UseVisualStyleBackColor = true;
             // 
-            // resultText
+            // le_resultText
             // 
             this.le_resultText.BackColor = System.Drawing.Color.Khaki;
             this.le_resultText.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.le_resultText.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.le_resultText.Location = new System.Drawing.Point(792, 35);
             this.le_resultText.MaxLength = 100;
-            this.le_resultText.Name = "resultText";
+            this.le_resultText.Name = "le_resultText";
             this.le_resultText.ReadOnly = true;
             this.le_resultText.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.le_resultText.ShowSelectionMargin = true;
@@ -972,7 +933,7 @@ namespace TimeSeriesAnalysis
             this.le_resultText.TabIndex = 4;
             this.le_resultText.Text = "";
             // 
-            // tauNum
+            // le_tauNum
             // 
             this.le_tauNum.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.le_tauNum.Location = new System.Drawing.Point(792, 167);
@@ -986,7 +947,7 @@ namespace TimeSeriesAnalysis
             0,
             0,
             0});
-            this.le_tauNum.Name = "tauNum";
+            this.le_tauNum.Name = "le_tauNum";
             this.le_tauNum.Size = new System.Drawing.Size(100, 22);
             this.le_tauNum.TabIndex = 9;
             this.le_tauNum.Value = new decimal(new int[] {
@@ -1029,7 +990,7 @@ namespace TimeSeriesAnalysis
             this.lyap_r_Grp.TabStop = false;
             this.lyap_r_Grp.Text = "Rosenstein";
             // 
-            // rosStepsNum
+            // le_ros_stepsNum
             // 
             this.le_ros_stepsNum.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.le_ros_stepsNum.Location = new System.Drawing.Point(149, 21);
@@ -1043,7 +1004,7 @@ namespace TimeSeriesAnalysis
             0,
             0,
             0});
-            this.le_ros_stepsNum.Name = "rosStepsNum";
+            this.le_ros_stepsNum.Name = "le_ros_stepsNum";
             this.le_ros_stepsNum.Size = new System.Drawing.Size(100, 22);
             this.le_ros_stepsNum.TabIndex = 19;
             this.le_ros_stepsNum.Value = new decimal(new int[] {
@@ -1070,7 +1031,7 @@ namespace TimeSeriesAnalysis
             this.rosDistanceLbl.TabIndex = 16;
             this.rosDistanceLbl.Text = "Theiler window:";
             // 
-            // rosDistanceNum
+            // le_ros_distanceNum
             // 
             this.le_ros_distanceNum.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.le_ros_distanceNum.Location = new System.Drawing.Point(149, 48);
@@ -1079,11 +1040,11 @@ namespace TimeSeriesAnalysis
             0,
             0,
             0});
-            this.le_ros_distanceNum.Name = "rosDistanceNum";
+            this.le_ros_distanceNum.Name = "le_ros_distanceNum";
             this.le_ros_distanceNum.Size = new System.Drawing.Size(100, 22);
             this.le_ros_distanceNum.TabIndex = 12;
             // 
-            // dimNum
+            // le_dimNum
             // 
             this.le_dimNum.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.le_dimNum.Location = new System.Drawing.Point(792, 140);
@@ -1097,7 +1058,7 @@ namespace TimeSeriesAnalysis
             0,
             0,
             0});
-            this.le_dimNum.Name = "dimNum";
+            this.le_dimNum.Name = "le_dimNum";
             this.le_dimNum.Size = new System.Drawing.Size(100, 22);
             this.le_dimNum.TabIndex = 8;
             this.le_dimNum.Value = new decimal(new int[] {
@@ -1106,13 +1067,13 @@ namespace TimeSeriesAnalysis
             0,
             0});
             // 
-            // lyap_calc_Rad_wolf
+            // le_wolf_radio
             // 
             this.le_wolf_radio.AutoSize = true;
             this.le_wolf_radio.Checked = true;
             this.le_wolf_radio.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.le_wolf_radio.Location = new System.Drawing.Point(672, 99);
-            this.le_wolf_radio.Name = "lyap_calc_Rad_wolf";
+            this.le_wolf_radio.Name = "le_wolf_radio";
             this.le_wolf_radio.Size = new System.Drawing.Size(52, 18);
             this.le_wolf_radio.TabIndex = 14;
             this.le_wolf_radio.TabStop = true;
@@ -1133,7 +1094,7 @@ namespace TimeSeriesAnalysis
             this.lyap_w_Grp.TabStop = false;
             this.lyap_w_Grp.Text = "Wolf";
             // 
-            // stepNum
+            // le_wolf_stepNum
             // 
             this.le_wolf_stepNum.DecimalPlaces = 7;
             this.le_wolf_stepNum.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -1148,7 +1109,7 @@ namespace TimeSeriesAnalysis
             0,
             0,
             0});
-            this.le_wolf_stepNum.Name = "stepNum";
+            this.le_wolf_stepNum.Name = "le_wolf_stepNum";
             this.le_wolf_stepNum.Size = new System.Drawing.Size(100, 22);
             this.le_wolf_stepNum.TabIndex = 19;
             this.le_wolf_stepNum.Value = new decimal(new int[] {
@@ -1175,7 +1136,7 @@ namespace TimeSeriesAnalysis
             this.label5.TabIndex = 16;
             this.label5.Text = "Evolution step size:";
             // 
-            // evolveStepsNum
+            // le_wolf_evolveStepsNum
             // 
             this.le_wolf_evolveStepsNum.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.le_wolf_evolveStepsNum.Location = new System.Drawing.Point(149, 48);
@@ -1189,7 +1150,7 @@ namespace TimeSeriesAnalysis
             0,
             0,
             0});
-            this.le_wolf_evolveStepsNum.Name = "evolveStepsNum";
+            this.le_wolf_evolveStepsNum.Name = "le_wolf_evolveStepsNum";
             this.le_wolf_evolveStepsNum.Size = new System.Drawing.Size(100, 22);
             this.le_wolf_evolveStepsNum.TabIndex = 12;
             this.le_wolf_evolveStepsNum.Value = new decimal(new int[] {
@@ -1416,7 +1377,118 @@ namespace TimeSeriesAnalysis
             0,
             0});
             // 
-            // mainForm
+            // chartSignal
+            // 
+            chartArea2.AxisX.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont) 
+            | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.StaggeredLabels)));
+            chartArea2.AxisX.MajorGrid.Enabled = false;
+            chartArea2.AxisY.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont) 
+            | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.StaggeredLabels)));
+            chartArea2.AxisY.MajorGrid.Enabled = false;
+            chartArea2.Name = "ChartArea1";
+            this.chartSignal.ChartAreas.Add(chartArea2);
+            this.chartSignal.Cursor = System.Windows.Forms.Cursors.Cross;
+            this.chartSignal.Location = new System.Drawing.Point(9, 23);
+            this.chartSignal.Name = "chartSignal";
+            this.chartSignal.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Pastel;
+            series2.ChartArea = "ChartArea1";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series2.Color = System.Drawing.Color.SteelBlue;
+            series2.MarkerColor = System.Drawing.Color.SteelBlue;
+            series2.MarkerSize = 2;
+            series2.Name = "Signal";
+            this.chartSignal.Series.Add(series2);
+            this.chartSignal.Size = new System.Drawing.Size(320, 239);
+            this.chartSignal.TabIndex = 12;
+            this.chartSignal.Text = "chart1";
+            this.chartSignal.DoubleClick += new System.EventHandler(this.chartSignal_DoubleClick);
+            // 
+            // chartPoincare
+            // 
+            chartArea1.AxisX.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont) 
+            | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.StaggeredLabels)));
+            chartArea1.AxisX.LabelStyle.Format = "G5";
+            chartArea1.AxisX.LabelStyle.TruncatedLabels = true;
+            chartArea1.AxisX.MajorGrid.Enabled = false;
+            chartArea1.AxisY.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont) 
+            | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.StaggeredLabels)));
+            chartArea1.AxisY.MajorGrid.Enabled = false;
+            chartArea1.Name = "ChartArea1";
+            this.chartPoincare.ChartAreas.Add(chartArea1);
+            this.chartPoincare.Cursor = System.Windows.Forms.Cursors.Cross;
+            this.chartPoincare.Location = new System.Drawing.Point(9, 22);
+            this.chartPoincare.Name = "chartPoincare";
+            this.chartPoincare.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Pastel;
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
+            series1.MarkerColor = System.Drawing.Color.SteelBlue;
+            series1.MarkerSize = 2;
+            series1.Name = "Signal";
+            this.chartPoincare.Series.Add(series1);
+            this.chartPoincare.Size = new System.Drawing.Size(320, 239);
+            this.chartPoincare.TabIndex = 13;
+            this.chartPoincare.Text = "chart1";
+            this.chartPoincare.DoubleClick += new System.EventHandler(this.chartPoincare_DoubleClick);
+            // 
+            // chartFft
+            // 
+            chartArea3.AxisX.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont) 
+            | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.StaggeredLabels)));
+            chartArea3.AxisX.MajorGrid.Enabled = false;
+            chartArea3.AxisY.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont) 
+            | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.StaggeredLabels)));
+            chartArea3.AxisY.MajorGrid.Enabled = false;
+            chartArea3.Name = "ChartArea1";
+            this.chartFft.ChartAreas.Add(chartArea3);
+            this.chartFft.Cursor = System.Windows.Forms.Cursors.Cross;
+            this.chartFft.Location = new System.Drawing.Point(6, 22);
+            this.chartFft.Name = "chartFft";
+            this.chartFft.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Pastel;
+            series3.ChartArea = "ChartArea1";
+            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series3.Color = System.Drawing.Color.SteelBlue;
+            series3.MarkerColor = System.Drawing.Color.SteelBlue;
+            series3.MarkerSize = 2;
+            series3.Name = "Signal";
+            this.chartFft.Series.Add(series3);
+            this.chartFft.Size = new System.Drawing.Size(320, 239);
+            this.chartFft.TabIndex = 13;
+            this.chartFft.Text = "chart1";
+            this.chartFft.DoubleClick += new System.EventHandler(this.chartFft_DoubleClick);
+            // 
+            // chartLyapunov
+            // 
+            chartArea4.AxisX.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont) 
+            | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.StaggeredLabels)));
+            chartArea4.AxisX.MajorGrid.Enabled = false;
+            chartArea4.AxisY.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont) 
+            | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.StaggeredLabels)));
+            chartArea4.AxisY.MajorGrid.Enabled = false;
+            chartArea4.Name = "ChartArea1";
+            this.chartLyapunov.ChartAreas.Add(chartArea4);
+            this.chartLyapunov.Cursor = System.Windows.Forms.Cursors.Cross;
+            this.chartLyapunov.Location = new System.Drawing.Point(8, 256);
+            this.chartLyapunov.Name = "chartLyapunov";
+            this.chartLyapunov.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Pastel;
+            series4.ChartArea = "ChartArea1";
+            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series4.Color = System.Drawing.Color.SteelBlue;
+            series4.MarkerColor = System.Drawing.Color.SteelBlue;
+            series4.MarkerSize = 2;
+            series4.Name = "Signal";
+            series5.ChartArea = "ChartArea1";
+            series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series5.Color = System.Drawing.Color.Red;
+            series5.MarkerColor = System.Drawing.Color.Red;
+            series5.MarkerSize = 2;
+            series5.Name = "Series2";
+            this.chartLyapunov.Series.Add(series4);
+            this.chartLyapunov.Series.Add(series5);
+            this.chartLyapunov.Size = new System.Drawing.Size(618, 320);
+            this.chartLyapunov.TabIndex = 26;
+            this.chartLyapunov.Text = "chart1";
+            // 
+            // MainForm
             // 
             this.BackColor = System.Drawing.SystemColors.GrayText;
             this.ClientSize = new System.Drawing.Size(1160, 635);
@@ -1432,11 +1504,9 @@ namespace TimeSeriesAnalysis
             this.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "mainForm";
+            this.Name = "MainForm";
             this.Text = "Timeseries analyser";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.mainForm_FormClosing);
-            ((System.ComponentModel.ISupportInitialize)(this.poincareMapPBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.signal_plotPBox)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
@@ -1450,12 +1520,10 @@ namespace TimeSeriesAnalysis
             this.fourierGroup.ResumeLayout(false);
             this.fourierGroup.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fft_dtNum)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.fft_plotPBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fft_fEndNum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fft_fStartNum)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.le_plotPBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.le_scaleMaxNum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.le_pStartNum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.le_pEndNum)).EndInit();
@@ -1483,6 +1551,10 @@ namespace TimeSeriesAnalysis
             ((System.ComponentModel.ISupportInitialize)(this.sourceColumnNum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPreviewWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPreviewHeight)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartSignal)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartPoincare)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartFft)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartLyapunov)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1491,9 +1563,7 @@ namespace TimeSeriesAnalysis
         #endregion
 
         private Button openFileBtn;
-        private PictureBox poincareMapPBox;
         private Button plotBtn;
-        private PictureBox signal_plotPBox;
         private Label fileNameLbl;
         private Button saveBtn;
         private TabControl tabControl1;
@@ -1528,11 +1598,9 @@ namespace TimeSeriesAnalysis
         private Label tauLbl;
         private Label label9;
         private Label label8;
-        private PictureBox le_plotPBox;
         private GroupBox waveletGroup;
         private Label waveletNameLbl;
         private CheckBox waveletCheckbox;
-        private PictureBox fft_plotPBox;
         private PictureBox wav_plotPBox;
         private Button lyapunovRedrawBtn;
         private Label label17;
@@ -1578,6 +1646,10 @@ namespace TimeSeriesAnalysis
         private NumericUpDown numPreviewHeight;
         private GroupBox groupBox2;
         private GroupBox groupBox1;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chartSignal;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chartPoincare;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chartFft;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chartLyapunov;
     }
 }
 

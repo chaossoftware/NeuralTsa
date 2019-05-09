@@ -71,8 +71,11 @@
       <HintPath>..\MathLib\lib\MWArray.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions.cs" />
@@ -81,6 +84,12 @@
     </Compile>
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ChartPreviewForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ChartPreviewForm.Designer.cs">
+      <DependentUpon>ChartPreviewForm.cs</DependentUpon>
     </Compile>
     <Compile Include="PreviewForm.cs">
       <SubType>Form</SubType>
@@ -95,6 +104,9 @@
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ChartPreviewForm.resx">
+      <DependentUpon>ChartPreviewForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PreviewForm.resx">
       <DependentUpon>PreviewForm.cs</DependentUpon>

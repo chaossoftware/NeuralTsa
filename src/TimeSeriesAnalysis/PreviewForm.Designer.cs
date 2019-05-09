@@ -32,27 +32,12 @@ namespace TimeSeriesAnalysis
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PreviewForm));
-            this.previewPBox = new System.Windows.Forms.PictureBox();
             this.contextMenu = new System.Windows.Forms.ContextMenu();
             this.saveAsItem = new System.Windows.Forms.MenuItem();
             this.copyItem = new System.Windows.Forms.MenuItem();
+            this.previewPBox = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.previewPBox)).BeginInit();
             this.SuspendLayout();
-            // 
-            // previewPBox
-            // 
-            this.previewPBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.previewPBox.BackColor = System.Drawing.Color.White;
-            this.previewPBox.Cursor = System.Windows.Forms.Cursors.Cross;
-            this.previewPBox.Location = new System.Drawing.Point(0, 0);
-            this.previewPBox.Name = "previewPBox";
-            this.previewPBox.Size = new System.Drawing.Size(1008, 561);
-            this.previewPBox.TabIndex = 0;
-            this.previewPBox.TabStop = false;
-            this.previewPBox.SizeChanged += new System.EventHandler(this.previewPBox_SizeChanged);
-            this.previewPBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.PreviewContextMenu);
             // 
             // contextMenu
             // 
@@ -72,6 +57,21 @@ namespace TimeSeriesAnalysis
             this.copyItem.Text = "Copy";
             this.copyItem.Click += new System.EventHandler(this.copyItem_Click);
             // 
+            // previewPBox
+            // 
+            this.previewPBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.previewPBox.BackColor = System.Drawing.Color.White;
+            this.previewPBox.Cursor = System.Windows.Forms.Cursors.Cross;
+            this.previewPBox.Location = new System.Drawing.Point(0, 0);
+            this.previewPBox.Name = "previewPBox";
+            this.previewPBox.Size = new System.Drawing.Size(1008, 561);
+            this.previewPBox.TabIndex = 0;
+            this.previewPBox.TabStop = false;
+            this.previewPBox.SizeChanged += new System.EventHandler(this.previewPBox_SizeChanged);
+            this.previewPBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.PreviewContextMenu);
+            // 
             // PreviewForm
             // 
             this.ClientSize = new System.Drawing.Size(1008, 561);
@@ -87,10 +87,9 @@ namespace TimeSeriesAnalysis
         }
 
         #endregion
-
-        public PictureBox previewPBox;
         public ContextMenu contextMenu;
         private MenuItem saveAsItem;
         private MenuItem copyItem;
+        public PictureBox previewPBox;
     }
 }

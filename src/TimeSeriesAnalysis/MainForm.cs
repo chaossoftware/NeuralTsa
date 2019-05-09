@@ -89,15 +89,17 @@ namespace TimeSeriesAnalysis {
             if (!Directory.Exists(outDir))
                 Directory.CreateDirectory(outDir);
 
-            if (signal_plotPBox.Image != null && poincareMapPBox.Image != null)
+            if (chartSignal.Series[0].Points.Count != 0 && chartPoincare.Series[0].Points.Count != 0)
             {
-                signal_plotPBox.Image.Save(fName + "_plot.png", ImageFormat.Png);
-                poincareMapPBox.Image.Save(fName + "_poincare.png", ImageFormat.Png);
+                routines.SaveChart(chartSignal, fName + "_plot");
+                routines.SaveChart(chartPoincare, fName + "_poincare");
                 DataWriter.CreateDataFile(fName + "_signal", routines.sourceData.GetTimeSeriesString(false));
             }
 
-            if (fft_plotPBox.Image != null)
-                fft_plotPBox.Image.Save(fName + "_fourier.png", ImageFormat.Png);
+            if (chartFft.Series[0].Points.Count != 0)
+            {
+                routines.SaveChart(chartFft, fName + "_fourier");
+            }
 
             if (wav_plotPBox.Image != null)
                 wav_plotPBox.Image.Save(fName + "_wavelet.png", ImageFormat.Png);
@@ -105,8 +107,10 @@ namespace TimeSeriesAnalysis {
             if (routines.lyapunov != null)
                 DataWriter.CreateDataFile(fName + "_lyapunov.txt", routines.lyapunov.GetInfoFull());
 
-            if (le_plotPBox.Image != null)
-                le_plotPBox.Image.Save(fName + "_lyapunovInTime.png", ImageFormat.Png);
+            if (chartLyapunov.Series[0].Points.Count != 0)
+            {
+                routines.SaveChart(chartLyapunov, fName + "_lyapunovSlope");
+            }
         }
 
         private void FillUiWithData()
@@ -131,32 +135,16 @@ namespace TimeSeriesAnalysis {
 
             routines.DeleteTempFiles();
 
-            signal_plotPBox.Image = routines
-                .GetSignalPlot(signal_plotPBox.Size, 1, useTimeCheckbox.Checked, startPointNum.ToInt(), endPointNum.ToInt())
-                .Plot();
-
-            poincareMapPBox.Image = routines
-                .GetPoincarePlot(poincareMapPBox.Size, 1)
-                .Plot();
+            routines.FillSignalChart(this.chartSignal);
+            routines.FillPoincareChart(this.chartPoincare);
 
             if (fourierCheckbox.Checked)
             {
-                try
-                {
-                    fft_plotPBox.Image = routines.GetFourierPlot(
-                        signal_plotPBox.Size, 
-                        1, 
-                        fft_fStartNum.ToDouble(), 
-                        fft_fEndNum.ToDouble(), 
-                        fft_dtNum.ToDouble(), 
-                        fft_logCbox.Checked)
-                        .Plot();
-                }
-                catch (Exception ex)
-                {
-                    fft_plotPBox.Image = null;
-                    MessageBox.Show($"Unable to build {StringData.Fourier}:\n" + ex.Message);
-                }
+                routines.FillFourierChart(chartFft,
+                    fft_fStartNum.ToDouble(),
+                    fft_fEndNum.ToDouble(),
+                    fft_dtNum.ToDouble(),
+                    fft_logCbox.Checked);
             }
 
             if (waveletCheckbox.Checked)
@@ -181,69 +169,16 @@ namespace TimeSeriesAnalysis {
             try
             {
 
-                string res;
                 if (routines.lyapunov is KantzMethod)
                     ((KantzMethod)routines.lyapunov).SetSlope(this.le_kantz_slopeCombo.Text);
 
-                le_plotPBox.Image = routines.GetLyapunovPlot(le_plotPBox.Size, 1, le_pStartNum.ToInt(), le_pEndNum.ToInt(), le_wolf_radio.Checked, out res).Plot();
+                var res = routines.FillLyapunovChart(chartLyapunov, le_pStartNum.ToInt(), le_pEndNum.ToInt(), le_wolf_radio.Checked);
 
                 if (routines.lyapunov is KantzMethod || routines.lyapunov is RosensteinMethod)
                     le_resultText.Text = res;
             }
             catch (Exception ex) {
                 MessageBox.Show("Error plotting Lyapunov slope: " + ex.Message); 
-            }
-        }
-
-        private void poincareMapPBox_DoubleClick(object sender, EventArgs e)
-        {
-            if (poincareMapPBox.Image != null)
-            {
-                var pf = GetPreviewForm(StringData.Poincare);
-                var pp = routines.GetPoincarePlot(pf.previewPBox.Size, 1);
-                pf.previewPBox.Image = pp.Plot();
-                pf.Plot = pp;
-            }
-        }
-
-        private void signal_plotPBox_DoubleClick(object sender, EventArgs e)
-        {
-            if (signal_plotPBox.Image != null)
-            {
-                var pf = GetPreviewForm(StringData.Signal);
-
-                var sp = routines.GetSignalPlot(
-                    pf.previewPBox.Size, 
-                    1, 
-                    useTimeCheckbox.Checked, 
-                    startPointNum.ToInt(), 
-                    endPointNum.ToInt());
-
-                pf.previewPBox.Image = sp.Plot();
-                pf.Plot = sp;
-            }
-        }
-
-        private void lyapunovPBox_DoubleClick(object sender, EventArgs e)
-        {
-            if (le_plotPBox.Image != null)
-            {
-                string tmp;
-                var pf = GetPreviewForm(StringData.LeInTime);
-                var sp = routines.GetLyapunovPlot(pf.previewPBox.Size, 1, le_pStartNum.ToInt(), le_pEndNum.ToInt(), le_wolf_radio.Checked, out tmp);
-                pf.previewPBox.Image = sp.Plot();
-                pf.Plot = sp;
-            }
-        }
-
-        private void fft_plotPBox_DoubleClick(object sender, EventArgs e)
-        {
-            if (fft_plotPBox.Image != null)
-            {
-                var pf = GetPreviewForm(StringData.Fourier);
-                var sp = routines.GetFourierPlot(pf.previewPBox.Size, 1, fft_fStartNum.ToDouble(), fft_fEndNum.ToDouble(), fft_dtNum.ToDouble(), fft_logCbox.Checked);
-                pf.previewPBox.Image = sp.Plot();
-                pf.Plot = sp;
             }
         }
 
@@ -366,14 +301,7 @@ namespace TimeSeriesAnalysis {
 
                 try
                 {
-                    le_plotPBox.Image = routines.GetLyapunovPlot(
-                        le_plotPBox.Size, 
-                        1, 
-                        le_pStartNum.ToInt(), 
-                        le_pEndNum.ToInt(), 
-                        le_wolf_radio.Checked, 
-                        out result)
-                        .Plot();
+                    routines.FillLyapunovChart(chartLyapunov, le_pStartNum.ToInt(), le_pEndNum.ToInt(), le_wolf_radio.Checked);
                 }
                 catch (Exception ex)
                 {
@@ -410,11 +338,16 @@ namespace TimeSeriesAnalysis {
         private void CleanUp()
         {
             routines.sourceData = null;
-            signal_plotPBox.Image = null;
-            poincareMapPBox.Image = null;
+            chartSignal.Series[0].Points.Clear();
+            chartPoincare.Series[0].Points.Clear();
+            chartFft.Series[0].Points.Clear();
+
+            foreach (var series in chartLyapunov.Series)
+            {
+                series.Points.Clear();
+            }
+            
             wav_plotPBox.Image = null;
-            fft_plotPBox.Image = null;
-            le_plotPBox.Image = null;
             routines.lyapunov = null;
             routines.DeleteTempFiles();
         }
@@ -441,6 +374,49 @@ namespace TimeSeriesAnalysis {
             form.Show();
 
             return form;
+        }
+
+        private ChartPreviewForm GetChartPreviewForm(string title)
+        {
+            var form = new ChartPreviewForm(
+                title,
+                this.numPreviewWidth.ToInt(),
+                this.numPreviewHeight.ToInt());
+
+            form.Show();
+
+            return form;
+        }
+
+        private void chartSignal_DoubleClick(object sender, EventArgs e)
+        {
+            if (chartSignal.Series[0].Points.Count != 0)
+            {
+                var pf = GetChartPreviewForm(StringData.Signal);
+                routines.FillSignalChart(pf.chart);
+            }
+        }
+
+        private void chartPoincare_DoubleClick(object sender, EventArgs e)
+        {
+            if (chartPoincare.Series[0].Points.Count != 0)
+            {
+                var pf = GetChartPreviewForm(StringData.Poincare);
+                routines.FillPoincareChart(pf.chart);
+            }
+        }
+
+        private void chartFft_DoubleClick(object sender, EventArgs e)
+        {
+            if (chartFft.Series[0].Points.Count != 0)
+            {
+                var pf = GetChartPreviewForm(StringData.Signal);
+                routines.FillFourierChart(pf.chart,
+                    fft_fStartNum.ToDouble(),
+                    fft_fEndNum.ToDouble(),
+                    fft_dtNum.ToDouble(),
+                    fft_logCbox.Checked);
+            }
         }
     }
 }
