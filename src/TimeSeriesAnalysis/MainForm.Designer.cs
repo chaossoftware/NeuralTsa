@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using MathLib.DrawEngine;
 
 namespace TimeSeriesAnalysis
 {
@@ -30,15 +31,6 @@ namespace TimeSeriesAnalysis
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.openFileBtn = new System.Windows.Forms.Button();
             this.plotBtn = new System.Windows.Forms.Button();
@@ -47,7 +39,9 @@ namespace TimeSeriesAnalysis
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.chartPoincare = new MathChart();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.chartSignal = new MathLib.DrawEngine.MathChart();
             this.waveletGroup = new System.Windows.Forms.GroupBox();
             this.wav_plotPBox = new System.Windows.Forms.PictureBox();
             this.label10 = new System.Windows.Forms.Label();
@@ -62,6 +56,7 @@ namespace TimeSeriesAnalysis
             this.waveletNameLbl = new System.Windows.Forms.Label();
             this.waveletCheckbox = new System.Windows.Forms.CheckBox();
             this.fourierGroup = new System.Windows.Forms.GroupBox();
+            this.chartFft = new MathChart();
             this.fft_dtNum = new System.Windows.Forms.NumericUpDown();
             this.fft_logCbox = new System.Windows.Forms.CheckBox();
             this.label16 = new System.Windows.Forms.Label();
@@ -71,6 +66,7 @@ namespace TimeSeriesAnalysis
             this.fft_fStartNum = new System.Windows.Forms.NumericUpDown();
             this.fourierCheckbox = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.chartLyapunov = new MathChart();
             this.label19 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.lyapunovRedrawBtn = new System.Windows.Forms.Button();
@@ -124,24 +120,24 @@ namespace TimeSeriesAnalysis
             this.numPreviewWidth = new System.Windows.Forms.NumericUpDown();
             this.label21 = new System.Windows.Forms.Label();
             this.numPreviewHeight = new System.Windows.Forms.NumericUpDown();
-            this.chartSignal = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.chartPoincare = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.chartFft = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.chartLyapunov = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chartPoincare)).BeginInit();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chartSignal)).BeginInit();
             this.waveletGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.wav_plotPBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.wav_dtNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.wav_fEndNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.wav_fStartNum)).BeginInit();
             this.fourierGroup.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chartFft)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fft_dtNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fft_fEndNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fft_fStartNum)).BeginInit();
             this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chartLyapunov)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.le_scaleMaxNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.le_pStartNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.le_pEndNum)).BeginInit();
@@ -165,10 +161,6 @@ namespace TimeSeriesAnalysis
             ((System.ComponentModel.ISupportInitialize)(this.sourceColumnNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPreviewWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPreviewHeight)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chartSignal)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chartPoincare)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chartFft)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chartLyapunov)).BeginInit();
             this.SuspendLayout();
             // 
             // openFileBtn
@@ -254,6 +246,15 @@ namespace TimeSeriesAnalysis
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Poincare pseudosection";
             // 
+            // chartPoincare
+            // 
+            this.chartPoincare.Location = new System.Drawing.Point(9, 22);
+            this.chartPoincare.Name = "chartPoincare";
+            this.chartPoincare.Size = new System.Drawing.Size(320, 239);
+            this.chartPoincare.TabIndex = 13;
+            this.chartPoincare.Text = "chart1";
+            this.chartPoincare.DoubleClick += new System.EventHandler(this.chartPoincare_DoubleClick);
+            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.chartSignal);
@@ -264,6 +265,16 @@ namespace TimeSeriesAnalysis
             this.groupBox1.TabIndex = 23;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Signal";
+            // 
+            // chartSignal
+            // 
+            this.chartSignal.Location = new System.Drawing.Point(9, 21);
+            this.chartSignal.Name = "chartSignal";
+            this.chartSignal.Size = new System.Drawing.Size(320, 240);
+            this.chartSignal.TabIndex = 0;
+            this.chartSignal.Text = "mathChart1";
+            this.chartSignal.DoubleClick += new System.EventHandler(this.chartSignal_DoubleClick);
+
             // 
             // waveletGroup
             // 
@@ -476,6 +487,15 @@ namespace TimeSeriesAnalysis
             this.fourierGroup.TabStop = false;
             this.fourierGroup.Text = "Fourier power spectrum";
             // 
+            // chartFft
+            // 
+            this.chartFft.Location = new System.Drawing.Point(6, 22);
+            this.chartFft.Name = "chartFft";
+            this.chartFft.Size = new System.Drawing.Size(320, 239);
+            this.chartFft.TabIndex = 13;
+            this.chartFft.Text = "chart1";
+            this.chartFft.DoubleClick += new System.EventHandler(this.chartFft_DoubleClick);
+            // 
             // fft_dtNum
             // 
             this.fft_dtNum.DecimalPlaces = 5;
@@ -632,6 +652,14 @@ namespace TimeSeriesAnalysis
             this.tabPage2.Size = new System.Drawing.Size(898, 585);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Lyapunov exponents";
+            // 
+            // chartLyapunov
+            // 
+            this.chartLyapunov.Location = new System.Drawing.Point(8, 256);
+            this.chartLyapunov.Name = "chartLyapunov";
+            this.chartLyapunov.Size = new System.Drawing.Size(618, 320);
+            this.chartLyapunov.TabIndex = 26;
+            this.chartLyapunov.Text = "chart1";
             // 
             // label19
             // 
@@ -1377,117 +1405,6 @@ namespace TimeSeriesAnalysis
             0,
             0});
             // 
-            // chartSignal
-            // 
-            chartArea2.AxisX.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont) 
-            | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.StaggeredLabels)));
-            chartArea2.AxisX.MajorGrid.Enabled = false;
-            chartArea2.AxisY.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont) 
-            | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.StaggeredLabels)));
-            chartArea2.AxisY.MajorGrid.Enabled = false;
-            chartArea2.Name = "ChartArea1";
-            this.chartSignal.ChartAreas.Add(chartArea2);
-            this.chartSignal.Cursor = System.Windows.Forms.Cursors.Cross;
-            this.chartSignal.Location = new System.Drawing.Point(9, 23);
-            this.chartSignal.Name = "chartSignal";
-            this.chartSignal.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Pastel;
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series2.Color = System.Drawing.Color.SteelBlue;
-            series2.MarkerColor = System.Drawing.Color.SteelBlue;
-            series2.MarkerSize = 2;
-            series2.Name = "Signal";
-            this.chartSignal.Series.Add(series2);
-            this.chartSignal.Size = new System.Drawing.Size(320, 239);
-            this.chartSignal.TabIndex = 12;
-            this.chartSignal.Text = "chart1";
-            this.chartSignal.DoubleClick += new System.EventHandler(this.chartSignal_DoubleClick);
-            // 
-            // chartPoincare
-            // 
-            chartArea1.AxisX.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont) 
-            | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.StaggeredLabels)));
-            chartArea1.AxisX.LabelStyle.Format = "G5";
-            chartArea1.AxisX.LabelStyle.TruncatedLabels = true;
-            chartArea1.AxisX.MajorGrid.Enabled = false;
-            chartArea1.AxisY.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont) 
-            | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.StaggeredLabels)));
-            chartArea1.AxisY.MajorGrid.Enabled = false;
-            chartArea1.Name = "ChartArea1";
-            this.chartPoincare.ChartAreas.Add(chartArea1);
-            this.chartPoincare.Cursor = System.Windows.Forms.Cursors.Cross;
-            this.chartPoincare.Location = new System.Drawing.Point(9, 22);
-            this.chartPoincare.Name = "chartPoincare";
-            this.chartPoincare.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Pastel;
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
-            series1.MarkerColor = System.Drawing.Color.SteelBlue;
-            series1.MarkerSize = 2;
-            series1.Name = "Signal";
-            this.chartPoincare.Series.Add(series1);
-            this.chartPoincare.Size = new System.Drawing.Size(320, 239);
-            this.chartPoincare.TabIndex = 13;
-            this.chartPoincare.Text = "chart1";
-            this.chartPoincare.DoubleClick += new System.EventHandler(this.chartPoincare_DoubleClick);
-            // 
-            // chartFft
-            // 
-            chartArea3.AxisX.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont) 
-            | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.StaggeredLabels)));
-            chartArea3.AxisX.MajorGrid.Enabled = false;
-            chartArea3.AxisY.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont) 
-            | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.StaggeredLabels)));
-            chartArea3.AxisY.MajorGrid.Enabled = false;
-            chartArea3.Name = "ChartArea1";
-            this.chartFft.ChartAreas.Add(chartArea3);
-            this.chartFft.Cursor = System.Windows.Forms.Cursors.Cross;
-            this.chartFft.Location = new System.Drawing.Point(6, 22);
-            this.chartFft.Name = "chartFft";
-            this.chartFft.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Pastel;
-            series3.ChartArea = "ChartArea1";
-            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series3.Color = System.Drawing.Color.SteelBlue;
-            series3.MarkerColor = System.Drawing.Color.SteelBlue;
-            series3.MarkerSize = 2;
-            series3.Name = "Signal";
-            this.chartFft.Series.Add(series3);
-            this.chartFft.Size = new System.Drawing.Size(320, 239);
-            this.chartFft.TabIndex = 13;
-            this.chartFft.Text = "chart1";
-            this.chartFft.DoubleClick += new System.EventHandler(this.chartFft_DoubleClick);
-            // 
-            // chartLyapunov
-            // 
-            chartArea4.AxisX.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont) 
-            | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.StaggeredLabels)));
-            chartArea4.AxisX.MajorGrid.Enabled = false;
-            chartArea4.AxisY.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont) 
-            | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.StaggeredLabels)));
-            chartArea4.AxisY.MajorGrid.Enabled = false;
-            chartArea4.Name = "ChartArea1";
-            this.chartLyapunov.ChartAreas.Add(chartArea4);
-            this.chartLyapunov.Cursor = System.Windows.Forms.Cursors.Cross;
-            this.chartLyapunov.Location = new System.Drawing.Point(8, 256);
-            this.chartLyapunov.Name = "chartLyapunov";
-            this.chartLyapunov.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Pastel;
-            series4.ChartArea = "ChartArea1";
-            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series4.Color = System.Drawing.Color.SteelBlue;
-            series4.MarkerColor = System.Drawing.Color.SteelBlue;
-            series4.MarkerSize = 2;
-            series4.Name = "Signal";
-            series5.ChartArea = "ChartArea1";
-            series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series5.Color = System.Drawing.Color.Red;
-            series5.MarkerColor = System.Drawing.Color.Red;
-            series5.MarkerSize = 2;
-            series5.Name = "Series2";
-            this.chartLyapunov.Series.Add(series4);
-            this.chartLyapunov.Series.Add(series5);
-            this.chartLyapunov.Size = new System.Drawing.Size(618, 320);
-            this.chartLyapunov.TabIndex = 26;
-            this.chartLyapunov.Text = "chart1";
-            // 
             // MainForm
             // 
             this.BackColor = System.Drawing.SystemColors.GrayText;
@@ -1510,7 +1427,9 @@ namespace TimeSeriesAnalysis
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.chartPoincare)).EndInit();
             this.groupBox1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.chartSignal)).EndInit();
             this.waveletGroup.ResumeLayout(false);
             this.waveletGroup.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.wav_plotPBox)).EndInit();
@@ -1519,11 +1438,13 @@ namespace TimeSeriesAnalysis
             ((System.ComponentModel.ISupportInitialize)(this.wav_fStartNum)).EndInit();
             this.fourierGroup.ResumeLayout(false);
             this.fourierGroup.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chartFft)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fft_dtNum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fft_fEndNum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fft_fStartNum)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chartLyapunov)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.le_scaleMaxNum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.le_pStartNum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.le_pEndNum)).EndInit();
@@ -1551,10 +1472,6 @@ namespace TimeSeriesAnalysis
             ((System.ComponentModel.ISupportInitialize)(this.sourceColumnNum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPreviewWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPreviewHeight)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chartSignal)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chartPoincare)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chartFft)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chartLyapunov)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1646,10 +1563,10 @@ namespace TimeSeriesAnalysis
         private NumericUpDown numPreviewHeight;
         private GroupBox groupBox2;
         private GroupBox groupBox1;
-        private System.Windows.Forms.DataVisualization.Charting.Chart chartSignal;
-        private System.Windows.Forms.DataVisualization.Charting.Chart chartPoincare;
-        private System.Windows.Forms.DataVisualization.Charting.Chart chartFft;
-        private System.Windows.Forms.DataVisualization.Charting.Chart chartLyapunov;
+        private MathChart chartPoincare;
+        private MathChart chartFft;
+        private MathChart chartLyapunov;
+        private MathChart chartSignal;
     }
 }
 

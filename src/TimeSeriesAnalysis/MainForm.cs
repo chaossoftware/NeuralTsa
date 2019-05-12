@@ -22,7 +22,7 @@ namespace TimeSeriesAnalysis {
         //File open and read
         private void openFileBtn_Click(object sender, EventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
+            var openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "All files|*.*|Time series data|*.dat *.txt *.csv";
             openFileDialog.ShowDialog();
             string fName = openFileDialog.FileName;
@@ -338,14 +338,10 @@ namespace TimeSeriesAnalysis {
         private void CleanUp()
         {
             routines.sourceData = null;
-            chartSignal.Series[0].Points.Clear();
-            chartPoincare.Series[0].Points.Clear();
-            chartFft.Series[0].Points.Clear();
-
-            foreach (var series in chartLyapunov.Series)
-            {
-                series.Points.Clear();
-            }
+            chartSignal.ClearChart();
+            chartPoincare.ClearChart();
+            chartFft.ClearChart();
+            chartLyapunov.ClearChart();
             
             wav_plotPBox.Image = null;
             routines.lyapunov = null;
@@ -390,7 +386,7 @@ namespace TimeSeriesAnalysis {
 
         private void chartSignal_DoubleClick(object sender, EventArgs e)
         {
-            if (chartSignal.Series[0].Points.Count != 0)
+            if (chartSignal.HasData)
             {
                 var pf = GetChartPreviewForm(StringData.Signal);
                 routines.FillSignalChart(pf.chart);
@@ -399,7 +395,7 @@ namespace TimeSeriesAnalysis {
 
         private void chartPoincare_DoubleClick(object sender, EventArgs e)
         {
-            if (chartPoincare.Series[0].Points.Count != 0)
+            if (chartPoincare.HasData)
             {
                 var pf = GetChartPreviewForm(StringData.Poincare);
                 routines.FillPoincareChart(pf.chart);

@@ -1,5 +1,5 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
+using MathLib.DrawEngine;
 
 namespace TimeSeriesAnalysis
 {
@@ -31,19 +31,17 @@ namespace TimeSeriesAnalysis
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ChartPreviewForm));
-            this.contextMenu = new System.Windows.Forms.ContextMenu();
-            this.saveAsItem = new System.Windows.Forms.MenuItem();
-            this.copyItem = new System.Windows.Forms.MenuItem();
-            this.chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.contextMenu = new ContextMenu();
+            this.saveAsItem = new MenuItem();
+            this.copyItem = new MenuItem();
+            this.chart = new MathChart();
             ((System.ComponentModel.ISupportInitialize)(this.chart)).BeginInit();
             this.SuspendLayout();
             // 
             // contextMenu
             // 
-            this.contextMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.contextMenu.MenuItems.AddRange(new MenuItem[] {
             this.saveAsItem,
             this.copyItem});
             // 
@@ -61,28 +59,9 @@ namespace TimeSeriesAnalysis
             // 
             // chart
             // 
-            this.chart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea1.AxisX.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont) 
-            | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.StaggeredLabels)));
-            chartArea1.AxisX.LabelStyle.Format = "G5";
-            chartArea1.AxisX.MajorGrid.Enabled = false;
-            chartArea1.AxisY.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont) 
-            | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.StaggeredLabels)));
-            chartArea1.AxisY.MajorGrid.Enabled = false;
-            chartArea1.Name = "ChartArea1";
-            this.chart.ChartAreas.Add(chartArea1);
+            this.chart.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             this.chart.Location = new System.Drawing.Point(1, 1);
             this.chart.Name = "chart";
-            this.chart.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Pastel;
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series1.Color = System.Drawing.Color.SteelBlue;
-            series1.MarkerColor = System.Drawing.Color.SteelBlue;
-            series1.MarkerSize = 2;
-            series1.Name = "Signal";
-            this.chart.Series.Add(series1);
             this.chart.Size = new System.Drawing.Size(1007, 559);
             this.chart.TabIndex = 13;
             this.chart.Text = "chart1";
@@ -106,6 +85,6 @@ namespace TimeSeriesAnalysis
         public ContextMenu contextMenu;
         private MenuItem saveAsItem;
         private MenuItem copyItem;
-        public System.Windows.Forms.DataVisualization.Charting.Chart chart;
+        public MathChart chart;
     }
 }
