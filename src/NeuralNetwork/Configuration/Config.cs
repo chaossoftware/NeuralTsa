@@ -181,7 +181,10 @@ namespace NeuralAnalyser.Configuration
                 var dataColumn = int.Parse(xFile.Attribute("dataColumn").Value, 
                     NumberStyles.Integer, CultureInfo.InvariantCulture);
 
-                File = new DataFile(fName, dataColumn);
+                var points = int.Parse(xFile.Attribute("points").Value,
+                    NumberStyles.Integer, CultureInfo.InvariantCulture);
+
+                File = new DataFile(fName, dataColumn, points);
             }
             catch
             {
@@ -192,14 +195,17 @@ namespace NeuralAnalyser.Configuration
 
     public class DataFile
     {
-        public DataFile(string fileName, int dataColumn)
+        public DataFile(string fileName, int dataColumn, int points)
         {
             this.FileName = fileName;
             this.DataColumn = dataColumn;
+            this.Points = points;
         }
 
         public string FileName { get; set; }
 
         public int DataColumn { get; set; }
+
+        public int Points { get; set; }
     }
 }

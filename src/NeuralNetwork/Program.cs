@@ -21,7 +21,7 @@ namespace NeuralAnalyser
             var config = new Config();
             var data = new SourceData(config.File.FileName);
 
-            data.SetTimeSeries(config.File.DataColumn - 1, 0, data.Length - 1, 1, false);
+            data.SetTimeSeries(config.File.DataColumn - 1, 0, data.Length - 1, config.File.Points, false);
 
             if (!Directory.Exists(config.Output.OutDirectory))
             {

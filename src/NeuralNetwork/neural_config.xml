@@ -30,7 +30,7 @@
 	<!-- Interval for testing neural net results (default 1e4) -->
  
 	<FilesToAnalyse>
-    <file path="TestData\henon" dataColumn="1" start="" end="" pts=""/>
+    <file path="TestData\henon" dataColumn="1" start="" end="" points="1"/>
 	</FilesToAnalyse>
 
   <Output>
