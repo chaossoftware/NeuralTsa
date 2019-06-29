@@ -87,29 +87,35 @@ namespace TimeSeriesAnalysis {
             string fName = Path.Combine(outDir, routines.sourceData.FileName);
 
             if (!Directory.Exists(outDir))
-                Directory.CreateDirectory(outDir);
-
-            if (chartSignal.Series[0].Points.Count != 0 && chartPoincare.Series[0].Points.Count != 0)
             {
-                routines.SaveChart(chartSignal, fName + "_plot");
-                routines.SaveChart(chartPoincare, fName + "_poincare");
+                Directory.CreateDirectory(outDir);
+            }
+
+            if (chartSignal.HasData && chartPoincare.HasData)
+            {
+                chartSignal.SaveImage(fName + "_plot", ImageFormat.Png);
+                chartPoincare.SaveImage(fName + "_poincare", ImageFormat.Png);
                 DataWriter.CreateDataFile(fName + "_signal", routines.sourceData.GetTimeSeriesString(false));
             }
 
-            if (chartFft.Series[0].Points.Count != 0)
+            if (chartFft.HasData)
             {
-                routines.SaveChart(chartFft, fName + "_fourier");
+                chartFft.SaveImage(fName + "_fourier", ImageFormat.Png);
             }
 
             if (wav_plotPBox.Image != null)
+            {
                 wav_plotPBox.Image.Save(fName + "_wavelet.png", ImageFormat.Png);
+            }
 
             if (routines.lyapunov != null)
-                DataWriter.CreateDataFile(fName + "_lyapunov.txt", routines.lyapunov.GetInfoFull());
-
-            if (chartLyapunov.Series[0].Points.Count != 0)
             {
-                routines.SaveChart(chartLyapunov, fName + "_lyapunovSlope");
+                DataWriter.CreateDataFile(fName + "_lyapunov.txt", routines.lyapunov.GetInfoFull());
+            }
+
+            if (chartLyapunov.HasData)
+            {
+                chartLyapunov.SaveImage(fName + "_lyapunovSlope", ImageFormat.Png);
             }
         }
 

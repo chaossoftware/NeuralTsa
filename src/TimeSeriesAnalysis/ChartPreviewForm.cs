@@ -47,7 +47,7 @@ namespace TimeSeriesAnalysis
 
             if (chart.Series[0].Points.Count != 0)
             {
-                GetBitmap().Save(fileName, ImageFormat.Png);
+                chart.SaveImage(fileName, ImageFormat.Png);
             }
         }
 

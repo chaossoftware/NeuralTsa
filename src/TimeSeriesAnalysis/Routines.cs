@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
@@ -21,17 +20,17 @@ namespace TimeSeriesAnalysis
         public void FillSignalChart(MathChart chart)
         {
             chart.ClearChart();
-            chart.AddTimeSeries("Signal", sourceData.TimeSeries, SeriesChartType.Line);
             chart.ChartAreas[0].Axes[0].Title = "t";
             chart.ChartAreas[0].Axes[1].Title = "f(t)";
+            chart.AddTimeSeries("Signal", sourceData.TimeSeries, SeriesChartType.Line);
         }
 
         public void FillPoincareChart(MathChart chart)
         {
             chart.ClearChart();
-            chart.AddTimeSeries("Pseudo Poincare Section", PseudoPoincareMap.GetMapDataFrom(sourceData.TimeSeries.YValues), SeriesChartType.Point);
             chart.ChartAreas[0].Axes[0].Title = "f(t)";
             chart.ChartAreas[0].Axes[1].Title = "f(t+1)";
+            chart.AddTimeSeries("Pseudo Poincare Section", PseudoPoincareMap.GetMapDataFrom(sourceData.TimeSeries.YValues), SeriesChartType.Point);
         }
 
         public void FillFourierChart(MathChart chart, double statrFreq, double endFreq, double dt, bool logScale)
@@ -108,14 +107,6 @@ namespace TimeSeriesAnalysis
         {
             File.Delete(StringData.WaveletFile);
             File.Delete(StringData.WaveletPreviewFile);
-        }
-
-        public void SaveChart(Chart chart, string filePath)
-        {
-            var bitmap = new Bitmap(chart.Width, chart.Height);
-            chart.DrawToBitmap(bitmap, new Rectangle(0, 0, chart.Width, chart.Height));
-
-            bitmap.Save(filePath + "." + ImageFormat.Png, ImageFormat.Png);
         }
     }
 }
