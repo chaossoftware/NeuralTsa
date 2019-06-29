@@ -14,10 +14,14 @@ namespace NeuralAnalyser.NeuralNet.Activation
         protected void InitNetworkLayer()
         {
             Neuron = new InputNeuron();
-            Neuron.Outputs = new List<PruneSynapse>(7);
+            Neuron.Memory = new double[7];
+            Neuron.Best = new double[7];
+            Neuron.Outputs = new List<PruneSynapse>();
 
             for (int i = 0; i < 7; i++)
-                Neuron.Outputs[i] = new PruneSynapse(i, i);
+            {
+                Neuron.Outputs.Add(new PruneSynapse(i, i));
+            }
         }
     }
 
