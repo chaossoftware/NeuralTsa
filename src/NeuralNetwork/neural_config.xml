@@ -12,7 +12,7 @@
 	
 	<LowLevelParams 
 		learningRate="0.999"
-		cycleSize="1e6"
+		epochInterval="1e6"
 		biasTerm="1" 
 		constantTerm="0" 
 		maxPertrubation="2" 

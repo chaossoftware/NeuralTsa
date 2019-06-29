@@ -97,7 +97,7 @@ namespace NeuralAnalyser.NeuralNet
 
                 int nMul_DSubCtAdd1_AddNAdd1 = neurons * (dims - Params.ConstantTerm + 1) + neurons + 1;
 
-                for (current = 1; current <= Params.CMax; current++)
+                for (current = 1; current <= Params.EpochInterval; current++)
                 {
                     if (Params.Pruning == 0)
                     {

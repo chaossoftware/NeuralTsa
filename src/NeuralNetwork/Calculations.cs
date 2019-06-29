@@ -145,7 +145,7 @@ namespace NeuralAnalyser
                 g.DrawImage(chart, new Point(outParams.AnimationSize.Width, 0));
                 g.DrawImage(poincare, new Point(0, outParams.AnimationSize.Height));
 
-                g.DrawString(string.Format("Dimensions: {1}\nNeurons: {0}\nIteration: {2:N0}", net.Params.Neurons, net.Params.Dimensions, net.current + net.successCount * net.Params.CMax), font, textBrush, outParams.AnimationSize.Width * 2, 0f, stringFormat);
+                g.DrawString(string.Format("Dimensions: {1}\nNeurons: {0}\nIteration: {2:N0}", net.Params.Neurons, net.Params.Dimensions, net.current + net.successCount * net.Params.EpochInterval), font, textBrush, outParams.AnimationSize.Width * 2, 0f, stringFormat);
             }
 
             return result;

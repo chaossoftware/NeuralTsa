@@ -78,7 +78,7 @@ namespace NeuralAnalyser.Configuration
             var eta = double.Parse(xLowParams.Attribute("learningRate").Value, 
                 NumberStyles.Float, CultureInfo.InvariantCulture);
 
-            var cmax = long.Parse(xLowParams.Attribute("cycleSize").Value, 
+            var epochInterval = long.Parse(xLowParams.Attribute("epochInterval").Value, 
                 NumberStyles.Float, CultureInfo.InvariantCulture);
 
             var biasTerm = int.Parse(xLowParams.Attribute("biasTerm").Value, 
@@ -100,7 +100,7 @@ namespace NeuralAnalyser.Configuration
                 NumberStyles.Float, CultureInfo.InvariantCulture);
 
             NeuralNet = new NeuralNetParameters(neurons, dimensions, errorExponent, trainings, ptsToPredict, 
-                GetActivationFunction(activationFunction), eta, cmax, biasTerm, constantTerm,
+                GetActivationFunction(activationFunction), eta, epochInterval, biasTerm, constantTerm,
                 maxPertrubation, nudge, pruning, testingInterval);
         }
 
