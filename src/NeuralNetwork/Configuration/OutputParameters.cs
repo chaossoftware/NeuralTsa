@@ -43,6 +43,8 @@ namespace NeuralAnalyser.Configuration
 
         public string ReconstructedSignalPlotFile => Path.Combine(OutDirectory, FileName + "_reconstructed_signal.png");
 
+        public string PredictedSignalPlotFile => Path.Combine(OutDirectory, FileName + "_reconstructed_signal.png");
+
         public string ReconstructedPoincarePlotFile => Path.Combine(OutDirectory, FileName + "_reconstructed_poincare.png");
 
         public string NetPlotFile => Path.Combine(OutDirectory, FileName + "_network_plot.png");

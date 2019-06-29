@@ -6,6 +6,7 @@ using System.Drawing.Text;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms.DataVisualization.Charting;
 using MathLib.Data;
 using MathLib.DrawEngine;
 using MathLib.DrawEngine.Charts;
@@ -356,19 +357,13 @@ namespace NeuralAnalyser
 
             try
             {
-                var constructedSignal = new double[net.xdata.Length];
-                Array.Copy(xt, constructedSignal, net.xdata.Length);
+                new MathChart(outParams.PlotsSize, "t", "f(t)")
+                    .AddTimeSeries("Signal", new Timeseries(xt), SeriesChartType.Line)
+                    .SaveImage(outParams.ReconstructedSignalPlotFile, ImageFormat.Png);
 
-                new LinePlot(outParams.PlotsSize, new Timeseries(constructedSignal))
-                {
-                    LabelY = "f(t)",
-                    LabelX = "t"
-                }.Plot()
-                    .Save(outParams.ReconstructedSignalPlotFile, ImageFormat.Png);
-
-                new ScatterPlot(outParams.PlotsSize, PseudoPoincareMap.GetMapDataFrom(xt))
-                    .Plot()
-                    .Save(outParams.ReconstructedPoincarePlotFile, ImageFormat.Png);
+                new MathChart(outParams.PlotsSize, "t", "t + 1")
+                    .AddTimeSeries("Pseudo poincare", PseudoPoincareMap.GetMapDataFrom(xt), SeriesChartType.Point)
+                    .SaveImage(outParams.ReconstructedPoincarePlotFile, ImageFormat.Png);
             }
             catch (Exception ex)
             {
@@ -436,11 +431,9 @@ namespace NeuralAnalyser
                 xpred[k] = _xpred;
             }
 
-            new LinePlot(outParams.PlotsSize, new Timeseries(xpred))
-            {
-                LabelY = "f(t)",
-                LabelX = "t"
-            }.Plot().Save(outParams.ReconstructedSignalPlotFile, ImageFormat.Png);
+            new MathChart(outParams.PlotsSize, "t", "f(t)")
+                .AddTimeSeries("Signal", new Timeseries(xpred), SeriesChartType.Line)
+                .SaveImage(outParams.PredictedSignalPlotFile, ImageFormat.Png);
 
             var pred = new StringBuilder();
 
