@@ -17,9 +17,7 @@ namespace NeuralAnalyser.NeuralNet
         private double tenPowNegativePruning;      
         private double minD5DivD;
         private double nmaxSubD_xmaxPowE;
-
-        private int neurons, dims;
-        private int countnd = 0;    //Allows for introducing n and d gradually
+        private int nMul_DSubCtAdd1_AddNAdd1;
 
         private double ddw;
 
@@ -95,7 +93,7 @@ namespace NeuralAnalyser.NeuralNet
 
                 #endregion
 
-                int nMul_DSubCtAdd1_AddNAdd1 = neurons * (dims - Params.ConstantTerm + 1) + neurons + 1;
+                
 
                 for (current = 1; current <= Params.EpochInterval; current++)
                 {
@@ -117,9 +115,9 @@ namespace NeuralAnalyser.NeuralNet
                     
                     int prunes = 0;
 
-                    for (int i = 0; i < neurons; i++)
+                    for (int i = 0; i < Params.Neurons; i++)
                     {
-                        for (int j = 0; j < dims; j++)
+                        for (int j = 0; j < Params.Dimensions; j++)
                         {
                             if (InputLayer.Neurons[j].Outputs[i].Weight == 0)
                             {
@@ -146,7 +144,7 @@ namespace NeuralAnalyser.NeuralNet
                         NeuronBias.Outputs[0].Weight = 0;
                     }
 
-                    for (int i = 0; i < neurons; i++)
+                    for (int i = 0; i < Params.Neurons; i++)
                     {
                         HiddenLayer.Neurons[i].CalculateWeight(0, ddw, 9 * pc);
 
@@ -158,7 +156,7 @@ namespace NeuralAnalyser.NeuralNet
                             NeuronConstant.Outputs[i].PruneIfMarked();
                         }
 
-                        for (int j = 0; j < dims; j++)
+                        for (int j = 0; j < Params.Dimensions; j++)
                         {
                             //Reduce neighborhood for large j by a factor of 1-32
                             double dj = 1d / Math.Pow(2, minD5DivD * j);
@@ -240,7 +238,7 @@ namespace NeuralAnalyser.NeuralNet
                     else
                     {
                         seed = NeuronRandomizer.Randomizer.Next(int.MaxValue);     //seed = (int) (1 / Math.Sqrt(e1));
-            
+
                         if (improved > 0)
                         {
                             ddw = Math.Min(Params.MaxPertrubation, (1 + improved / Params.TestingInterval) * Math.Abs(ddw));
@@ -304,15 +302,6 @@ namespace NeuralAnalyser.NeuralNet
                     }
                 }
 
-                if (++countnd % 2 != 0)
-                {
-                    neurons = Math.Min(neurons + 1, Params.Neurons); //Increase the number of neurons slowly
-                }
-                else
-                {
-                    dims = Math.Min(dims + 1, Params.Dimensions); //And then increase the number of dimensions
-                }
-
                 #region "Save best weights"
 
                 //Save best weights
@@ -365,9 +354,7 @@ namespace NeuralAnalyser.NeuralNet
             tenPowNegativePruning = Math.Pow(10, -Params.Pruning);
             minD5DivD = (double)Math.Min(Params.Dimensions, 5) / Params.Dimensions;
             nmaxSubD_xmaxPowE = (nmax - Params.Dimensions) * Math.Pow(xmax, Params.ErrorsExponent);
-            
-            neurons = Params.Neurons;
-            dims = Params.Dimensions;
+            nMul_DSubCtAdd1_AddNAdd1 = Params.Neurons * (Params.Dimensions - Params.ConstantTerm + 1) + Params.Neurons + 1;
 
             ddw = Params.MaxPertrubation;
         }
