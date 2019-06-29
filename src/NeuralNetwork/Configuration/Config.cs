@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Xml.Linq;
 using NewMind.NeuralNet.Activation;
 using NeuralAnalyser.NeuralNet.Activation;
+using System.Collections.Generic;
 
 namespace NeuralAnalyser.Configuration
 {
@@ -15,9 +16,7 @@ namespace NeuralAnalyser.Configuration
 
         public NeuralNetParameters NeuralNet { get; protected set; }
 
-        public OutputParameters Output { get; protected set; }
-
-        public DataFile File { get; protected set; }
+        public List<DataFile> Files { get; protected set; }
 
         private XDocument ConfigFile
         {
@@ -42,8 +41,15 @@ namespace NeuralAnalyser.Configuration
         public Config()
         {
             LoadNeuralNetParams();
-            LoadFile();
-            LoadOutParams();
+
+            Files = new List<DataFile>();
+
+            foreach (var file in ConfigFile.Root.Element("FilesToAnalyse").Elements("file"))
+            {
+                var dataFile = GetDataFile(file);
+                dataFile.Output = LoadOutParams(dataFile.FileName);
+                Files.Add(dataFile);
+            }
         }
 
         private void LoadNeuralNetParams()
@@ -133,9 +139,9 @@ namespace NeuralAnalyser.Configuration
             }
         }
 
-        private void LoadOutParams()
+        private OutputParameters LoadOutParams(string fileName)
         {
-            Output = new OutputParameters(File.FileName);
+            var output = new OutputParameters(fileName);
 
             var xParams = ConfigFile.Root.Element("Output");
 
@@ -147,35 +153,35 @@ namespace NeuralAnalyser.Configuration
             var xAnimation = xParams.Element("animation");
             var xLeInTime = xParams.Element("leInTime");
 
-            Output.SaveWav = bool.Parse(xWav.Attribute("build").Value);
+            output.SaveWav = bool.Parse(xWav.Attribute("build").Value);
 
-            Output.PredictedSignalPts = int.Parse(xReconstructedSignal.Attribute("points").Value,
+            output.PredictedSignalPts = int.Parse(xReconstructedSignal.Attribute("points").Value,
                 NumberStyles.Float, CultureInfo.InvariantCulture);
 
-            Output.SaveModel = bool.Parse(xModel3D.Attribute("build").Value);
+            output.SaveModel = bool.Parse(xModel3D.Attribute("build").Value);
 
-            Output.SaveLeInTime = bool.Parse(xLeInTime.Attribute("build").Value);
+            output.SaveLeInTime = bool.Parse(xLeInTime.Attribute("build").Value);
 
-            Output.PlotsSize = new Size(
+            output.PlotsSize = new Size(
                 int.Parse(xPlots.Attribute("width").Value,
                 NumberStyles.Integer, CultureInfo.InvariantCulture),
                 int.Parse(xPlots.Attribute("height").Value,
                 NumberStyles.Integer, CultureInfo.InvariantCulture));
 
-            Output.SaveAnimation = bool.Parse(xAnimation.Attribute("build").Value);
-            Output.AnimationSize = new Size(
+            output.SaveAnimation = bool.Parse(xAnimation.Attribute("build").Value);
+            output.AnimationSize = new Size(
                 int.Parse(xAnimation.Attribute("width").Value,
                 NumberStyles.Integer, CultureInfo.InvariantCulture),
                 int.Parse(xAnimation.Attribute("height").Value,
                 NumberStyles.Integer, CultureInfo.InvariantCulture));
+
+            return output;
         }
 
-        private void LoadFile()
+        private DataFile GetDataFile(XElement xFile)
         {
             try
             {
-                var xFile = ConfigFile.Root.Element("FilesToAnalyse").Element("file");
-
                 string fName = xFile.Attribute("path").Value;
 
                 var dataColumn = int.Parse(xFile.Attribute("dataColumn").Value, 
@@ -197,34 +203,12 @@ namespace NeuralAnalyser.Configuration
                     end = -1;
                 }
 
-                File = new DataFile(fName, dataColumn, points, start, end);
+                return new DataFile(fName, dataColumn, points, start, end);
             }
             catch
             {
                 throw new ArgumentException("Unable to read files list");
             }
         }
-    }
-
-    public class DataFile
-    {
-        public DataFile(string fileName, int dataColumn, int points, int startPoint, int endPoint)
-        {
-            this.FileName = fileName;
-            this.DataColumn = dataColumn;
-            this.StartPoint = startPoint;
-            this.EndPoint = endPoint;
-            this.Points = points;
-        }
-
-        public string FileName { get; set; }
-
-        public int DataColumn { get; set; }
-
-        public int StartPoint { get; set; }
-
-        public int EndPoint { get; set; }
-
-        public int Points { get; set; }
     }
 }

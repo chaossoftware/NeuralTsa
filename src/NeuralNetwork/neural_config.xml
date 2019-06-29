@@ -31,6 +31,7 @@
  
 	<FilesToAnalyse>
     <file path="TestData\henon" dataColumn="1" start="" end="" points="1"/>
+    <file path="TestData\hypchaos" dataColumn="1" start="" end="" points="1"/>
 	</FilesToAnalyse>
 
   <Output>
