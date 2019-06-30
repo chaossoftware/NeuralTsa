@@ -15,25 +15,25 @@ namespace TimeSeriesAnalysis
 {
     internal class Routines
     {
-        public SourceData sourceData;
+        public SourceData SourceData { get; set; }
 
-        public LyapunovMethod lyapunov;
+        public LyapunovMethod Lyapunov { get; set; }
 
         public void FillSignalChart(MathChart chart) =>
             chart.ClearChart()
             .SetAxisNames("t", "f(t)")
-            .AddTimeSeries("Signal", sourceData.TimeSeries, SeriesChartType.Line);
+            .AddTimeSeries("Signal", SourceData.TimeSeries, SeriesChartType.Line);
 
         public void FillPoincareChart(MathChart chart) =>
             chart.ClearChart()
             .SetAxisNames("f(t)", "f(t+1)")
-            .AddTimeSeries("Pseudo Poincare Section", PseudoPoincareMap.GetMapDataFrom(sourceData.TimeSeries.YValues), SeriesChartType.Point);
+            .AddTimeSeries("Pseudo Poincare Section", PseudoPoincareMap.GetMapDataFrom(SourceData.TimeSeries.YValues), SeriesChartType.Point);
 
         public void FillFourierChart(MathChart chart, double statrFreq, double endFreq, double dt, bool logScale)
         {
             try
             {
-                var timeseries = Fourier.GetFourier(sourceData.TimeSeries.YValues, statrFreq, endFreq, dt, Convert.ToInt32(logScale));
+                var timeseries = Fourier.GetFourier(SourceData.TimeSeries.YValues, statrFreq, endFreq, dt, Convert.ToInt32(logScale));
                 chart.ClearChart()
                     .SetAxisNames("ω", "f(ω)")
                     .AddTimeSeries("Fourier Spectrum", timeseries, SeriesChartType.Point);
@@ -58,7 +58,7 @@ namespace TimeSeriesAnalysis
 
                 for (int i = startPoint; i < range; i++)
                 {
-                    timeseries.AddDataPoint(lyapunov.Slope.DataPoints[i].X, lyapunov.Slope.DataPoints[i].Y);
+                    timeseries.AddDataPoint(Lyapunov.Slope.DataPoints[i].X, Lyapunov.Slope.DataPoints[i].Y);
                 }
 
                 chart.SetAxisNames("t", "LE")
@@ -68,15 +68,15 @@ namespace TimeSeriesAnalysis
             {
                 var tsSector = new Timeseries();
 
-                tsSector.AddDataPoint(lyapunov.Slope.DataPoints[startPoint].X, lyapunov.Slope.DataPoints[startPoint].Y);
-                tsSector.AddDataPoint(lyapunov.Slope.DataPoints[range - 1].X, lyapunov.Slope.DataPoints[range - 1].Y);
+                tsSector.AddDataPoint(Lyapunov.Slope.DataPoints[startPoint].X, Lyapunov.Slope.DataPoints[startPoint].Y);
+                tsSector.AddDataPoint(Lyapunov.Slope.DataPoints[range - 1].X, Lyapunov.Slope.DataPoints[range - 1].Y);
 
                 chart.SetAxisNames("t", "Slope")
-                    .AddTimeSeries("Lyapunov Function", lyapunov.Slope, SeriesChartType.Line)
+                    .AddTimeSeries("Lyapunov Function", Lyapunov.Slope, SeriesChartType.Line)
                     .AddTimeSeries("Sector", tsSector, SeriesChartType.Line, Color.Red);
 
                 result = string.Format("{0:F5}",
-                    (lyapunov.Slope.DataPoints[endPoint].Y - lyapunov.Slope.DataPoints[startPoint].Y) / (lyapunov.Slope.DataPoints[endPoint].X - lyapunov.Slope.DataPoints[startPoint].X)
+                    (Lyapunov.Slope.DataPoints[endPoint].Y - Lyapunov.Slope.DataPoints[startPoint].Y) / (Lyapunov.Slope.DataPoints[endPoint].X - Lyapunov.Slope.DataPoints[startPoint].X)
                 );
             }
 
@@ -90,7 +90,7 @@ namespace TimeSeriesAnalysis
             var mwfileName = new MWCharArray(tmpFileName);
             var mwWname = new MWCharArray(wName);
             var mwColMap = new MWCharArray(colMap);
-            var mwSignalArray = new MWNumericArray(sourceData.TimeSeries.YValues);
+            var mwSignalArray = new MWNumericArray(SourceData.TimeSeries.YValues);
 
             matlabEngine.Get2DWavelet(mwSignalArray, mwFolder, mwfileName, mwWname, tStart, tEnd, fStart, fEnd, dt, mwColMap, width, height);
         }

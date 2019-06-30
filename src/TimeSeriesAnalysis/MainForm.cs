@@ -28,13 +28,14 @@ namespace TimeSeriesAnalysis {
             string fName = openFileDialog.FileName;
 
             if (string.IsNullOrEmpty(fName))
+            {
                 return;
-
-            CleanUp();
+            }
 
             try
             {
-                routines.sourceData = new SourceData(fName);
+                CleanUp();
+                routines.SourceData = new SourceData(fName);
                 FillUiWithData();
             }
             catch (ArgumentException ex)
@@ -58,13 +59,13 @@ namespace TimeSeriesAnalysis {
 
         private bool RefreshTimeSeries()
         {
-            if (routines.sourceData == null)
+            if (routines.SourceData == null)
             {
                 MessageBox.Show(StringData.MsgEmptyFile);
                 return false;
             }
 
-            routines.sourceData.SetTimeSeries(
+            routines.SourceData.SetTimeSeries(
                 sourceColumnNum.ToInt() - 1,
                 startPointNum.ToInt(),
                 endPointNum.ToInt(),
@@ -77,14 +78,14 @@ namespace TimeSeriesAnalysis {
 
         private void saveBtn_Click(object sender, EventArgs e)
         {
-            if (routines.sourceData == null)
+            if (routines.SourceData == null)
             {
                 MessageBox.Show(StringData.MsgEmptyFile);
                 return;
             }
 
-            var outDir = Path.Combine(routines.sourceData.Folder, routines.sourceData.FileName + "_rez");
-            string fName = Path.Combine(outDir, routines.sourceData.FileName);
+            var outDir = Path.Combine(routines.SourceData.Folder, routines.SourceData.FileName + "_rez");
+            string fName = Path.Combine(outDir, routines.SourceData.FileName);
 
             if (!Directory.Exists(outDir))
             {
@@ -95,7 +96,7 @@ namespace TimeSeriesAnalysis {
             {
                 chartSignal.SaveImage(fName + "_plot", ImageFormat.Png);
                 chartPoincare.SaveImage(fName + "_poincare", ImageFormat.Png);
-                DataWriter.CreateDataFile(fName + "_signal", routines.sourceData.GetTimeSeriesString(false));
+                DataWriter.CreateDataFile(fName + "_signal", routines.SourceData.GetTimeSeriesString(false));
             }
 
             if (chartFft.HasData)
@@ -108,9 +109,9 @@ namespace TimeSeriesAnalysis {
                 wav_plotPBox.Image.Save(fName + "_wavelet.png", ImageFormat.Png);
             }
 
-            if (routines.lyapunov != null)
+            if (routines.Lyapunov != null)
             {
-                DataWriter.CreateDataFile(fName + "_lyapunov.txt", routines.lyapunov.GetInfoFull());
+                DataWriter.CreateDataFile(fName + "_lyapunov.txt", routines.Lyapunov.GetInfoFull());
             }
 
             if (chartLyapunov.HasData)
@@ -121,15 +122,15 @@ namespace TimeSeriesAnalysis {
 
         private void FillUiWithData()
         {
-            fileNameLbl.Text = routines.sourceData.ToString().Replace("\n", " ");
+            fileNameLbl.Text = routines.SourceData.ToString().Replace("\n", " ");
 
-            sourceColumnNum.Maximum = routines.sourceData.ColumnsCount;
+            sourceColumnNum.Maximum = routines.SourceData.ColumnsCount;
             sourceColumnNum.Minimum = 1;
 
-            startPointNum.Maximum = routines.sourceData.Length - 1;
+            startPointNum.Maximum = routines.SourceData.Length - 1;
 
-            endPointNum.Maximum = routines.sourceData.Length;
-            endPointNum.Value = routines.sourceData.Length;
+            endPointNum.Maximum = routines.SourceData.Length;
+            endPointNum.Value = routines.SourceData.Length;
         }
 
         #region "CHARTS"
@@ -156,8 +157,8 @@ namespace TimeSeriesAnalysis {
             if (waveletCheckbox.Checked)
             {
                 wav_plotPBox.Image = null;
-                double tStart = routines.sourceData.TimeSeries.Min.X;
-                double tEnd = routines.sourceData.TimeSeries.Max.X;
+                double tStart = routines.SourceData.TimeSeries.Min.X;
+                double tEnd = routines.SourceData.TimeSeries.Max.X;
 
                 try
                 {
@@ -171,19 +172,24 @@ namespace TimeSeriesAnalysis {
             }
         }
 
-        private void lyapunovRedrawBtn_Click(object sender, EventArgs e) {
+        private void lyapunovRedrawBtn_Click(object sender, EventArgs e)
+        {
             try
             {
-
-                if (routines.lyapunov is KantzMethod)
-                    ((KantzMethod)routines.lyapunov).SetSlope(this.le_kantz_slopeCombo.Text);
+                if (routines.Lyapunov is KantzMethod)
+                {
+                    ((KantzMethod)routines.Lyapunov).SetSlope(this.le_kantz_slopeCombo.Text);
+                }
 
                 var res = routines.FillLyapunovChart(chartLyapunov, le_pStartNum.ToInt(), le_pEndNum.ToInt(), le_wolf_radio.Checked);
 
-                if (routines.lyapunov is KantzMethod || routines.lyapunov is RosensteinMethod)
+                if (routines.Lyapunov is KantzMethod || routines.Lyapunov is RosensteinMethod)
+                {
                     le_resultText.Text = res;
+                }
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 MessageBox.Show("Error plotting Lyapunov slope: " + ex.Message); 
             }
         }
@@ -197,8 +203,8 @@ namespace TimeSeriesAnalysis {
                 routines.BuildWavelet(
                     StringData.WaveletPreviewFile, 
                     wav_nameCombo.Text,
-                    routines.sourceData.TimeSeries.Min.X,
-                    routines.sourceData.TimeSeries.Max.X, 
+                    routines.SourceData.TimeSeries.Min.X,
+                    routines.SourceData.TimeSeries.Max.X, 
                     wav_fStartNum.ToDouble(), 
                     wav_fEndNum.ToDouble(), 
                     wav_dtNum.ToDouble(), 
@@ -229,46 +235,11 @@ namespace TimeSeriesAnalysis {
 
         private void CalculateLyapunovExponent()
         {
-            int dim = le_dimNum.ToInt();
-            int tau = le_tauNum.ToInt();
-            double scaleMin = le_scaleMinNum.ToDouble();
-
-            if (le_wolf_radio.Checked)
-                routines.lyapunov = new WolfMethod(
-                    routines.sourceData.TimeSeries.YValues,
-                    dim,
-                    tau,
-                    le_wolf_stepNum.ToDouble(),
-                    scaleMin,
-                    le_scaleMaxNum.ToDouble(), 
-                    le_wolf_evolveStepsNum.ToInt()
-                );
-
-            if (lyap_calc_Rad_rosenstein.Checked)
-                routines.lyapunov = new RosensteinMethod(
-                    routines.sourceData.TimeSeries.YValues,
-                    dim,
-                    tau, 
-                    le_ros_stepsNum.ToInt(), 
-                    le_ros_distanceNum.ToInt(),
-                    scaleMin
-                );
-
-            if (lyap_calc_Rad_kantz.Checked)
-                routines.lyapunov = new KantzMethod(
-                    routines.sourceData.TimeSeries.YValues,
-                    dim,
-                    tau,
-                    le_kantz_maxIterNum.ToInt(),
-                    le_kantz_windowNum.ToInt(),
-                    scaleMin,
-                    le_scaleMaxNum.ToDouble(),
-                    le_kantz_scalesNum.ToInt()
-                );
+            SetLyapunovMethod();
 
             try
             {
-                routines.lyapunov.Calculate();
+                routines.Lyapunov.Calculate();
                 var mi = new MethodInvoker(this.SetLyapunovResult);
                 this.BeginInvoke(mi);
             }
@@ -284,33 +255,32 @@ namespace TimeSeriesAnalysis {
             le_resultText.BackColor = Color.Khaki;
             string result = string.Empty;
 
-            if (routines.lyapunov is WolfMethod)
+            if (routines.Lyapunov is WolfMethod)
             {
-                result = string.Format("{0:F5}", ((WolfMethod)routines.lyapunov).rezult);
+                result = string.Format("{0:F5}", ((WolfMethod)routines.Lyapunov).rezult);
                 le_resultText.Text = result;
             }
 
-            if (routines.lyapunov is KantzMethod)
+            if (routines.Lyapunov is KantzMethod)
             {
                 this.le_kantz_slopeCombo.Items.Clear();
-                string[] items = new string[((KantzMethod)routines.lyapunov).SlopesList.Count];
-                ((KantzMethod)routines.lyapunov).SlopesList.Keys.CopyTo(items, 0);
+                string[] items = new string[((KantzMethod)routines.Lyapunov).SlopesList.Count];
+                ((KantzMethod)routines.Lyapunov).SlopesList.Keys.CopyTo(items, 0);
                 this.le_kantz_slopeCombo.Items.AddRange(items);
                 this.le_kantz_slopeCombo.SelectedIndex = 0;
-                ((KantzMethod)routines.lyapunov).SetSlope(this.le_kantz_slopeCombo.Text);
+                ((KantzMethod)routines.Lyapunov).SetSlope(this.le_kantz_slopeCombo.Text);
             }
 
-            if (routines.lyapunov.Slope.Length > 1)
+            if (routines.Lyapunov.Slope.Length > 1)
             {
-                le_resultText.Text = routines.lyapunov.GetInfoShort();
-                le_pEndNum.Value = routines.lyapunov.Slope.Length - 1;
+                le_resultText.Text = routines.Lyapunov.GetInfoShort();
+                le_pEndNum.Value = routines.Lyapunov.Slope.Length - 1;
 
                 try
                 {
-
                     if (!le_wolf_radio.Checked)
                     {
-                        var leSectorEnd = routines.SlopeChangePointIndex(routines.lyapunov.Slope, 2, routines.lyapunov.Slope.Amplitude.Y / 30);
+                        var leSectorEnd = routines.SlopeChangePointIndex(routines.Lyapunov.Slope, 2, routines.Lyapunov.Slope.Amplitude.Y / 30);
 
                         if (leSectorEnd > 0)
                         {
@@ -331,7 +301,7 @@ namespace TimeSeriesAnalysis {
                 result = StringData.NoValue;
             }
                
-            if (routines.lyapunov is KantzMethod || routines.lyapunov is RosensteinMethod)
+            if (routines.Lyapunov is KantzMethod || routines.Lyapunov is RosensteinMethod)
             {
                 le_resultText.Text = result;
             }
@@ -344,7 +314,7 @@ namespace TimeSeriesAnalysis {
             if (this.useTimeCheckbox.Checked)
             {
                 RefreshTimeSeries();
-                sourceStepTxt.Text = string.Format(CultureInfo.InvariantCulture, "{0:F8}", routines.sourceData.Step);
+                sourceStepTxt.Text = string.Format(CultureInfo.InvariantCulture, "{0:F8}", routines.SourceData.Step);
             }
             else
             {
@@ -354,14 +324,14 @@ namespace TimeSeriesAnalysis {
 
         private void CleanUp()
         {
-            routines.sourceData = null;
+            routines.SourceData = null;
             chartSignal.ClearChart();
             chartPoincare.ClearChart();
             chartFft.ClearChart();
             chartLyapunov.ClearChart();
             
             wav_plotPBox.Image = null;
-            routines.lyapunov = null;
+            routines.Lyapunov = null;
             routines.DeleteTempFiles();
         }
 
@@ -373,7 +343,7 @@ namespace TimeSeriesAnalysis {
             if (this.useTimeCheckbox.Checked)
             {
                 RefreshTimeSeries();
-                sourceStepTxt.Text = string.Format(CultureInfo.InvariantCulture, "{0:F8}", routines.sourceData.Step);
+                sourceStepTxt.Text = string.Format(CultureInfo.InvariantCulture, "{0:F8}", routines.SourceData.Step);
             }
         }
 
@@ -429,6 +399,50 @@ namespace TimeSeriesAnalysis {
                     fft_fEndNum.ToDouble(),
                     fft_dtNum.ToDouble(),
                     fft_logCbox.Checked);
+            }
+        }
+
+        private void SetLyapunovMethod()
+        {
+            int dim = le_dimNum.ToInt();
+            int tau = le_tauNum.ToInt();
+            double scaleMin = le_scaleMinNum.ToDouble();
+
+            if (le_wolf_radio.Checked)
+            {
+                routines.Lyapunov = new WolfMethod(
+                    routines.SourceData.TimeSeries.YValues,
+                    dim,
+                    tau,
+                    le_wolf_stepNum.ToDouble(),
+                    scaleMin,
+                    le_scaleMaxNum.ToDouble(),
+                    le_wolf_evolveStepsNum.ToInt()
+                );
+            }
+            else if (lyap_calc_Rad_rosenstein.Checked)
+            {
+                routines.Lyapunov = new RosensteinMethod(
+                    routines.SourceData.TimeSeries.YValues,
+                    dim,
+                    tau,
+                    le_ros_stepsNum.ToInt(),
+                    le_ros_distanceNum.ToInt(),
+                    scaleMin
+                );
+            }
+            else if (lyap_calc_Rad_kantz.Checked)
+            {
+                routines.Lyapunov = new KantzMethod(
+                    routines.SourceData.TimeSeries.YValues,
+                    dim,
+                    tau,
+                    le_kantz_maxIterNum.ToInt(),
+                    le_kantz_windowNum.ToInt(),
+                    scaleMin,
+                    le_scaleMaxNum.ToDouble(),
+                    le_kantz_scalesNum.ToInt()
+                );
             }
         }
     }
