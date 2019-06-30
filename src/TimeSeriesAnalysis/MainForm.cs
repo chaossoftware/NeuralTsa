@@ -307,6 +307,17 @@ namespace TimeSeriesAnalysis {
 
                 try
                 {
+
+                    if (!le_wolf_radio.Checked)
+                    {
+                        var leSectorEnd = routines.SlopeChangePointIndex(routines.lyapunov.Slope, 2, routines.lyapunov.Slope.Amplitude.Y / 30);
+
+                        if (leSectorEnd > 0)
+                        {
+                            le_pEndNum.Value = leSectorEnd;
+                        }
+                    }
+
                     routines.FillLyapunovChart(chartLyapunov, le_pStartNum.ToInt(), le_pEndNum.ToInt(), le_wolf_radio.Checked);
                 }
                 catch (Exception ex)
