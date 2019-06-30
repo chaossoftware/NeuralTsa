@@ -288,7 +288,7 @@ namespace TimeSeriesAnalysis {
                         }
                     }
 
-                    routines.FillLyapunovChart(chartLyapunov, le_pStartNum.ToInt(), le_pEndNum.ToInt(), le_wolf_radio.Checked);
+                    result = routines.FillLyapunovChart(chartLyapunov, le_pStartNum.ToInt(), le_pEndNum.ToInt(), le_wolf_radio.Checked);
                 }
                 catch (Exception ex)
                 {
