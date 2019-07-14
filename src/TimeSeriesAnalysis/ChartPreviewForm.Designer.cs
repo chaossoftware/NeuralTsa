@@ -1,9 +1,9 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
+using MathLib.DrawEngine;
 
 namespace TimeSeriesAnalysis
 {
-    partial class PreviewForm
+    partial class ChartPreviewForm
     {
         /// <summary>
         /// Required designer variable.
@@ -31,17 +31,17 @@ namespace TimeSeriesAnalysis
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PreviewForm));
-            this.contextMenu = new System.Windows.Forms.ContextMenu();
-            this.saveAsItem = new System.Windows.Forms.MenuItem();
-            this.copyItem = new System.Windows.Forms.MenuItem();
-            this.previewPBox = new System.Windows.Forms.PictureBox();
-            ((System.ComponentModel.ISupportInitialize)(this.previewPBox)).BeginInit();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ChartPreviewForm));
+            this.contextMenu = new ContextMenu();
+            this.saveAsItem = new MenuItem();
+            this.copyItem = new MenuItem();
+            this.chart = new MathChart();
+            ((System.ComponentModel.ISupportInitialize)(this.chart)).BeginInit();
             this.SuspendLayout();
             // 
             // contextMenu
             // 
-            this.contextMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.contextMenu.MenuItems.AddRange(new MenuItem[] {
             this.saveAsItem,
             this.copyItem});
             // 
@@ -57,31 +57,26 @@ namespace TimeSeriesAnalysis
             this.copyItem.Text = "Copy";
             this.copyItem.Click += new System.EventHandler(this.copyItem_Click);
             // 
-            // previewPBox
+            // chart
             // 
-            this.previewPBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.previewPBox.BackColor = System.Drawing.Color.White;
-            this.previewPBox.Cursor = System.Windows.Forms.Cursors.Cross;
-            this.previewPBox.Location = new System.Drawing.Point(0, 0);
-            this.previewPBox.Name = "previewPBox";
-            this.previewPBox.Size = new System.Drawing.Size(1008, 561);
-            this.previewPBox.TabIndex = 0;
-            this.previewPBox.TabStop = false;
-            this.previewPBox.SizeChanged += new System.EventHandler(this.previewPBox_SizeChanged);
-            this.previewPBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.PreviewContextMenu);
+            this.chart.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            this.chart.Location = new System.Drawing.Point(1, 1);
+            this.chart.Name = "chart";
+            this.chart.Size = new System.Drawing.Size(1007, 559);
+            this.chart.TabIndex = 13;
+            this.chart.Text = "chart1";
+            this.chart.MouseClick += new System.Windows.Forms.MouseEventHandler(this.chart_MouseClick);
             // 
-            // PreviewForm
+            // ChartPreviewForm
             // 
             this.ClientSize = new System.Drawing.Size(1008, 561);
-            this.Controls.Add(this.previewPBox);
+            this.Controls.Add(this.chart);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(133, 100);
-            this.Name = "PreviewForm";
+            this.Name = "ChartPreviewForm";
             this.Text = "Preview Form";
-            ((System.ComponentModel.ISupportInitialize)(this.previewPBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chart)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -90,6 +85,6 @@ namespace TimeSeriesAnalysis
         public ContextMenu contextMenu;
         private MenuItem saveAsItem;
         private MenuItem copyItem;
-        public PictureBox previewPBox;
+        public MathChart chart;
     }
 }

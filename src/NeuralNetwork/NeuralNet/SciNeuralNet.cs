@@ -17,9 +17,7 @@ namespace NeuralAnalyser.NeuralNet
         private double tenPowNegativePruning;      
         private double minD5DivD;
         private double nmaxSubD_xmaxPowE;
-
-        private int neurons, dims;
-        private int countnd = 0;    //Allows for introducing n and d gradually
+        private int nMul_DSubCtAdd1_AddNAdd1;
 
         private double ddw;
 
@@ -69,12 +67,16 @@ namespace NeuralAnalyser.NeuralNet
 
                 //update memory with best results
                 foreach (InputNeuron neuron in this.InputLayer.Neurons)
+                {
                     neuron.BestToMemory();
+                }
 
                 NeuronConstant.BestToMemory();
 
                 foreach (HiddenNeuron neuron in this.HiddenLayer.Neurons)
+                {
                     neuron.BestToMemory();
+                }
 
                 NeuronBias.BestToMemory();
 
@@ -82,36 +84,51 @@ namespace NeuralAnalyser.NeuralNet
                 if (AdditionalNeuron)
                 {
                     (Params.ActFunction as ComplexActivationFunction).Neuron.BestToMemory();
+
                     if ((Params.ActFunction as ComplexActivationFunction).Neuron.Memory[0] == 0)
+                    {
                         (Params.ActFunction as ComplexActivationFunction).Neuron.Memory[0] = 1;
+                    }
                 }
 
                 #endregion
 
-                int nMul_DSubCtAdd1_AddNAdd1 = neurons * (dims - Params.ConstantTerm + 1) + neurons + 1;
+                
 
-                for (current = 1; current <= Params.CMax; current++)
+                for (current = 1; current <= Params.EpochInterval; current++)
                 {
                     if (Params.Pruning == 0)
                     {
                         foreach (InputNeuron neuron in InputLayer.Neurons)
+                        {
                             foreach (PruneSynapse synapse in neuron.Outputs)
+                            {
                                 synapse.Prune = false;
+                            }
+                        }
 
                         foreach (PruneSynapse synapse in NeuronConstant.Outputs)
+                        {
                             synapse.Prune = false;
+                        }
                     }
                     
                     int prunes = 0;
 
-                    for (int i = 0; i < neurons; i++)
+                    for (int i = 0; i < Params.Neurons; i++)
                     {
-                        for (int j = 0; j < dims; j++)
+                        for (int j = 0; j < Params.Dimensions; j++)
+                        {
                             if (InputLayer.Neurons[j].Outputs[i].Weight == 0)
+                            {
                                 prunes++;
+                            }
+                        }
 
                         if (NeuronConstant.Outputs[i].Weight == 0 && Params.ConstantTerm == 0)
+                        {
                             prunes++;
+                        }
                     }
 
                     //Probability of changing a given parameter at each trial
@@ -127,7 +144,7 @@ namespace NeuralAnalyser.NeuralNet
                         NeuronBias.Outputs[0].Weight = 0;
                     }
 
-                    for (int i = 0; i < neurons; i++)
+                    for (int i = 0; i < Params.Neurons; i++)
                     {
                         HiddenLayer.Neurons[i].CalculateWeight(0, ddw, 9 * pc);
 
@@ -139,7 +156,7 @@ namespace NeuralAnalyser.NeuralNet
                             NeuronConstant.Outputs[i].PruneIfMarked();
                         }
 
-                        for (int j = 0; j < dims; j++)
+                        for (int j = 0; j < Params.Dimensions; j++)
                         {
                             //Reduce neighborhood for large j by a factor of 1-32
                             double dj = 1d / Math.Pow(2, minD5DivD * j);
@@ -195,17 +212,23 @@ namespace NeuralAnalyser.NeuralNet
 
                         //memorize current weights
                         foreach (InputNeuron neuron in InputLayer.Neurons)
+                        {
                             neuron.WeightsToMemory();
+                        }
 
                         foreach (HiddenNeuron neuron in HiddenLayer.Neurons)
+                        {
                             neuron.WeightsToMemory();
+                        }
 
                         NeuronBias.WeightsToMemory();
                         NeuronConstant.WeightsToMemory();
 
                         // same for Activation function neuron if needed
                         if (AdditionalNeuron)
+                        {
                             (Params.ActFunction as ComplexActivationFunction).Neuron.WeightsToMemory();
+                        }
                     }
                     else if (ddw > 0 && improved == 0)
                     {
@@ -215,21 +238,25 @@ namespace NeuralAnalyser.NeuralNet
                     else
                     {
                         seed = NeuronRandomizer.Randomizer.Next(int.MaxValue);     //seed = (int) (1 / Math.Sqrt(e1));
-            
+
                         if (improved > 0)
                         {
                             ddw = Math.Min(Params.MaxPertrubation, (1 + improved / Params.TestingInterval) * Math.Abs(ddw));
                             improved = 0;
                         }
                         else
+                        {
                             ddw = Params.Eta * Math.Abs(ddw);
+                        }
                     }
 
                     NeuronRandomizer.Randomizer = new Random(seed);
         
                     //Testing is costly - don't do it too often
                     if (current % Params.TestingInterval != 0)
+                    {
                         continue;
+                    }
 
                     try
                     {
@@ -241,7 +268,9 @@ namespace NeuralAnalyser.NeuralNet
                     }
 
                     if (OutputLayer.Neurons[0].Memory[0] > OutputLayer.Neurons[0].Best[0] && OutputLayer.Neurons[0].Best[0] != 0)
+                    {
                         continue;
+                    }
 
                     // same for Activation function neuron if needed
                     if (AdditionalNeuron)
@@ -258,20 +287,20 @@ namespace NeuralAnalyser.NeuralNet
                             {
                                 double aBest = this.InputLayer.Neurons[j].Memory[i];
                                 double bBest = this.HiddenLayer.Neurons[i].Memory[0];
+
                                 if (aBest != 0 && Math.Abs(aBest * bBest) < tenPowNegativePruning)
+                                {
                                     this.InputLayer.Neurons[j].Outputs[i].Prune = true;
+                                }
                             }
 
                             if (NeuronConstant.Memory[i] != 0 && Math.Abs(NeuronConstant.Memory[i] * this.HiddenLayer.Neurons[i].Memory[0]) < tenPowNegativePruning)
+                            {
                                 NeuronConstant.Outputs[i].Prune = true;
+                            }
                         }
                     }
                 }
-
-                if (++countnd % 2 != 0)
-                    neurons = Math.Min(neurons + 1, Params.Neurons); //Increase the number of neurons slowly
-                else
-                    dims = Math.Min(dims + 1, Params.Dimensions); //And then increase the number of dimensions
 
                 #region "Save best weights"
 
@@ -307,7 +336,6 @@ namespace NeuralAnalyser.NeuralNet
             }
         }
 
-
         /// <summary>
         /// Init neural network parameters
         /// all arrays should have +1 length
@@ -326,9 +354,7 @@ namespace NeuralAnalyser.NeuralNet
             tenPowNegativePruning = Math.Pow(10, -Params.Pruning);
             minD5DivD = (double)Math.Min(Params.Dimensions, 5) / Params.Dimensions;
             nmaxSubD_xmaxPowE = (nmax - Params.Dimensions) * Math.Pow(xmax, Params.ErrorsExponent);
-            
-            neurons = Params.Neurons;
-            dims = Params.Dimensions;
+            nMul_DSubCtAdd1_AddNAdd1 = Params.Neurons * (Params.Dimensions - Params.ConstantTerm + 1) + Params.Neurons + 1;
 
             ddw = Params.MaxPertrubation;
         }

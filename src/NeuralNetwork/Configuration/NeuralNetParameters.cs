@@ -21,7 +21,7 @@ namespace NeuralAnalyser.Configuration
         }
 
         public NeuralNetParameters(int neurons, int dimensions, int errorsExponent, int trainings, 
-            int ptsToPredict, ActivationFunction actFunction, double eta, long cmax, int biasTerm, 
+            int ptsToPredict, ActivationFunction actFunction, double eta, long epochInterval, int biasTerm, 
             int constantTerm, double maxPertrubation, double nudge, int pruning, double testingInterval)
         {
             Neurons = neurons;
@@ -32,7 +32,7 @@ namespace NeuralAnalyser.Configuration
             ActFunction = actFunction;
 
             Eta = eta;
-            CMax = cmax;
+            EpochInterval = epochInterval;
             BiasTerm = biasTerm;
             ConstantTerm = constantTerm;
             MaxPertrubation = maxPertrubation;
@@ -45,7 +45,7 @@ namespace NeuralAnalyser.Configuration
         public double Eta { get; private set; } = 0.999;
 
         //Number of iterations
-        public long CMax { get; private set; } = 1000000;
+        public long EpochInterval { get; private set; } = 1000000;
 
         //0 for bias term; otherwise 1
         public int BiasTerm { get; private set; } = 1;
@@ -63,7 +63,7 @@ namespace NeuralAnalyser.Configuration
         public int Pruning { get; private set; } = 0;
 
         //Interval for testing neural net results
-        public double TestingInterval { get; private set; } = 1e4;
+        public double TestingInterval { get; private set; } = 1e5;
 
         //Neurons count
         public int Neurons { get; private set; }
@@ -97,7 +97,7 @@ namespace NeuralAnalyser.Configuration
             new StringBuilder()
             .Append(GetInfoShort() + "\n")
             .AppendFormat(CultureInfo.InvariantCulture, "Learning rate: {0}\n", Eta)
-            .AppendFormat(CultureInfo.InvariantCulture, "Number of iterations: {0:0.#####e-0}\n", CMax)
+            .AppendFormat(CultureInfo.InvariantCulture, "Epoch interval: {0:0.#####e-0}\n", EpochInterval)
             .AppendFormat("Bias termt: {0}\n", BiasTerm)
             .AppendFormat("Constant term: {0}\n", ConstantTerm)
             .AppendFormat(CultureInfo.InvariantCulture, "Maximum perturbation: {0}\n", MaxPertrubation)

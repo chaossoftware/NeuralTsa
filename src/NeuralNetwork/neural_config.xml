@@ -12,7 +12,7 @@
 	
 	<LowLevelParams 
 		learningRate="0.999"
-		cycleSize="1e6"
+		epochInterval="1e6"
 		biasTerm="1" 
 		constantTerm="0" 
 		maxPertrubation="2" 
@@ -30,7 +30,8 @@
 	<!-- Interval for testing neural net results (default 1e4) -->
  
 	<FilesToAnalyse>
-    <file path="TestData\henon" dataColumn="1" start="" end="" pts=""/>
+    <file path="TestData\henon" dataColumn="1" start="" end="" points="1"/>
+    <file path="TestData\hypchaos" dataColumn="1" start="" end="" points="1"/>
 	</FilesToAnalyse>
 
   <Output>
