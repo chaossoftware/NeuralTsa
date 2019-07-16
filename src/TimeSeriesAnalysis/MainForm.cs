@@ -245,7 +245,7 @@ namespace TimeSeriesAnalysis {
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Unable to calculate LE:\n" + ex.Message);
+                MessageBox.Show("Unable to calculate LE:\n" + ex);
                 le_resultText.Text = "Error";
             }
         }
@@ -259,6 +259,11 @@ namespace TimeSeriesAnalysis {
             {
                 result = string.Format("{0:F5}", ((WolfMethod)routines.Lyapunov).rezult);
                 le_resultText.Text = result;
+            }
+
+            if (routines.Lyapunov is JakobianMethod)
+            {
+                le_resultText.Text = ((JakobianMethod)routines.Lyapunov).GetInfoShort();
             }
 
             if (routines.Lyapunov is KantzMethod)
@@ -442,6 +447,18 @@ namespace TimeSeriesAnalysis {
                     scaleMin,
                     le_scaleMaxNum.ToDouble(),
                     le_kantz_scalesNum.ToInt()
+                );
+            }
+            else if (le_jakobian_radio.Checked)
+            {
+                routines.Lyapunov = new JakobianMethod(
+                    routines.SourceData.TimeSeries.YValues,
+                    dim,
+                    le_ros_stepsNum.ToInt(),
+                    scaleMin,
+                    1.2,
+                    30,
+                    false
                 );
             }
         }

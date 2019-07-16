@@ -39,7 +39,7 @@ namespace TimeSeriesAnalysis
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.chartPoincare = new MathChart();
+            this.chartPoincare = new MathLib.DrawEngine.MathChart();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.chartSignal = new MathLib.DrawEngine.MathChart();
             this.waveletGroup = new System.Windows.Forms.GroupBox();
@@ -56,7 +56,7 @@ namespace TimeSeriesAnalysis
             this.waveletNameLbl = new System.Windows.Forms.Label();
             this.waveletCheckbox = new System.Windows.Forms.CheckBox();
             this.fourierGroup = new System.Windows.Forms.GroupBox();
-            this.chartFft = new MathChart();
+            this.chartFft = new MathLib.DrawEngine.MathChart();
             this.fft_dtNum = new System.Windows.Forms.NumericUpDown();
             this.fft_logCbox = new System.Windows.Forms.CheckBox();
             this.label16 = new System.Windows.Forms.Label();
@@ -66,7 +66,7 @@ namespace TimeSeriesAnalysis
             this.fft_fStartNum = new System.Windows.Forms.NumericUpDown();
             this.fourierCheckbox = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.chartLyapunov = new MathChart();
+            this.chartLyapunov = new MathLib.DrawEngine.MathChart();
             this.label19 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.lyapunovRedrawBtn = new System.Windows.Forms.Button();
@@ -120,6 +120,7 @@ namespace TimeSeriesAnalysis
             this.numPreviewWidth = new System.Windows.Forms.NumericUpDown();
             this.label21 = new System.Windows.Forms.Label();
             this.numPreviewHeight = new System.Windows.Forms.NumericUpDown();
+            this.le_jakobian_radio = new System.Windows.Forms.RadioButton();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -274,7 +275,6 @@ namespace TimeSeriesAnalysis
             this.chartSignal.TabIndex = 0;
             this.chartSignal.Text = "mathChart1";
             this.chartSignal.DoubleClick += new System.EventHandler(this.chartSignal_DoubleClick);
-
             // 
             // waveletGroup
             // 
@@ -622,6 +622,7 @@ namespace TimeSeriesAnalysis
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.Color.Silver;
+            this.tabPage2.Controls.Add(this.le_jakobian_radio);
             this.tabPage2.Controls.Add(this.chartLyapunov);
             this.tabPage2.Controls.Add(this.label19);
             this.tabPage2.Controls.Add(this.label4);
@@ -951,13 +952,13 @@ namespace TimeSeriesAnalysis
             this.le_resultText.BackColor = System.Drawing.Color.Khaki;
             this.le_resultText.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.le_resultText.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.le_resultText.Location = new System.Drawing.Point(792, 35);
+            this.le_resultText.Location = new System.Drawing.Point(671, 35);
             this.le_resultText.MaxLength = 100;
             this.le_resultText.Name = "le_resultText";
             this.le_resultText.ReadOnly = true;
             this.le_resultText.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.le_resultText.ShowSelectionMargin = true;
-            this.le_resultText.Size = new System.Drawing.Size(100, 21);
+            this.le_resultText.Size = new System.Drawing.Size(221, 58);
             this.le_resultText.TabIndex = 4;
             this.le_resultText.Text = "";
             // 
@@ -1104,7 +1105,6 @@ namespace TimeSeriesAnalysis
             this.le_wolf_radio.Name = "le_wolf_radio";
             this.le_wolf_radio.Size = new System.Drawing.Size(52, 18);
             this.le_wolf_radio.TabIndex = 14;
-            this.le_wolf_radio.TabStop = true;
             this.le_wolf_radio.Text = "Wolf";
             this.le_wolf_radio.UseVisualStyleBackColor = true;
             // 
@@ -1405,6 +1405,17 @@ namespace TimeSeriesAnalysis
             0,
             0});
             // 
+            // le_jakobian_radio
+            // 
+            this.le_jakobian_radio.AutoSize = true;
+            this.le_jakobian_radio.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.le_jakobian_radio.Location = new System.Drawing.Point(586, 99);
+            this.le_jakobian_radio.Name = "le_jakobian_radio";
+            this.le_jakobian_radio.Size = new System.Drawing.Size(80, 18);
+            this.le_jakobian_radio.TabIndex = 27;
+            this.le_jakobian_radio.Text = "Jakobian";
+            this.le_jakobian_radio.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.BackColor = System.Drawing.SystemColors.GrayText;
@@ -1567,6 +1578,7 @@ namespace TimeSeriesAnalysis
         private MathChart chartFft;
         private MathChart chartLyapunov;
         private MathChart chartSignal;
+        private RadioButton le_jakobian_radio;
     }
 }
 
