@@ -39,9 +39,7 @@ namespace TimeSeriesAnalysis
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.chartPoincare = new MathLib.DrawEngine.MathChart();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.chartSignal = new MathLib.DrawEngine.MathChart();
             this.waveletGroup = new System.Windows.Forms.GroupBox();
             this.wav_plotPBox = new System.Windows.Forms.PictureBox();
             this.label10 = new System.Windows.Forms.Label();
@@ -56,7 +54,6 @@ namespace TimeSeriesAnalysis
             this.waveletNameLbl = new System.Windows.Forms.Label();
             this.waveletCheckbox = new System.Windows.Forms.CheckBox();
             this.fourierGroup = new System.Windows.Forms.GroupBox();
-            this.chartFft = new MathLib.DrawEngine.MathChart();
             this.fft_dtNum = new System.Windows.Forms.NumericUpDown();
             this.fft_logCbox = new System.Windows.Forms.CheckBox();
             this.label16 = new System.Windows.Forms.Label();
@@ -66,7 +63,7 @@ namespace TimeSeriesAnalysis
             this.fft_fStartNum = new System.Windows.Forms.NumericUpDown();
             this.fourierCheckbox = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.chartLyapunov = new MathLib.DrawEngine.MathChart();
+            this.le_jakobian_radio = new System.Windows.Forms.RadioButton();
             this.label19 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.lyapunovRedrawBtn = new System.Windows.Forms.Button();
@@ -78,11 +75,7 @@ namespace TimeSeriesAnalysis
             this.le_pEndNum = new System.Windows.Forms.NumericUpDown();
             this.lyap_k_Grp = new System.Windows.Forms.GroupBox();
             this.le_kantz_slopeCombo = new System.Windows.Forms.ComboBox();
-            this.lyap_k_Lbl_window = new System.Windows.Forms.Label();
-            this.le_kantz_maxIterNum = new System.Windows.Forms.NumericUpDown();
-            this.lyap_k_Lbl_maxiter = new System.Windows.Forms.Label();
             this.lyap_k_Lbl_scales = new System.Windows.Forms.Label();
-            this.le_kantz_windowNum = new System.Windows.Forms.NumericUpDown();
             this.le_kantz_scalesNum = new System.Windows.Forms.NumericUpDown();
             this.startBtn = new System.Windows.Forms.Button();
             this.le_scaleMinNum = new System.Windows.Forms.NumericUpDown();
@@ -120,31 +113,29 @@ namespace TimeSeriesAnalysis
             this.numPreviewWidth = new System.Windows.Forms.NumericUpDown();
             this.label21 = new System.Windows.Forms.Label();
             this.numPreviewHeight = new System.Windows.Forms.NumericUpDown();
-            this.le_jakobian_radio = new System.Windows.Forms.RadioButton();
+            this.lyap_log_text = new System.Windows.Forms.RichTextBox();
+            this.chartPoincare = new MathLib.DrawEngine.MathChart();
+            this.chartSignal = new MathLib.DrawEngine.MathChart();
+            this.chartFft = new MathLib.DrawEngine.MathChart();
+            this.chartLyapunov = new MathLib.DrawEngine.MathChart();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chartPoincare)).BeginInit();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chartSignal)).BeginInit();
             this.waveletGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.wav_plotPBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.wav_dtNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.wav_fEndNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.wav_fStartNum)).BeginInit();
             this.fourierGroup.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chartFft)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fft_dtNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fft_fEndNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fft_fStartNum)).BeginInit();
             this.tabPage2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chartLyapunov)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.le_scaleMaxNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.le_pStartNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.le_pEndNum)).BeginInit();
             this.lyap_k_Grp.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.le_kantz_maxIterNum)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.le_kantz_windowNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.le_kantz_scalesNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.le_scaleMinNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.le_tauNum)).BeginInit();
@@ -162,6 +153,10 @@ namespace TimeSeriesAnalysis
             ((System.ComponentModel.ISupportInitialize)(this.sourceColumnNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPreviewWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPreviewHeight)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartPoincare)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartSignal)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartFft)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartLyapunov)).BeginInit();
             this.SuspendLayout();
             // 
             // openFileBtn
@@ -247,15 +242,6 @@ namespace TimeSeriesAnalysis
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Poincare pseudosection";
             // 
-            // chartPoincare
-            // 
-            this.chartPoincare.Location = new System.Drawing.Point(9, 22);
-            this.chartPoincare.Name = "chartPoincare";
-            this.chartPoincare.Size = new System.Drawing.Size(320, 239);
-            this.chartPoincare.TabIndex = 13;
-            this.chartPoincare.Text = "chart1";
-            this.chartPoincare.DoubleClick += new System.EventHandler(this.chartPoincare_DoubleClick);
-            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.chartSignal);
@@ -266,15 +252,6 @@ namespace TimeSeriesAnalysis
             this.groupBox1.TabIndex = 23;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Signal";
-            // 
-            // chartSignal
-            // 
-            this.chartSignal.Location = new System.Drawing.Point(9, 21);
-            this.chartSignal.Name = "chartSignal";
-            this.chartSignal.Size = new System.Drawing.Size(320, 240);
-            this.chartSignal.TabIndex = 0;
-            this.chartSignal.Text = "mathChart1";
-            this.chartSignal.DoubleClick += new System.EventHandler(this.chartSignal_DoubleClick);
             // 
             // waveletGroup
             // 
@@ -487,15 +464,6 @@ namespace TimeSeriesAnalysis
             this.fourierGroup.TabStop = false;
             this.fourierGroup.Text = "Fourier power spectrum";
             // 
-            // chartFft
-            // 
-            this.chartFft.Location = new System.Drawing.Point(6, 22);
-            this.chartFft.Name = "chartFft";
-            this.chartFft.Size = new System.Drawing.Size(320, 239);
-            this.chartFft.TabIndex = 13;
-            this.chartFft.Text = "chart1";
-            this.chartFft.DoubleClick += new System.EventHandler(this.chartFft_DoubleClick);
-            // 
             // fft_dtNum
             // 
             this.fft_dtNum.DecimalPlaces = 5;
@@ -622,6 +590,7 @@ namespace TimeSeriesAnalysis
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.Color.Silver;
+            this.tabPage2.Controls.Add(this.lyap_log_text);
             this.tabPage2.Controls.Add(this.le_jakobian_radio);
             this.tabPage2.Controls.Add(this.chartLyapunov);
             this.tabPage2.Controls.Add(this.label19);
@@ -633,7 +602,6 @@ namespace TimeSeriesAnalysis
             this.tabPage2.Controls.Add(this.label3);
             this.tabPage2.Controls.Add(this.le_pStartNum);
             this.tabPage2.Controls.Add(this.le_pEndNum);
-            this.tabPage2.Controls.Add(this.lyap_k_Grp);
             this.tabPage2.Controls.Add(this.startBtn);
             this.tabPage2.Controls.Add(this.le_scaleMinNum);
             this.tabPage2.Controls.Add(this.label18);
@@ -654,19 +622,22 @@ namespace TimeSeriesAnalysis
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Lyapunov exponents";
             // 
-            // chartLyapunov
+            // le_jakobian_radio
             // 
-            this.chartLyapunov.Location = new System.Drawing.Point(8, 256);
-            this.chartLyapunov.Name = "chartLyapunov";
-            this.chartLyapunov.Size = new System.Drawing.Size(618, 320);
-            this.chartLyapunov.TabIndex = 26;
-            this.chartLyapunov.Text = "chart1";
+            this.le_jakobian_radio.AutoSize = true;
+            this.le_jakobian_radio.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.le_jakobian_radio.Location = new System.Drawing.Point(176, 6);
+            this.le_jakobian_radio.Name = "le_jakobian_radio";
+            this.le_jakobian_radio.Size = new System.Drawing.Size(80, 18);
+            this.le_jakobian_radio.TabIndex = 27;
+            this.le_jakobian_radio.Text = "Jakobian";
+            this.le_jakobian_radio.UseVisualStyleBackColor = true;
             // 
             // label19
             // 
             this.label19.AutoSize = true;
             this.label19.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label19.Location = new System.Drawing.Point(6, 192);
+            this.label19.Location = new System.Drawing.Point(6, 231);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(174, 14);
             this.label19.TabIndex = 25;
@@ -676,7 +647,7 @@ namespace TimeSeriesAnalysis
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label4.Location = new System.Drawing.Point(713, 223);
+            this.label4.Location = new System.Drawing.Point(135, 131);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(73, 14);
             this.label4.TabIndex = 14;
@@ -685,7 +656,7 @@ namespace TimeSeriesAnalysis
             // lyapunovRedrawBtn
             // 
             this.lyapunovRedrawBtn.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.lyapunovRedrawBtn.Location = new System.Drawing.Point(6, 214);
+            this.lyapunovRedrawBtn.Location = new System.Drawing.Point(526, 227);
             this.lyapunovRedrawBtn.Name = "lyapunovRedrawBtn";
             this.lyapunovRedrawBtn.Size = new System.Drawing.Size(100, 23);
             this.lyapunovRedrawBtn.TabIndex = 14;
@@ -697,7 +668,7 @@ namespace TimeSeriesAnalysis
             // 
             this.lyap_calc_Rad_kantz.AutoSize = true;
             this.lyap_calc_Rad_kantz.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.lyap_calc_Rad_kantz.Location = new System.Drawing.Point(831, 99);
+            this.lyap_calc_Rad_kantz.Location = new System.Drawing.Point(109, 6);
             this.lyap_calc_Rad_kantz.Name = "lyap_calc_Rad_kantz";
             this.lyap_calc_Rad_kantz.Size = new System.Drawing.Size(61, 18);
             this.lyap_calc_Rad_kantz.TabIndex = 16;
@@ -713,7 +684,7 @@ namespace TimeSeriesAnalysis
             0,
             0,
             262144});
-            this.le_scaleMaxNum.Location = new System.Drawing.Point(792, 221);
+            this.le_scaleMaxNum.Location = new System.Drawing.Point(214, 129);
             this.le_scaleMaxNum.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -732,7 +703,7 @@ namespace TimeSeriesAnalysis
             // 
             this.label17.AutoSize = true;
             this.label17.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label17.Location = new System.Drawing.Point(112, 218);
+            this.label17.Location = new System.Drawing.Point(236, 230);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(40, 14);
             this.label17.TabIndex = 6;
@@ -742,7 +713,7 @@ namespace TimeSeriesAnalysis
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label3.Location = new System.Drawing.Point(717, 197);
+            this.label3.Location = new System.Drawing.Point(139, 105);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(69, 14);
             this.label3.TabIndex = 12;
@@ -751,7 +722,7 @@ namespace TimeSeriesAnalysis
             // le_pStartNum
             // 
             this.le_pStartNum.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.le_pStartNum.Location = new System.Drawing.Point(158, 215);
+            this.le_pStartNum.Location = new System.Drawing.Point(282, 227);
             this.le_pStartNum.Maximum = new decimal(new int[] {
             9999999,
             0,
@@ -764,7 +735,7 @@ namespace TimeSeriesAnalysis
             // le_pEndNum
             // 
             this.le_pEndNum.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.le_pEndNum.Location = new System.Drawing.Point(295, 215);
+            this.le_pEndNum.Location = new System.Drawing.Point(420, 227);
             this.le_pEndNum.Maximum = new decimal(new int[] {
             9999999,
             0,
@@ -787,16 +758,12 @@ namespace TimeSeriesAnalysis
             // lyap_k_Grp
             // 
             this.lyap_k_Grp.Controls.Add(this.le_kantz_slopeCombo);
-            this.lyap_k_Grp.Controls.Add(this.lyap_k_Lbl_window);
-            this.lyap_k_Grp.Controls.Add(this.le_kantz_maxIterNum);
-            this.lyap_k_Grp.Controls.Add(this.lyap_k_Lbl_maxiter);
             this.lyap_k_Grp.Controls.Add(this.lyap_k_Lbl_scales);
-            this.lyap_k_Grp.Controls.Add(this.le_kantz_windowNum);
             this.lyap_k_Grp.Controls.Add(this.le_kantz_scalesNum);
             this.lyap_k_Grp.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.lyap_k_Grp.Location = new System.Drawing.Point(632, 442);
+            this.lyap_k_Grp.Location = new System.Drawing.Point(6, 105);
             this.lyap_k_Grp.Name = "lyap_k_Grp";
-            this.lyap_k_Grp.Size = new System.Drawing.Size(260, 134);
+            this.lyap_k_Grp.Size = new System.Drawing.Size(243, 84);
             this.lyap_k_Grp.TabIndex = 20;
             this.lyap_k_Grp.TabStop = false;
             this.lyap_k_Grp.Text = "Kantz";
@@ -805,73 +772,24 @@ namespace TimeSeriesAnalysis
             // 
             this.le_kantz_slopeCombo.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.le_kantz_slopeCombo.FormattingEnabled = true;
-            this.le_kantz_slopeCombo.Location = new System.Drawing.Point(72, 102);
+            this.le_kantz_slopeCombo.Location = new System.Drawing.Point(60, 48);
             this.le_kantz_slopeCombo.Name = "le_kantz_slopeCombo";
             this.le_kantz_slopeCombo.Size = new System.Drawing.Size(177, 22);
             this.le_kantz_slopeCombo.TabIndex = 30;
             // 
-            // lyap_k_Lbl_window
-            // 
-            this.lyap_k_Lbl_window.AutoSize = true;
-            this.lyap_k_Lbl_window.Location = new System.Drawing.Point(36, 50);
-            this.lyap_k_Lbl_window.Name = "lyap_k_Lbl_window";
-            this.lyap_k_Lbl_window.Size = new System.Drawing.Size(107, 14);
-            this.lyap_k_Lbl_window.TabIndex = 21;
-            this.lyap_k_Lbl_window.Text = "Theiler window:";
-            // 
-            // le_kantz_maxIterNum
-            // 
-            this.le_kantz_maxIterNum.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.le_kantz_maxIterNum.Location = new System.Drawing.Point(149, 21);
-            this.le_kantz_maxIterNum.Maximum = new decimal(new int[] {
-            1000000,
-            0,
-            0,
-            0});
-            this.le_kantz_maxIterNum.Name = "le_kantz_maxIterNum";
-            this.le_kantz_maxIterNum.Size = new System.Drawing.Size(100, 22);
-            this.le_kantz_maxIterNum.TabIndex = 19;
-            this.le_kantz_maxIterNum.Value = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-            // 
-            // lyap_k_Lbl_maxiter
-            // 
-            this.lyap_k_Lbl_maxiter.AutoSize = true;
-            this.lyap_k_Lbl_maxiter.Location = new System.Drawing.Point(69, 23);
-            this.lyap_k_Lbl_maxiter.Name = "lyap_k_Lbl_maxiter";
-            this.lyap_k_Lbl_maxiter.Size = new System.Drawing.Size(74, 14);
-            this.lyap_k_Lbl_maxiter.TabIndex = 18;
-            this.lyap_k_Lbl_maxiter.Text = "Iterations:";
-            // 
             // lyap_k_Lbl_scales
             // 
             this.lyap_k_Lbl_scales.AutoSize = true;
-            this.lyap_k_Lbl_scales.Location = new System.Drawing.Point(91, 77);
+            this.lyap_k_Lbl_scales.Location = new System.Drawing.Point(79, 23);
             this.lyap_k_Lbl_scales.Name = "lyap_k_Lbl_scales";
             this.lyap_k_Lbl_scales.Size = new System.Drawing.Size(52, 14);
             this.lyap_k_Lbl_scales.TabIndex = 16;
             this.lyap_k_Lbl_scales.Text = "Scales:";
             // 
-            // le_kantz_windowNum
-            // 
-            this.le_kantz_windowNum.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.le_kantz_windowNum.Location = new System.Drawing.Point(149, 48);
-            this.le_kantz_windowNum.Maximum = new decimal(new int[] {
-            999,
-            0,
-            0,
-            0});
-            this.le_kantz_windowNum.Name = "le_kantz_windowNum";
-            this.le_kantz_windowNum.Size = new System.Drawing.Size(100, 22);
-            this.le_kantz_windowNum.TabIndex = 20;
-            // 
             // le_kantz_scalesNum
             // 
             this.le_kantz_scalesNum.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.le_kantz_scalesNum.Location = new System.Drawing.Point(149, 75);
+            this.le_kantz_scalesNum.Location = new System.Drawing.Point(137, 21);
             this.le_kantz_scalesNum.Maximum = new decimal(new int[] {
             999,
             0,
@@ -894,7 +812,7 @@ namespace TimeSeriesAnalysis
             // startBtn
             // 
             this.startBtn.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.startBtn.Location = new System.Drawing.Point(792, 6);
+            this.startBtn.Location = new System.Drawing.Point(792, 229);
             this.startBtn.Name = "startBtn";
             this.startBtn.Size = new System.Drawing.Size(100, 23);
             this.startBtn.TabIndex = 13;
@@ -911,7 +829,7 @@ namespace TimeSeriesAnalysis
             0,
             0,
             262144});
-            this.le_scaleMinNum.Location = new System.Drawing.Point(792, 194);
+            this.le_scaleMinNum.Location = new System.Drawing.Point(214, 102);
             this.le_scaleMinNum.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -930,7 +848,7 @@ namespace TimeSeriesAnalysis
             // 
             this.label18.AutoSize = true;
             this.label18.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label18.Location = new System.Drawing.Point(264, 217);
+            this.label18.Location = new System.Drawing.Point(389, 229);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(25, 14);
             this.label18.TabIndex = 7;
@@ -939,11 +857,13 @@ namespace TimeSeriesAnalysis
             // lyap_calc_Rad_rosenstein
             // 
             this.lyap_calc_Rad_rosenstein.AutoSize = true;
+            this.lyap_calc_Rad_rosenstein.Checked = true;
             this.lyap_calc_Rad_rosenstein.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.lyap_calc_Rad_rosenstein.Location = new System.Drawing.Point(730, 99);
+            this.lyap_calc_Rad_rosenstein.Location = new System.Drawing.Point(8, 6);
             this.lyap_calc_Rad_rosenstein.Name = "lyap_calc_Rad_rosenstein";
             this.lyap_calc_Rad_rosenstein.Size = new System.Drawing.Size(95, 18);
             this.lyap_calc_Rad_rosenstein.TabIndex = 15;
+            this.lyap_calc_Rad_rosenstein.TabStop = true;
             this.lyap_calc_Rad_rosenstein.Text = "Rosenstein";
             this.lyap_calc_Rad_rosenstein.UseVisualStyleBackColor = true;
             // 
@@ -952,20 +872,20 @@ namespace TimeSeriesAnalysis
             this.le_resultText.BackColor = System.Drawing.Color.Khaki;
             this.le_resultText.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.le_resultText.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.le_resultText.Location = new System.Drawing.Point(671, 35);
+            this.le_resultText.Location = new System.Drawing.Point(632, 256);
             this.le_resultText.MaxLength = 100;
             this.le_resultText.Name = "le_resultText";
             this.le_resultText.ReadOnly = true;
             this.le_resultText.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.le_resultText.ShowSelectionMargin = true;
-            this.le_resultText.Size = new System.Drawing.Size(221, 58);
+            this.le_resultText.Size = new System.Drawing.Size(260, 58);
             this.le_resultText.TabIndex = 4;
             this.le_resultText.Text = "";
             // 
             // le_tauNum
             // 
             this.le_tauNum.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.le_tauNum.Location = new System.Drawing.Point(792, 167);
+            this.le_tauNum.Location = new System.Drawing.Point(214, 75);
             this.le_tauNum.Maximum = new decimal(new int[] {
             999,
             0,
@@ -989,7 +909,7 @@ namespace TimeSeriesAnalysis
             // 
             this.dimLbl.AutoSize = true;
             this.dimLbl.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.dimLbl.Location = new System.Drawing.Point(636, 142);
+            this.dimLbl.Location = new System.Drawing.Point(58, 50);
             this.dimLbl.Name = "dimLbl";
             this.dimLbl.Size = new System.Drawing.Size(150, 14);
             this.dimLbl.TabIndex = 6;
@@ -999,7 +919,7 @@ namespace TimeSeriesAnalysis
             // 
             this.tauLbl.AutoSize = true;
             this.tauLbl.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.tauLbl.Location = new System.Drawing.Point(643, 170);
+            this.tauLbl.Location = new System.Drawing.Point(65, 78);
             this.tauLbl.Name = "tauLbl";
             this.tauLbl.Size = new System.Drawing.Size(143, 14);
             this.tauLbl.TabIndex = 7;
@@ -1011,13 +931,14 @@ namespace TimeSeriesAnalysis
             this.lyap_r_Grp.Controls.Add(this.rosStepsLbl);
             this.lyap_r_Grp.Controls.Add(this.rosDistanceLbl);
             this.lyap_r_Grp.Controls.Add(this.le_ros_distanceNum);
+            this.lyap_r_Grp.Controls.Add(this.lyap_k_Grp);
             this.lyap_r_Grp.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.lyap_r_Grp.Location = new System.Drawing.Point(632, 352);
+            this.lyap_r_Grp.Location = new System.Drawing.Point(366, 6);
             this.lyap_r_Grp.Name = "lyap_r_Grp";
-            this.lyap_r_Grp.Size = new System.Drawing.Size(260, 84);
+            this.lyap_r_Grp.Size = new System.Drawing.Size(260, 195);
             this.lyap_r_Grp.TabIndex = 20;
             this.lyap_r_Grp.TabStop = false;
-            this.lyap_r_Grp.Text = "Rosenstein";
+            this.lyap_r_Grp.Text = "Rosenstein/Kantz";
             // 
             // le_ros_stepsNum
             // 
@@ -1076,7 +997,7 @@ namespace TimeSeriesAnalysis
             // le_dimNum
             // 
             this.le_dimNum.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.le_dimNum.Location = new System.Drawing.Point(792, 140);
+            this.le_dimNum.Location = new System.Drawing.Point(214, 48);
             this.le_dimNum.Maximum = new decimal(new int[] {
             99,
             0,
@@ -1099,9 +1020,8 @@ namespace TimeSeriesAnalysis
             // le_wolf_radio
             // 
             this.le_wolf_radio.AutoSize = true;
-            this.le_wolf_radio.Checked = true;
             this.le_wolf_radio.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.le_wolf_radio.Location = new System.Drawing.Point(672, 99);
+            this.le_wolf_radio.Location = new System.Drawing.Point(262, 6);
             this.le_wolf_radio.Name = "le_wolf_radio";
             this.le_wolf_radio.Size = new System.Drawing.Size(52, 18);
             this.le_wolf_radio.TabIndex = 14;
@@ -1115,7 +1035,7 @@ namespace TimeSeriesAnalysis
             this.lyap_w_Grp.Controls.Add(this.label5);
             this.lyap_w_Grp.Controls.Add(this.le_wolf_evolveStepsNum);
             this.lyap_w_Grp.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.lyap_w_Grp.Location = new System.Drawing.Point(632, 256);
+            this.lyap_w_Grp.Location = new System.Drawing.Point(632, 6);
             this.lyap_w_Grp.Name = "lyap_w_Grp";
             this.lyap_w_Grp.Size = new System.Drawing.Size(260, 86);
             this.lyap_w_Grp.TabIndex = 12;
@@ -1405,16 +1325,55 @@ namespace TimeSeriesAnalysis
             0,
             0});
             // 
-            // le_jakobian_radio
+            // lyap_log_text
             // 
-            this.le_jakobian_radio.AutoSize = true;
-            this.le_jakobian_radio.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.le_jakobian_radio.Location = new System.Drawing.Point(586, 99);
-            this.le_jakobian_radio.Name = "le_jakobian_radio";
-            this.le_jakobian_radio.Size = new System.Drawing.Size(80, 18);
-            this.le_jakobian_radio.TabIndex = 27;
-            this.le_jakobian_radio.Text = "Jakobian";
-            this.le_jakobian_radio.UseVisualStyleBackColor = true;
+            this.lyap_log_text.BackColor = System.Drawing.Color.Khaki;
+            this.lyap_log_text.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lyap_log_text.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.lyap_log_text.Location = new System.Drawing.Point(632, 320);
+            this.lyap_log_text.MaxLength = 100;
+            this.lyap_log_text.Name = "lyap_log_text";
+            this.lyap_log_text.ReadOnly = true;
+            this.lyap_log_text.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.lyap_log_text.ShowSelectionMargin = true;
+            this.lyap_log_text.Size = new System.Drawing.Size(260, 256);
+            this.lyap_log_text.TabIndex = 28;
+            this.lyap_log_text.Text = "";
+            // 
+            // chartPoincare
+            // 
+            this.chartPoincare.Location = new System.Drawing.Point(9, 22);
+            this.chartPoincare.Name = "chartPoincare";
+            this.chartPoincare.Size = new System.Drawing.Size(320, 239);
+            this.chartPoincare.TabIndex = 13;
+            this.chartPoincare.Text = "chart1";
+            this.chartPoincare.DoubleClick += new System.EventHandler(this.chartPoincare_DoubleClick);
+            // 
+            // chartSignal
+            // 
+            this.chartSignal.Location = new System.Drawing.Point(9, 21);
+            this.chartSignal.Name = "chartSignal";
+            this.chartSignal.Size = new System.Drawing.Size(320, 240);
+            this.chartSignal.TabIndex = 0;
+            this.chartSignal.Text = "mathChart1";
+            this.chartSignal.DoubleClick += new System.EventHandler(this.chartSignal_DoubleClick);
+            // 
+            // chartFft
+            // 
+            this.chartFft.Location = new System.Drawing.Point(6, 22);
+            this.chartFft.Name = "chartFft";
+            this.chartFft.Size = new System.Drawing.Size(320, 239);
+            this.chartFft.TabIndex = 13;
+            this.chartFft.Text = "chart1";
+            this.chartFft.DoubleClick += new System.EventHandler(this.chartFft_DoubleClick);
+            // 
+            // chartLyapunov
+            // 
+            this.chartLyapunov.Location = new System.Drawing.Point(8, 256);
+            this.chartLyapunov.Name = "chartLyapunov";
+            this.chartLyapunov.Size = new System.Drawing.Size(618, 320);
+            this.chartLyapunov.TabIndex = 26;
+            this.chartLyapunov.Text = "chart1";
             // 
             // MainForm
             // 
@@ -1438,9 +1397,7 @@ namespace TimeSeriesAnalysis
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.chartPoincare)).EndInit();
             this.groupBox1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.chartSignal)).EndInit();
             this.waveletGroup.ResumeLayout(false);
             this.waveletGroup.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.wav_plotPBox)).EndInit();
@@ -1449,20 +1406,16 @@ namespace TimeSeriesAnalysis
             ((System.ComponentModel.ISupportInitialize)(this.wav_fStartNum)).EndInit();
             this.fourierGroup.ResumeLayout(false);
             this.fourierGroup.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chartFft)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fft_dtNum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fft_fEndNum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fft_fStartNum)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chartLyapunov)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.le_scaleMaxNum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.le_pStartNum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.le_pEndNum)).EndInit();
             this.lyap_k_Grp.ResumeLayout(false);
             this.lyap_k_Grp.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.le_kantz_maxIterNum)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.le_kantz_windowNum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.le_kantz_scalesNum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.le_scaleMinNum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.le_tauNum)).EndInit();
@@ -1483,6 +1436,10 @@ namespace TimeSeriesAnalysis
             ((System.ComponentModel.ISupportInitialize)(this.sourceColumnNum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPreviewWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPreviewHeight)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartPoincare)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartSignal)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartFft)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartLyapunov)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1552,12 +1509,8 @@ namespace TimeSeriesAnalysis
         private Label sourceStepLbl;
         private RichTextBox sourceStepTxt;
         private GroupBox lyap_k_Grp;
-        private NumericUpDown le_kantz_maxIterNum;
-        private Label lyap_k_Lbl_maxiter;
         private Label lyap_k_Lbl_scales;
         private NumericUpDown le_kantz_scalesNum;
-        private Label lyap_k_Lbl_window;
-        private NumericUpDown le_kantz_windowNum;
         private RadioButton lyap_calc_Rad_kantz;
         private NumericUpDown fft_dtNum;
         private CheckBox fft_logCbox;
@@ -1579,6 +1532,7 @@ namespace TimeSeriesAnalysis
         private MathChart chartLyapunov;
         private MathChart chartSignal;
         private RadioButton le_jakobian_radio;
+        private RichTextBox lyap_log_text;
     }
 }
 

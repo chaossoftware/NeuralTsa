@@ -255,16 +255,8 @@ namespace TimeSeriesAnalysis {
             le_resultText.BackColor = Color.Khaki;
             string result = string.Empty;
 
-            if (routines.Lyapunov is WolfMethod)
-            {
-                result = string.Format("{0:F5}", ((WolfMethod)routines.Lyapunov).rezult);
-                le_resultText.Text = result;
-            }
-
-            if (routines.Lyapunov is JakobianMethod)
-            {
-                le_resultText.Text = ((JakobianMethod)routines.Lyapunov).GetResult();
-            }
+            le_resultText.Text = routines.Lyapunov.GetResult();
+            lyap_log_text.Text = routines.Lyapunov.GetInfo() + "\n\n" + routines.Lyapunov.Log.ToString();
 
             if (routines.Lyapunov is KantzMethod)
             {
@@ -278,7 +270,6 @@ namespace TimeSeriesAnalysis {
 
             if (routines.Lyapunov.Slope.Length > 1)
             {
-                le_resultText.Text = routines.Lyapunov.GetResult();
                 le_pEndNum.Value = routines.Lyapunov.Slope.Length - 1;
 
                 try
@@ -442,8 +433,8 @@ namespace TimeSeriesAnalysis {
                     routines.SourceData.TimeSeries.YValues,
                     dim,
                     tau,
-                    le_kantz_maxIterNum.ToInt(),
-                    le_kantz_windowNum.ToInt(),
+                    le_ros_stepsNum.ToInt(),
+                    le_ros_distanceNum.ToInt(),
                     scaleMin,
                     le_scaleMaxNum.ToDouble(),
                     le_kantz_scalesNum.ToInt()
