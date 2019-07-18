@@ -111,7 +111,7 @@ namespace TimeSeriesAnalysis {
 
             if (routines.Lyapunov != null)
             {
-                DataWriter.CreateDataFile(fName + "_lyapunov.txt", routines.Lyapunov.GetInfoFull());
+                DataWriter.CreateDataFile(fName + "_lyapunov.txt", routines.Lyapunov.GetInfo());
             }
 
             if (chartLyapunov.HasData)
@@ -263,7 +263,7 @@ namespace TimeSeriesAnalysis {
 
             if (routines.Lyapunov is JakobianMethod)
             {
-                le_resultText.Text = ((JakobianMethod)routines.Lyapunov).GetInfoShort();
+                le_resultText.Text = ((JakobianMethod)routines.Lyapunov).GetResult();
             }
 
             if (routines.Lyapunov is KantzMethod)
@@ -278,7 +278,7 @@ namespace TimeSeriesAnalysis {
 
             if (routines.Lyapunov.Slope.Length > 1)
             {
-                le_resultText.Text = routines.Lyapunov.GetInfoShort();
+                le_resultText.Text = routines.Lyapunov.GetResult();
                 le_pEndNum.Value = routines.Lyapunov.Slope.Length - 1;
 
                 try
