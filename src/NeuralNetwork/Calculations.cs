@@ -152,14 +152,13 @@ namespace NeuralAnalyser
             return result;
         }
 
-        private BenettinResult CalculateLyapunovSpectrum(SciNeuralNet net, NeuralNetEquations systemEquations)
+        private LyapunovSpectrum CalculateLyapunovSpectrum(SciNeuralNet net, NeuralNetEquations systemEquations)
         {
             int dim = systemEquations.EquationsCount;
             int dimPlusOne = systemEquations.TotalEquationsCount;
 
             var ort = new ModifiedGrammSchmidt(dim);
             var lyap = new BenettinMethod(dim);
-            BenettinResult result;
 
             double time = 0;                 //time
             int irate = 1;                   //integration steps per reorthonormalization
@@ -193,7 +192,7 @@ namespace NeuralAnalyser
                 }
 
                 ort.Perform(v, znorm);
-                lyap.calculateLE(znorm, time);
+                lyap.CalculateLyapunovSpectrum(znorm, time);
 
                 for (int k = 0; k < dim; k++)
                 {
@@ -204,15 +203,14 @@ namespace NeuralAnalyser
                 }
             }
 
-            result = lyap.GetResults();
-            result.LeSpectrumInTime = leInTime;
+            lyap.Result.SpectrumInTime = leInTime;
 
             if (outParams.SaveLeInTime)
             {
                 CreateLeInTimeFile(leInTime);
             }
 
-            return result;
+            return lyap.Result;
         }
 
         private double[,] Get2DArray(HiddenNeuron[] neurons, InputNeuron[] inputs)
@@ -445,13 +443,13 @@ namespace NeuralAnalyser
             DataWriter.CreateDataFile(outParams.PredictFile, pred.ToString());
         }
 
-        private void SaveDebugInfoToFile(SciNeuralNet net, BenettinResult benettin, double lle)
+        private void SaveDebugInfoToFile(SciNeuralNet net, LyapunovSpectrum benettin, double lle)
         {
             var ebest = net.OutputLayer.Neurons[0].Memory[0];
 
             var debug = new StringBuilder()
                 .AppendFormat(CultureInfo.InvariantCulture, "Training error: {0:0.#####e-0}\n\n", ebest)
-                .Append(benettin.GetInfo())
+                .Append(benettin.ToString())
                 .AppendFormat(CultureInfo.InvariantCulture, "Largest Lyapunov exponent: {0:F5}\n", lle)
                 .AppendFormat(CultureInfo.InvariantCulture, "\nBias: {0:F8}\n\n", net.NeuronBias.Memory[0]);
 
