@@ -111,7 +111,7 @@ namespace TimeSeriesAnalysis {
 
             if (routines.Lyapunov != null)
             {
-                DataWriter.CreateDataFile(fName + "_lyapunov.txt", routines.Lyapunov.GetInfo());
+                DataWriter.CreateDataFile(fName + "_lyapunov.txt", routines.Lyapunov.ToString());
             }
 
             if (chartLyapunov.HasData)
@@ -256,7 +256,7 @@ namespace TimeSeriesAnalysis {
             string result = string.Empty;
 
             le_resultText.Text = routines.Lyapunov.GetResult();
-            lyap_log_text.Text = routines.Lyapunov.GetInfo() + "\n\n" + routines.Lyapunov.Log.ToString();
+            lyap_log_text.Text = routines.Lyapunov.ToString() + "\n\n" + routines.Lyapunov.Log.ToString();
 
             if (routines.Lyapunov is KantzMethod)
             {
