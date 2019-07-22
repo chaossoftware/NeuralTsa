@@ -453,5 +453,10 @@ namespace TimeSeriesAnalysis {
                 );
             }
         }
+
+        private void lyap_calc_Rad_kantz_CheckedChanged(object sender, EventArgs e)
+        {
+            this.le_kantz_slopeCombo.Visible = (sender as RadioButton).Checked;
+        }
     }
 }
