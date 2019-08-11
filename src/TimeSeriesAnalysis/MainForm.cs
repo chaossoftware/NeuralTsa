@@ -445,7 +445,7 @@ namespace TimeSeriesAnalysis {
                 routines.Lyapunov = new JakobianMethod(
                     routines.SourceData.TimeSeries.YValues,
                     dim,
-                    le_ros_stepsNum.ToInt(),
+                    routines.SourceData.TimeSeries.YValues.Length,
                     scaleMin,
                     1.2,
                     30,
