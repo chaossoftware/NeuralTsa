@@ -66,6 +66,7 @@ namespace TimeSeriesAnalysis
             this.fft_fStartNum = new System.Windows.Forms.NumericUpDown();
             this.fourierCheckbox = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.le_kantz_slopeCombo = new System.Windows.Forms.ComboBox();
             this.lyap_log_text = new System.Windows.Forms.RichTextBox();
             this.le_jakobian_radio = new System.Windows.Forms.RadioButton();
             this.chartLyapunov = new MathLib.DrawEngine.MathChart();
@@ -92,7 +93,6 @@ namespace TimeSeriesAnalysis
             this.rosDistanceLbl = new System.Windows.Forms.Label();
             this.le_ros_distanceNum = new System.Windows.Forms.NumericUpDown();
             this.lyap_k_Grp = new System.Windows.Forms.GroupBox();
-            this.le_kantz_slopeCombo = new System.Windows.Forms.ComboBox();
             this.lyap_k_Lbl_scales = new System.Windows.Forms.Label();
             this.le_kantz_scalesNum = new System.Windows.Forms.NumericUpDown();
             this.le_dimNum = new System.Windows.Forms.NumericUpDown();
@@ -650,6 +650,15 @@ namespace TimeSeriesAnalysis
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Lyapunov exponents";
             // 
+            // le_kantz_slopeCombo
+            // 
+            this.le_kantz_slopeCombo.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.le_kantz_slopeCombo.FormattingEnabled = true;
+            this.le_kantz_slopeCombo.Location = new System.Drawing.Point(303, 226);
+            this.le_kantz_slopeCombo.Name = "le_kantz_slopeCombo";
+            this.le_kantz_slopeCombo.Size = new System.Drawing.Size(217, 22);
+            this.le_kantz_slopeCombo.TabIndex = 30;
+            // 
             // lyap_log_text
             // 
             this.lyap_log_text.BackColor = System.Drawing.Color.Khaki;
@@ -745,11 +754,6 @@ namespace TimeSeriesAnalysis
             this.le_scaleMaxNum.Name = "le_scaleMaxNum";
             this.le_scaleMaxNum.Size = new System.Drawing.Size(100, 22);
             this.le_scaleMaxNum.TabIndex = 11;
-            this.le_scaleMaxNum.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            196608});
             // 
             // label17
             // 
@@ -836,11 +840,6 @@ namespace TimeSeriesAnalysis
             this.le_scaleMinNum.Name = "le_scaleMinNum";
             this.le_scaleMinNum.Size = new System.Drawing.Size(100, 22);
             this.le_scaleMinNum.TabIndex = 10;
-            this.le_scaleMinNum.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            262144});
             // 
             // label18
             // 
@@ -1003,15 +1002,6 @@ namespace TimeSeriesAnalysis
             this.lyap_k_Grp.TabIndex = 20;
             this.lyap_k_Grp.TabStop = false;
             this.lyap_k_Grp.Text = "Kantz";
-            // 
-            // le_kantz_slopeCombo
-            // 
-            this.le_kantz_slopeCombo.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.le_kantz_slopeCombo.FormattingEnabled = true;
-            this.le_kantz_slopeCombo.Location = new System.Drawing.Point(303, 226);
-            this.le_kantz_slopeCombo.Name = "le_kantz_slopeCombo";
-            this.le_kantz_slopeCombo.Size = new System.Drawing.Size(217, 22);
-            this.le_kantz_slopeCombo.TabIndex = 30;
             // 
             // lyap_k_Lbl_scales
             // 
