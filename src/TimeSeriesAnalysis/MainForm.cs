@@ -410,10 +410,10 @@ namespace TimeSeriesAnalysis {
                     routines.SourceData.TimeSeries.YValues,
                     dim,
                     tau,
-                    le_wolf_stepNum.ToDouble(),
+                    le_w_dtNum.ToDouble(),
                     scaleMin,
-                    le_scaleMaxNum.ToDouble(),
-                    le_wolf_evolveStepsNum.ToInt()
+                    le_w_scaleMaxNum.ToDouble(),
+                    le_w_evolveStepsNum.ToInt()
                 );
             }
             else if (lyap_calc_Rad_rosenstein.Checked)
@@ -422,8 +422,8 @@ namespace TimeSeriesAnalysis {
                     routines.SourceData.TimeSeries.YValues,
                     dim,
                     tau,
-                    le_ros_stepsNum.ToInt(),
-                    le_ros_distanceNum.ToInt(),
+                    le_r_stepsNum.ToInt(),
+                    le_r_distanceNum.ToInt(),
                     scaleMin
                 );
             }
@@ -433,11 +433,11 @@ namespace TimeSeriesAnalysis {
                     routines.SourceData.TimeSeries.YValues,
                     dim,
                     tau,
-                    le_ros_stepsNum.ToInt(),
-                    le_ros_distanceNum.ToInt(),
+                    le_k_stepsNum.ToInt(),
+                    le_k_distanceNum.ToInt(),
                     scaleMin,
-                    le_scaleMaxNum.ToDouble(),
-                    le_kantz_scalesNum.ToInt()
+                    le_k_scaleMaxNum.ToDouble(),
+                    le_k_scalesNum.ToInt()
                 );
             }
             else if (le_jakobian_radio.Checked)
@@ -447,16 +447,27 @@ namespace TimeSeriesAnalysis {
                     dim,
                     routines.SourceData.TimeSeries.YValues.Length,
                     scaleMin,
-                    1.2,
-                    30,
-                    false
+                    le_j_scaleDtNum.ToDouble(),
+                    le_j_minNeighNum.ToInt(),
+                    le_j_inverceCheck.Checked
                 );
             }
         }
 
         private void lyap_calc_Rad_kantz_CheckedChanged(object sender, EventArgs e)
         {
-            this.le_kantz_slopeCombo.Visible = (sender as RadioButton).Checked;
+            var selected = (sender as RadioButton).Checked;
+            this.le_kantz_slopeCombo.Visible = selected;
+            le_k_gr.Visible = selected;
         }
+
+        private void lyap_calc_Rad_rosenstein_CheckedChanged(object sender, EventArgs e) =>
+            le_r_gr.Visible = (sender as RadioButton).Checked;
+
+        private void le_wolf_radio_CheckedChanged(object sender, EventArgs e) =>
+            le_w_gr.Visible = (sender as RadioButton).Checked;
+
+        private void le_jakobian_radio_CheckedChanged(object sender, EventArgs e) =>
+            le_j_gr.Visible = (sender as RadioButton).Checked;
     }
 }
