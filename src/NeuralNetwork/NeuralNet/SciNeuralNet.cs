@@ -343,7 +343,7 @@ namespace NeuralAnalyser.NeuralNet
         private void Init(double[] sourceArray)
         {
             nmax = sourceArray.Length;
-            double xmax = Ext.countMaxAbs(sourceArray);
+            double xmax = Ext.CountMaxAbs(sourceArray);
 
             // create array with data
             xdata = new double[nmax];

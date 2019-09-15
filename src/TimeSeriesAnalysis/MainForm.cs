@@ -8,6 +8,7 @@ using MathLib.IO;
 using MathLib.MathMethods.Lyapunov;
 using System.Globalization;
 using MathLib.Data;
+using System.Diagnostics;
 
 namespace TimeSeriesAnalysis {
     public partial class MainForm : Form
@@ -111,7 +112,7 @@ namespace TimeSeriesAnalysis {
 
             if (routines.Lyapunov != null)
             {
-                DataWriter.CreateDataFile(fName + "_lyapunov.txt", routines.Lyapunov.GetInfoFull());
+                DataWriter.CreateDataFile(fName + "_lyapunov.txt", routines.Lyapunov.ToString());
             }
 
             if (chartLyapunov.HasData)
@@ -122,7 +123,9 @@ namespace TimeSeriesAnalysis {
 
         private void FillUiWithData()
         {
-            fileNameLbl.Text = routines.SourceData.ToString().Replace("\n", " ");
+            fileStatusStrip.Text = routines.SourceData.ToString().Replace("\n", " ");
+            statusBar.Invalidate();
+            statusBar.Refresh();
 
             sourceColumnNum.Maximum = routines.SourceData.ColumnsCount;
             sourceColumnNum.Minimum = 1;
@@ -245,7 +248,7 @@ namespace TimeSeriesAnalysis {
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Unable to calculate LE:\n" + ex.Message);
+                MessageBox.Show("Unable to calculate LE:\n" + ex);
                 le_resultText.Text = "Error";
             }
         }
@@ -255,11 +258,8 @@ namespace TimeSeriesAnalysis {
             le_resultText.BackColor = Color.Khaki;
             string result = string.Empty;
 
-            if (routines.Lyapunov is WolfMethod)
-            {
-                result = string.Format("{0:F5}", ((WolfMethod)routines.Lyapunov).rezult);
-                le_resultText.Text = result;
-            }
+            le_resultText.Text = routines.Lyapunov.GetResult();
+            lyap_log_text.Text = routines.Lyapunov.ToString() + "\n\n" + routines.Lyapunov.Log.ToString();
 
             if (routines.Lyapunov is KantzMethod)
             {
@@ -273,7 +273,6 @@ namespace TimeSeriesAnalysis {
 
             if (routines.Lyapunov.Slope.Length > 1)
             {
-                le_resultText.Text = routines.Lyapunov.GetInfoShort();
                 le_pEndNum.Value = routines.Lyapunov.Slope.Length - 1;
 
                 try
@@ -404,9 +403,9 @@ namespace TimeSeriesAnalysis {
 
         private void SetLyapunovMethod()
         {
-            int dim = le_dimNum.ToInt();
-            int tau = le_tauNum.ToInt();
-            double scaleMin = le_scaleMinNum.ToDouble();
+            var dim = le_dimNum.ToInt();
+            var tau = le_tauNum.ToInt();
+            var scaleMin = le_scaleMinNum.ToDouble();
 
             if (le_wolf_radio.Checked)
             {
@@ -414,10 +413,10 @@ namespace TimeSeriesAnalysis {
                     routines.SourceData.TimeSeries.YValues,
                     dim,
                     tau,
-                    le_wolf_stepNum.ToDouble(),
+                    le_w_dtNum.ToDouble(),
                     scaleMin,
-                    le_scaleMaxNum.ToDouble(),
-                    le_wolf_evolveStepsNum.ToInt()
+                    le_w_scaleMaxNum.ToDouble(),
+                    le_w_evolveStepsNum.ToInt()
                 );
             }
             else if (lyap_calc_Rad_rosenstein.Checked)
@@ -426,8 +425,8 @@ namespace TimeSeriesAnalysis {
                     routines.SourceData.TimeSeries.YValues,
                     dim,
                     tau,
-                    le_ros_stepsNum.ToInt(),
-                    le_ros_distanceNum.ToInt(),
+                    le_r_stepsNum.ToInt(),
+                    le_r_distanceNum.ToInt(),
                     scaleMin
                 );
             }
@@ -437,13 +436,46 @@ namespace TimeSeriesAnalysis {
                     routines.SourceData.TimeSeries.YValues,
                     dim,
                     tau,
-                    le_kantz_maxIterNum.ToInt(),
-                    le_kantz_windowNum.ToInt(),
+                    le_k_stepsNum.ToInt(),
+                    le_k_distanceNum.ToInt(),
                     scaleMin,
-                    le_scaleMaxNum.ToDouble(),
-                    le_kantz_scalesNum.ToInt()
+                    le_k_scaleMaxNum.ToDouble(),
+                    le_k_scalesNum.ToInt()
                 );
             }
+            else if (le_jakobian_radio.Checked)
+            {
+                routines.Lyapunov = new JakobianMethod(
+                    routines.SourceData.TimeSeries.YValues,
+                    dim,
+                    routines.SourceData.TimeSeries.YValues.Length,
+                    scaleMin,
+                    le_j_scaleDtNum.ToDouble(),
+                    le_j_minNeighNum.ToInt(),
+                    le_j_inverceCheck.Checked
+                );
+            }
+        }
+
+        private void lyap_calc_Rad_kantz_CheckedChanged(object sender, EventArgs e)
+        {
+            var selected = (sender as RadioButton).Checked;
+            this.le_kantz_slopeCombo.Visible = selected;
+            le_k_gr.Visible = selected;
+        }
+
+        private void lyap_calc_Rad_rosenstein_CheckedChanged(object sender, EventArgs e) =>
+            le_r_gr.Visible = (sender as RadioButton).Checked;
+
+        private void le_wolf_radio_CheckedChanged(object sender, EventArgs e) =>
+            le_w_gr.Visible = (sender as RadioButton).Checked;
+
+        private void le_jakobian_radio_CheckedChanged(object sender, EventArgs e) =>
+            le_j_gr.Visible = (sender as RadioButton).Checked;
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("https://ssd.mathworks.com/supportfiles/downloads/R2016b/deployment_files/R2016b/installers/win64/MCR_R2016b_win64_installer.exe");
         }
     }
 }
