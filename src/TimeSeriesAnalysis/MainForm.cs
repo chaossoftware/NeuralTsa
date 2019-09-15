@@ -402,9 +402,9 @@ namespace TimeSeriesAnalysis {
 
         private void SetLyapunovMethod()
         {
-            int dim = le_dimNum.ToInt();
-            int tau = le_tauNum.ToInt();
-            double scaleMin = le_scaleMinNum.ToDouble();
+            var dim = le_dimNum.ToInt();
+            var tau = le_tauNum.ToInt();
+            var scaleMin = le_scaleMinNum.ToDouble();
 
             if (le_wolf_radio.Checked)
             {
