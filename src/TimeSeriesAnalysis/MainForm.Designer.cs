@@ -34,7 +34,6 @@ namespace TimeSeriesAnalysis
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.openFileBtn = new System.Windows.Forms.Button();
             this.plotBtn = new System.Windows.Forms.Button();
-            this.fileNameLbl = new System.Windows.Forms.Label();
             this.saveBtn = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -132,6 +131,8 @@ namespace TimeSeriesAnalysis
             this.numPreviewWidth = new System.Windows.Forms.NumericUpDown();
             this.label21 = new System.Windows.Forms.Label();
             this.numPreviewHeight = new System.Windows.Forms.NumericUpDown();
+            this.statusBar = new System.Windows.Forms.StatusStrip();
+            this.fileStatusStrip = new System.Windows.Forms.ToolStripStatusLabel();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -178,6 +179,7 @@ namespace TimeSeriesAnalysis
             ((System.ComponentModel.ISupportInitialize)(this.sourceColumnNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPreviewWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPreviewHeight)).BeginInit();
+            this.statusBar.SuspendLayout();
             this.SuspendLayout();
             // 
             // openFileBtn
@@ -202,22 +204,10 @@ namespace TimeSeriesAnalysis
             this.plotBtn.UseVisualStyleBackColor = true;
             this.plotBtn.Click += new System.EventHandler(this.plotBtn_Click);
             // 
-            // fileNameLbl
-            // 
-            this.fileNameLbl.AutoSize = true;
-            this.fileNameLbl.BackColor = System.Drawing.Color.Khaki;
-            this.fileNameLbl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.fileNameLbl.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.fileNameLbl.Location = new System.Drawing.Point(4, 5);
-            this.fileNameLbl.Name = "fileNameLbl";
-            this.fileNameLbl.Size = new System.Drawing.Size(218, 16);
-            this.fileNameLbl.TabIndex = 14;
-            this.fileNameLbl.Text = "Please, select file with timeseries";
-            // 
             // saveBtn
             // 
             this.saveBtn.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.saveBtn.Location = new System.Drawing.Point(1069, 601);
+            this.saveBtn.Location = new System.Drawing.Point(1073, 583);
             this.saveBtn.Name = "saveBtn";
             this.saveBtn.Size = new System.Drawing.Size(79, 23);
             this.saveBtn.TabIndex = 1;
@@ -230,7 +220,7 @@ namespace TimeSeriesAnalysis
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.tabControl1.Location = new System.Drawing.Point(0, 24);
+            this.tabControl1.Location = new System.Drawing.Point(0, -2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(906, 612);
@@ -1608,17 +1598,32 @@ namespace TimeSeriesAnalysis
             0,
             0});
             // 
+            // statusBar
+            // 
+            this.statusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileStatusStrip});
+            this.statusBar.Location = new System.Drawing.Point(0, 613);
+            this.statusBar.Name = "statusBar";
+            this.statusBar.Size = new System.Drawing.Size(1160, 22);
+            this.statusBar.TabIndex = 27;
+            // 
+            // fileStatusStrip
+            // 
+            this.fileStatusStrip.Name = "fileStatusStrip";
+            this.fileStatusStrip.Size = new System.Drawing.Size(177, 17);
+            this.fileStatusStrip.Text = "Please, select file with timeseries";
+            // 
             // MainForm
             // 
             this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(1160, 635);
+            this.Controls.Add(this.statusBar);
             this.Controls.Add(this.label20);
             this.Controls.Add(this.numPreviewWidth);
             this.Controls.Add(this.label21);
             this.Controls.Add(this.numPreviewHeight);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.saveBtn);
-            this.Controls.Add(this.fileNameLbl);
             this.Controls.Add(this.sourcePrefGBox);
             this.Controls.Add(this.openFileBtn);
             this.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -1681,6 +1686,8 @@ namespace TimeSeriesAnalysis
             ((System.ComponentModel.ISupportInitialize)(this.sourceColumnNum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPreviewWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPreviewHeight)).EndInit();
+            this.statusBar.ResumeLayout(false);
+            this.statusBar.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1690,7 +1697,6 @@ namespace TimeSeriesAnalysis
 
         private Button openFileBtn;
         private Button plotBtn;
-        private Label fileNameLbl;
         private Button saveBtn;
         private TabControl tabControl1;
         private TabPage tabPage1;
@@ -1788,6 +1794,8 @@ namespace TimeSeriesAnalysis
         private NumericUpDown le_j_minNeighNum;
         private Label le_j_minNeighLbl;
         private CheckBox le_j_inverceCheck;
+        private StatusStrip statusBar;
+        private ToolStripStatusLabel fileStatusStrip;
     }
 }
 

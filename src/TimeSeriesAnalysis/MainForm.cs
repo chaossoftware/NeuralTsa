@@ -122,7 +122,9 @@ namespace TimeSeriesAnalysis {
 
         private void FillUiWithData()
         {
-            fileNameLbl.Text = routines.SourceData.ToString().Replace("\n", " ");
+            fileStatusStrip.Text = routines.SourceData.ToString().Replace("\n", " ");
+            statusBar.Invalidate();
+            statusBar.Refresh();
 
             sourceColumnNum.Maximum = routines.SourceData.ColumnsCount;
             sourceColumnNum.Minimum = 1;
