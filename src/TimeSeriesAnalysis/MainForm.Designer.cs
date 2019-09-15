@@ -88,13 +88,13 @@ namespace TimeSeriesAnalysis
             this.le_k_scaleMaxLbl = new System.Windows.Forms.Label();
             this.le_k_scaleMaxNum = new System.Windows.Forms.NumericUpDown();
             this.label19 = new System.Windows.Forms.Label();
+            this.startBtn = new System.Windows.Forms.Button();
             this.lyapunovRedrawBtn = new System.Windows.Forms.Button();
             this.lyap_calc_Rad_kantz = new System.Windows.Forms.RadioButton();
             this.label17 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.le_pStartNum = new System.Windows.Forms.NumericUpDown();
             this.le_pEndNum = new System.Windows.Forms.NumericUpDown();
-            this.startBtn = new System.Windows.Forms.Button();
             this.le_scaleMinNum = new System.Windows.Forms.NumericUpDown();
             this.label18 = new System.Windows.Forms.Label();
             this.lyap_calc_Rad_rosenstein = new System.Windows.Forms.RadioButton();
@@ -133,6 +133,7 @@ namespace TimeSeriesAnalysis
             this.numPreviewHeight = new System.Windows.Forms.NumericUpDown();
             this.statusBar = new System.Windows.Forms.StatusStrip();
             this.fileStatusStrip = new System.Windows.Forms.ToolStripStatusLabel();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -988,6 +989,17 @@ namespace TimeSeriesAnalysis
             this.label19.TabIndex = 25;
             this.label19.Text = "Slope";
             // 
+            // startBtn
+            // 
+            this.startBtn.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.startBtn.Location = new System.Drawing.Point(8, 220);
+            this.startBtn.Name = "startBtn";
+            this.startBtn.Size = new System.Drawing.Size(100, 23);
+            this.startBtn.TabIndex = 13;
+            this.startBtn.Text = "Calculate";
+            this.startBtn.UseVisualStyleBackColor = true;
+            this.startBtn.Click += new System.EventHandler(this.startBtn_Click);
+            // 
             // lyapunovRedrawBtn
             // 
             this.lyapunovRedrawBtn.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -1066,17 +1078,6 @@ namespace TimeSeriesAnalysis
             0,
             0,
             0});
-            // 
-            // startBtn
-            // 
-            this.startBtn.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.startBtn.Location = new System.Drawing.Point(8, 220);
-            this.startBtn.Name = "startBtn";
-            this.startBtn.Size = new System.Drawing.Size(100, 23);
-            this.startBtn.TabIndex = 13;
-            this.startBtn.Text = "Calculate";
-            this.startBtn.UseVisualStyleBackColor = true;
-            this.startBtn.Click += new System.EventHandler(this.startBtn_Click);
             // 
             // le_scaleMinNum
             // 
@@ -1605,14 +1606,30 @@ namespace TimeSeriesAnalysis
             // 
             // fileStatusStrip
             // 
+            this.fileStatusStrip.BackColor = System.Drawing.SystemColors.Control;
             this.fileStatusStrip.Name = "fileStatusStrip";
             this.fileStatusStrip.Size = new System.Drawing.Size(177, 17);
             this.fileStatusStrip.Text = "Please, select file with timeseries";
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.BackColor = System.Drawing.SystemColors.Control;
+            this.linkLabel1.LinkArea = new System.Windows.Forms.LinkArea(9, 9);
+            this.linkLabel1.Location = new System.Drawing.Point(817, 618);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(315, 20);
+            this.linkLabel1.TabIndex = 29;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "Download MCR 2016b to use wavelets and fourier";
+            this.linkLabel1.UseCompatibleTextRendering = true;
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
             // MainForm
             // 
             this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(1160, 635);
+            this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.statusBar);
             this.Controls.Add(this.label20);
             this.Controls.Add(this.numPreviewWidth);
@@ -1792,6 +1809,7 @@ namespace TimeSeriesAnalysis
         private CheckBox le_j_inverceCheck;
         private StatusStrip statusBar;
         private ToolStripStatusLabel fileStatusStrip;
+        private LinkLabel linkLabel1;
     }
 }
 

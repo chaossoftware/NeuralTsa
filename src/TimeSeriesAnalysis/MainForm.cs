@@ -8,6 +8,7 @@ using MathLib.IO;
 using MathLib.MathMethods.Lyapunov;
 using System.Globalization;
 using MathLib.Data;
+using System.Diagnostics;
 
 namespace TimeSeriesAnalysis {
     public partial class MainForm : Form
@@ -471,5 +472,10 @@ namespace TimeSeriesAnalysis {
 
         private void le_jakobian_radio_CheckedChanged(object sender, EventArgs e) =>
             le_j_gr.Visible = (sender as RadioButton).Checked;
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("https://ssd.mathworks.com/supportfiles/downloads/R2016b/deployment_files/R2016b/installers/win64/MCR_R2016b_win64_installer.exe");
+        }
     }
 }
