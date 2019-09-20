@@ -134,6 +134,8 @@ namespace TimeSeriesAnalysis
             this.statusBar = new System.Windows.Forms.StatusStrip();
             this.fileStatusStrip = new System.Windows.Forms.ToolStripStatusLabel();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.autoCorBtn = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -181,6 +183,7 @@ namespace TimeSeriesAnalysis
             ((System.ComponentModel.ISupportInitialize)(this.numPreviewWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPreviewHeight)).BeginInit();
             this.statusBar.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
             // openFileBtn
@@ -220,6 +223,7 @@ namespace TimeSeriesAnalysis
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.tabControl1.Location = new System.Drawing.Point(0, -2);
             this.tabControl1.Name = "tabControl1";
@@ -1625,6 +1629,26 @@ namespace TimeSeriesAnalysis
             this.linkLabel1.UseCompatibleTextRendering = true;
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.autoCorBtn);
+            this.tabPage3.Location = new System.Drawing.Point(4, 23);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Size = new System.Drawing.Size(898, 585);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Signal Properties";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // autoCorBtn
+            // 
+            this.autoCorBtn.Location = new System.Drawing.Point(22, 20);
+            this.autoCorBtn.Name = "autoCorBtn";
+            this.autoCorBtn.Size = new System.Drawing.Size(148, 23);
+            this.autoCorBtn.TabIndex = 0;
+            this.autoCorBtn.Text = "Auto correlation function";
+            this.autoCorBtn.UseVisualStyleBackColor = true;
+            this.autoCorBtn.Click += new System.EventHandler(this.autoCorBtn_Click);
+            // 
             // MainForm
             // 
             this.BackColor = System.Drawing.SystemColors.Window;
@@ -1701,6 +1725,7 @@ namespace TimeSeriesAnalysis
             ((System.ComponentModel.ISupportInitialize)(this.numPreviewHeight)).EndInit();
             this.statusBar.ResumeLayout(false);
             this.statusBar.PerformLayout();
+            this.tabPage3.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1810,6 +1835,8 @@ namespace TimeSeriesAnalysis
         private StatusStrip statusBar;
         private ToolStripStatusLabel fileStatusStrip;
         private LinkLabel linkLabel1;
+        private TabPage tabPage3;
+        private Button autoCorBtn;
     }
 }
 
