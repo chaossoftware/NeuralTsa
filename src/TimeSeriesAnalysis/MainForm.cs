@@ -5,11 +5,11 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using MathLib.IO;
-using MathLib.MathMethods.Lyapunov;
+using MathLib.NumericalMethods.Lyapunov;
 using System.Globalization;
 using MathLib.Data;
 using System.Diagnostics;
-using MathLib.MathMethods;
+using MathLib.NumericalMethods;
 
 namespace TimeSeriesAnalysis {
     public partial class MainForm : Form

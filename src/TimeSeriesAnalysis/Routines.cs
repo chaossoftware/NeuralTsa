@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using MathLib.Data;
 using MathLib.DrawEngine;
-using MathLib.MathMethods.Lyapunov;
+using MathLib.NumericalMethods.Lyapunov;
 using MathLib.Transform;
 using MathWorks.MATLAB.NET.Arrays;
 
