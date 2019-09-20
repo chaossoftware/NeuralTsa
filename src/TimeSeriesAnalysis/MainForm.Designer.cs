@@ -115,6 +115,8 @@ namespace TimeSeriesAnalysis
             this.le_w_dtLbl = new System.Windows.Forms.Label();
             this.le_w_evolveStepsLbl = new System.Windows.Forms.Label();
             this.le_w_evolveStepsNum = new System.Windows.Forms.NumericUpDown();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.autoCorBtn = new System.Windows.Forms.Button();
             this.sourcePrefGBox = new System.Windows.Forms.GroupBox();
             this.sourceStepLbl = new System.Windows.Forms.Label();
             this.sourceStepTxt = new System.Windows.Forms.RichTextBox();
@@ -134,8 +136,7 @@ namespace TimeSeriesAnalysis
             this.statusBar = new System.Windows.Forms.StatusStrip();
             this.fileStatusStrip = new System.Windows.Forms.ToolStripStatusLabel();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.autoCorBtn = new System.Windows.Forms.Button();
+            this.autoCorChart = new MathLib.DrawEngine.MathChart();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -175,6 +176,7 @@ namespace TimeSeriesAnalysis
             ((System.ComponentModel.ISupportInitialize)(this.le_w_scaleMaxNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.le_w_dtNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.le_w_evolveStepsNum)).BeginInit();
+            this.tabPage3.SuspendLayout();
             this.sourcePrefGBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.endPointNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.startPointNum)).BeginInit();
@@ -183,7 +185,7 @@ namespace TimeSeriesAnalysis
             ((System.ComponentModel.ISupportInitialize)(this.numPreviewWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPreviewHeight)).BeginInit();
             this.statusBar.SuspendLayout();
-            this.tabPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.autoCorChart)).BeginInit();
             this.SuspendLayout();
             // 
             // openFileBtn
@@ -1381,6 +1383,27 @@ namespace TimeSeriesAnalysis
             0,
             0});
             // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.autoCorChart);
+            this.tabPage3.Controls.Add(this.autoCorBtn);
+            this.tabPage3.Location = new System.Drawing.Point(4, 23);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Size = new System.Drawing.Size(898, 585);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Signal Properties";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // autoCorBtn
+            // 
+            this.autoCorBtn.Location = new System.Drawing.Point(8, 6);
+            this.autoCorBtn.Name = "autoCorBtn";
+            this.autoCorBtn.Size = new System.Drawing.Size(148, 23);
+            this.autoCorBtn.TabIndex = 0;
+            this.autoCorBtn.Text = "Auto correlation function";
+            this.autoCorBtn.UseVisualStyleBackColor = true;
+            this.autoCorBtn.Click += new System.EventHandler(this.autoCorBtn_Click);
+            // 
             // sourcePrefGBox
             // 
             this.sourcePrefGBox.Controls.Add(this.sourceStepLbl);
@@ -1629,25 +1652,13 @@ namespace TimeSeriesAnalysis
             this.linkLabel1.UseCompatibleTextRendering = true;
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
-            // tabPage3
+            // autoCorChart
             // 
-            this.tabPage3.Controls.Add(this.autoCorBtn);
-            this.tabPage3.Location = new System.Drawing.Point(4, 23);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(898, 585);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Signal Properties";
-            this.tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // autoCorBtn
-            // 
-            this.autoCorBtn.Location = new System.Drawing.Point(22, 20);
-            this.autoCorBtn.Name = "autoCorBtn";
-            this.autoCorBtn.Size = new System.Drawing.Size(148, 23);
-            this.autoCorBtn.TabIndex = 0;
-            this.autoCorBtn.Text = "Auto correlation function";
-            this.autoCorBtn.UseVisualStyleBackColor = true;
-            this.autoCorBtn.Click += new System.EventHandler(this.autoCorBtn_Click);
+            this.autoCorChart.Location = new System.Drawing.Point(8, 35);
+            this.autoCorChart.Name = "autoCorChart";
+            this.autoCorChart.Size = new System.Drawing.Size(400, 232);
+            this.autoCorChart.TabIndex = 27;
+            this.autoCorChart.Text = "chart1";
             // 
             // MainForm
             // 
@@ -1715,6 +1726,7 @@ namespace TimeSeriesAnalysis
             ((System.ComponentModel.ISupportInitialize)(this.le_w_scaleMaxNum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.le_w_dtNum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.le_w_evolveStepsNum)).EndInit();
+            this.tabPage3.ResumeLayout(false);
             this.sourcePrefGBox.ResumeLayout(false);
             this.sourcePrefGBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.endPointNum)).EndInit();
@@ -1725,7 +1737,7 @@ namespace TimeSeriesAnalysis
             ((System.ComponentModel.ISupportInitialize)(this.numPreviewHeight)).EndInit();
             this.statusBar.ResumeLayout(false);
             this.statusBar.PerformLayout();
-            this.tabPage3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.autoCorChart)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1837,6 +1849,7 @@ namespace TimeSeriesAnalysis
         private LinkLabel linkLabel1;
         private TabPage tabPage3;
         private Button autoCorBtn;
+        private MathChart autoCorChart;
     }
 }
 

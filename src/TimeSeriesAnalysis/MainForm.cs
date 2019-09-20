@@ -10,6 +10,7 @@ using System.Globalization;
 using MathLib.Data;
 using System.Diagnostics;
 using MathLib.NumericalMethods;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace TimeSeriesAnalysis {
     public partial class MainForm : Form
@@ -481,12 +482,12 @@ namespace TimeSeriesAnalysis {
 
         private void autoCorBtn_Click(object sender, EventArgs e)
         {
-            var q = new AutoCorrelationFunction().GetAutoCorrelationOfSeries(routines.SourceData.TimeSeries.YValues);
-            File.Delete(@"D:\result.csv");
-            for (int i = 0; i < q.Length; i++)
-            {
-                File.AppendAllText(@"D:\result.csv", q[i].ToString() + "\r\n");
-            }
+            var autoCor = new AutoCorrelationFunction()
+                .GetAutoCorrelationOfSeries(routines.SourceData.TimeSeries.YValues);
+
+            autoCorChart.ClearChart();
+            autoCorChart.SetAxisNames("t", "autocorrelation")
+                    .AddTimeSeries("autocorrelation", new Timeseries(autoCor), SeriesChartType.Line);
         }
     }
 }
