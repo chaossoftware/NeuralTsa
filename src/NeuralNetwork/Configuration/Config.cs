@@ -47,7 +47,7 @@ namespace NeuralAnalyser.Configuration
             foreach (var file in ConfigFile.Root.Element("FilesToAnalyse").Elements("file"))
             {
                 var dataFile = GetDataFile(file);
-                dataFile.Output = LoadOutParams(dataFile.FileName);
+                dataFile.Output = LoadOutParams(dataFile.FileName, dataFile.DataColumn);
                 Files.Add(dataFile);
             }
         }
@@ -139,9 +139,9 @@ namespace NeuralAnalyser.Configuration
             }
         }
 
-        private OutputParameters LoadOutParams(string fileName)
+        private OutputParameters LoadOutParams(string fileName, int column)
         {
-            var output = new OutputParameters(fileName);
+            var output = new OutputParameters(fileName, column);
 
             var xParams = ConfigFile.Root.Element("Output");
 

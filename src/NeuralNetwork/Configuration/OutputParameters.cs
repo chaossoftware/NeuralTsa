@@ -5,9 +5,9 @@ namespace NeuralAnalyser.Configuration
 {
     public class OutputParameters
     {
-        public OutputParameters(string fileName)
+        public OutputParameters(string fileName, int column)
         {
-            OutDirectory = fileName + "_nnOut";
+            OutDirectory = $"{fileName}_col{column}_nnOut";
             FileName = Path.GetFileName(fileName);
         }
 
