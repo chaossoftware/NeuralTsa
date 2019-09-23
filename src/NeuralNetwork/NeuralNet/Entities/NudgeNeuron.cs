@@ -6,6 +6,8 @@ namespace NeuralAnalyser.NeuralNet.Entities
 {
     public abstract class NudgeNeuron<N> : INeuron<N> where N : NudgeNeuron<N>
     {
+        private Random randomizer;
+
         protected NudgeNeuron()
         {
             this.Inputs = new List<PruneSynapse>();
@@ -31,7 +33,7 @@ namespace NeuralAnalyser.NeuralNet.Entities
         {
             Outputs[index].Weight = Memory[index];
 
-            if(NeuronRandomizer.Randomizer.NextDouble() < lowerThan)
+            if(randomizer.NextDouble() < lowerThan)
                 Outputs[index].Weight += pertrubation * (Gauss2() - Nudge * Math.Sign(Memory[index]));
         }
 
@@ -65,6 +67,8 @@ namespace NeuralAnalyser.NeuralNet.Entities
                 Best[i] = Memory[i];
         }
 
+        public void SetRandomizer(Random randomizer) =>
+            this.randomizer = randomizer;
 
         /// <summary>
         /// Returns the product of two normally (Gaussian) distributed random 
@@ -74,10 +78,11 @@ namespace NeuralAnalyser.NeuralNet.Entities
         private double Gauss2()
         {
             double v1, v2, _arg;
+
             do
             {
-                v1 = 2d * NeuronRandomizer.Randomizer.NextDouble() - 1d;
-                v2 = 2d * NeuronRandomizer.Randomizer.NextDouble() - 1d;
+                v1 = 2d * randomizer.NextDouble() - 1d;
+                v2 = 2d * randomizer.NextDouble() - 1d;
                 _arg = v1 * v1 + v2 * v2;
             }
             while (_arg >= 1d || _arg == 0d);

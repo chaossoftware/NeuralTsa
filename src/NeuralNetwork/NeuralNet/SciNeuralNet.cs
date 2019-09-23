@@ -9,6 +9,8 @@ namespace NeuralAnalyser.NeuralNet
 {
     public class SciNeuralNet : ThreeLayerNetwork<InputNeuron, HiddenNeuron, OutputNeuron, PruneSynapse>
     {
+        private Random randomizer;
+
         //----- input data
         private long nmax;  //lines in file
         public double[] xdata;
@@ -237,7 +239,7 @@ namespace NeuralAnalyser.NeuralNet
                     //Reseed the random if the trial failed
                     else
                     {
-                        seed = NeuronRandomizer.Randomizer.Next(int.MaxValue);     //seed = (int) (1 / Math.Sqrt(e1));
+                        seed = randomizer.Next(int.MaxValue);     //seed = (int) (1 / Math.Sqrt(e1));
 
                         if (improved > 0)
                         {
@@ -250,8 +252,9 @@ namespace NeuralAnalyser.NeuralNet
                         }
                     }
 
-                    NeuronRandomizer.Randomizer = new Random(seed);
-        
+                    randomizer = new Random(seed);
+                    RandomizeNeurons();
+
                     //Testing is costly - don't do it too often
                     if (current % Params.TestingInterval != 0)
                     {
@@ -362,7 +365,7 @@ namespace NeuralAnalyser.NeuralNet
         public override void ConstructNetwork()
         {
             //random = new Random();
-            NeuronRandomizer.Randomizer = new Random();
+            randomizer = new Random();
 
             // init input layer
             for (int i = 0; i < Params.Dimensions; i++)
@@ -380,11 +383,9 @@ namespace NeuralAnalyser.NeuralNet
             NeuronConstant.Best = new double[Params.Neurons];
 
             // init hidden layer
-            HiddenNeuron.Function = Params.ActFunction;
-
             for (int i = 0; i < Params.Neurons; i++)
             {
-                var neuron = new HiddenNeuron(Params.Nudge);
+                var neuron = new HiddenNeuron(Params.ActFunction, Params.Nudge);
                 neuron.Memory = new double[1];
                 neuron.Best = new double[1];
                 this.HiddenLayer.Neurons[i] = neuron;
@@ -401,8 +402,6 @@ namespace NeuralAnalyser.NeuralNet
             outNeuron.Best = new double[1];
             outNeuron.Outputs.Add(new PruneSynapse(0, 0, 1));
             this.OutputLayer.Neurons[0] = outNeuron;
-
-
 
             //Connect input and hidden layer neurons
             for (int i = 0; i < Params.Dimensions; i++)
@@ -428,7 +427,7 @@ namespace NeuralAnalyser.NeuralNet
             }
 
             //Connect bias output and output neuron bias inputs
-            PruneSynapse biasSynapse = new PruneSynapse(Params.Neurons, 1);
+            var biasSynapse = new PruneSynapse(Params.Neurons, 1);
             NeuronBias.Outputs.Add(biasSynapse);
             OutputLayer.Neurons[0].BiasInput = biasSynapse;
 
@@ -444,11 +443,39 @@ namespace NeuralAnalyser.NeuralNet
                 this.HiddenLayer.Neurons[synapse.IndexSource].Outputs.Add(synapse);
                 this.OutputLayer.Neurons[synapse.IndexDestination].Inputs.Add(synapse);
             }
+
+            RandomizeNeurons();
         }
 
         public override object Clone()
         {
             throw new NotImplementedException();
+        }
+
+        private void RandomizeNeurons()
+        {
+            this.NeuronBias.SetRandomizer(randomizer);
+            this.NeuronConstant.SetRandomizer(randomizer);
+
+            foreach (var n in this.InputLayer.Neurons)
+            {
+                n.SetRandomizer(randomizer);
+            }
+
+            foreach (var n in this.HiddenLayer.Neurons)
+            {
+                n.SetRandomizer(randomizer);
+            }
+
+            foreach (var n in this.OutputLayer.Neurons)
+            {
+                n.SetRandomizer(randomizer);
+            }
+
+            if (AdditionalNeuron)
+            {
+                (Params.ActFunction as ComplexActivationFunction).Neuron.SetRandomizer(randomizer);
+            }
         }
     }
 }

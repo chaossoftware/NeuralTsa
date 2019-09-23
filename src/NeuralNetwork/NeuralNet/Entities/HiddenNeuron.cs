@@ -4,7 +4,7 @@ namespace NeuralAnalyser.NeuralNet.Entities
 {
     public class HiddenNeuron : NudgeNeuron<HiddenNeuron>
     {
-        public static ActivationFunction Function;
+        private ActivationFunction activationFunction;
         public PruneSynapse BiasInput;
 
         public HiddenNeuron() : base()
@@ -16,6 +16,12 @@ namespace NeuralAnalyser.NeuralNet.Entities
             Nudge = nudge;
         }
 
+        public HiddenNeuron(ActivationFunction activationFunction, double nudge)
+        {
+            this.activationFunction = activationFunction;
+            this.Nudge = nudge;
+        }
+
         public override void Process()
         {
             double arg = BiasInput.Weight;
@@ -23,7 +29,7 @@ namespace NeuralAnalyser.NeuralNet.Entities
                 arg += synapse.Signal;
 
             foreach (PruneSynapse synapse in Outputs)
-                synapse.Signal = synapse.Weight * Function.Phi(arg);
+                synapse.Signal = synapse.Weight * activationFunction.Phi(arg);
         }
     }
 }
