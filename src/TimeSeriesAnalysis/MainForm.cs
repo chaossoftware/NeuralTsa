@@ -447,7 +447,7 @@ namespace TimeSeriesAnalysis {
             }
             else if (le_jakobian_radio.Checked)
             {
-                routines.Lyapunov = new JakobianMethod(
+                routines.Lyapunov = new SanoSawadaMethod(
                     routines.SourceData.TimeSeries.YValues,
                     dim,
                     routines.SourceData.TimeSeries.YValues.Length,
