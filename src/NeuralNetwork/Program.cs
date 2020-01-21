@@ -32,7 +32,7 @@ namespace NeuralAnalyser
             var data = new SourceData(dataFile.FileName);
 
             var startPoint = dataFile.StartPoint != -1 ? dataFile.StartPoint - 1 : 0;
-            var endPoint = dataFile.EndPoint != -1 ? dataFile.EndPoint - 1 : data.Length - 1;
+            var endPoint = dataFile.EndPoint != -1 ? dataFile.EndPoint - 1 : data.LinesCount - 1;
 
             data.SetTimeSeries(dataFile.DataColumn - 1, startPoint, endPoint, dataFile.Points, false);
 

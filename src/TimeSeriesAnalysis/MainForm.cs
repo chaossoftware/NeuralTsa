@@ -99,7 +99,7 @@ namespace TimeSeriesAnalysis {
             {
                 chartSignal.SaveImage(fName + "_plot", ImageFormat.Png);
                 chartPoincare.SaveImage(fName + "_poincare", ImageFormat.Png);
-                DataWriter.CreateDataFile(fName + "_signal", routines.SourceData.GetTimeSeriesString(false));
+                DataWriter.CreateDataFile(fName + "_signal", routines.SourceData.GetTimeSeriesString());
             }
 
             if (chartFft.HasData)
@@ -132,10 +132,10 @@ namespace TimeSeriesAnalysis {
             sourceColumnNum.Maximum = routines.SourceData.ColumnsCount;
             sourceColumnNum.Minimum = 1;
 
-            startPointNum.Maximum = routines.SourceData.Length - 1;
+            startPointNum.Maximum = routines.SourceData.LinesCount - 1;
 
-            endPointNum.Maximum = routines.SourceData.Length;
-            endPointNum.Value = routines.SourceData.Length;
+            endPointNum.Maximum = routines.SourceData.LinesCount;
+            endPointNum.Value = routines.SourceData.LinesCount;
         }
 
         #region "CHARTS"
