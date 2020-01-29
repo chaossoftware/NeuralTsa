@@ -38,7 +38,16 @@ namespace TimeSeriesAnalysis {
             try
             {
                 CleanUp();
-                routines.SourceData = new SourceData(fName);
+
+                if (checkBox1.Checked)
+                {
+                    routines.SourceData = new SourceData(fName, numSkipLines.ToInt(), numReadLines.ToInt());
+                }
+                else
+                {
+                    routines.SourceData = new SourceData(fName);
+                }
+
                 FillUiWithData();
             }
             catch (ArgumentException ex)
@@ -488,6 +497,11 @@ namespace TimeSeriesAnalysis {
             autoCorChart.ClearChart();
             autoCorChart.SetAxisNames("t", "autocorrelation")
                     .AddTimeSeries("autocorrelation", new Timeseries(autoCor), SeriesChartType.Line);
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            gBoxReadParams.Visible = (sender as CheckBox).Checked;
         }
     }
 }

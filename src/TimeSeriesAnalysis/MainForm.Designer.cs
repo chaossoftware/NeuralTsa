@@ -116,6 +116,7 @@ namespace TimeSeriesAnalysis
             this.le_w_evolveStepsLbl = new System.Windows.Forms.Label();
             this.le_w_evolveStepsNum = new System.Windows.Forms.NumericUpDown();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.autoCorChart = new MathLib.DrawEngine.MathChart();
             this.autoCorBtn = new System.Windows.Forms.Button();
             this.sourcePrefGBox = new System.Windows.Forms.GroupBox();
             this.sourceStepLbl = new System.Windows.Forms.Label();
@@ -136,7 +137,12 @@ namespace TimeSeriesAnalysis
             this.statusBar = new System.Windows.Forms.StatusStrip();
             this.fileStatusStrip = new System.Windows.Forms.ToolStripStatusLabel();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
-            this.autoCorChart = new MathLib.DrawEngine.MathChart();
+            this.numSkipLines = new System.Windows.Forms.NumericUpDown();
+            this.gBoxReadParams = new System.Windows.Forms.GroupBox();
+            this.numReadLines = new System.Windows.Forms.NumericUpDown();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -177,6 +183,7 @@ namespace TimeSeriesAnalysis
             ((System.ComponentModel.ISupportInitialize)(this.le_w_dtNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.le_w_evolveStepsNum)).BeginInit();
             this.tabPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.autoCorChart)).BeginInit();
             this.sourcePrefGBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.endPointNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.startPointNum)).BeginInit();
@@ -185,7 +192,9 @@ namespace TimeSeriesAnalysis
             ((System.ComponentModel.ISupportInitialize)(this.numPreviewWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPreviewHeight)).BeginInit();
             this.statusBar.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.autoCorChart)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numSkipLines)).BeginInit();
+            this.gBoxReadParams.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numReadLines)).BeginInit();
             this.SuspendLayout();
             // 
             // openFileBtn
@@ -1394,6 +1403,14 @@ namespace TimeSeriesAnalysis
             this.tabPage3.Text = "Signal Properties";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // autoCorChart
+            // 
+            this.autoCorChart.Location = new System.Drawing.Point(8, 35);
+            this.autoCorChart.Name = "autoCorChart";
+            this.autoCorChart.Size = new System.Drawing.Size(400, 232);
+            this.autoCorChart.TabIndex = 27;
+            this.autoCorChart.Text = "chart1";
+            // 
             // autoCorBtn
             // 
             this.autoCorBtn.Location = new System.Drawing.Point(8, 6);
@@ -1418,7 +1435,7 @@ namespace TimeSeriesAnalysis
             this.sourcePrefGBox.Controls.Add(this.pointsNum);
             this.sourcePrefGBox.Controls.Add(this.sourceColumnNum);
             this.sourcePrefGBox.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.sourcePrefGBox.Location = new System.Drawing.Point(912, 82);
+            this.sourcePrefGBox.Location = new System.Drawing.Point(912, 144);
             this.sourcePrefGBox.Name = "sourcePrefGBox";
             this.sourcePrefGBox.Size = new System.Drawing.Size(236, 202);
             this.sourcePrefGBox.TabIndex = 19;
@@ -1563,7 +1580,7 @@ namespace TimeSeriesAnalysis
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(941, 349);
+            this.label20.Location = new System.Drawing.Point(941, 390);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(101, 14);
             this.label20.TabIndex = 26;
@@ -1571,7 +1588,7 @@ namespace TimeSeriesAnalysis
             // 
             // numPreviewWidth
             // 
-            this.numPreviewWidth.Location = new System.Drawing.Point(1047, 347);
+            this.numPreviewWidth.Location = new System.Drawing.Point(1047, 388);
             this.numPreviewWidth.Maximum = new decimal(new int[] {
             1920,
             0,
@@ -1594,7 +1611,7 @@ namespace TimeSeriesAnalysis
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(935, 377);
+            this.label21.Location = new System.Drawing.Point(935, 418);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(107, 14);
             this.label21.TabIndex = 25;
@@ -1602,7 +1619,7 @@ namespace TimeSeriesAnalysis
             // 
             // numPreviewHeight
             // 
-            this.numPreviewHeight.Location = new System.Drawing.Point(1047, 375);
+            this.numPreviewHeight.Location = new System.Drawing.Point(1047, 416);
             this.numPreviewHeight.Maximum = new decimal(new int[] {
             1080,
             0,
@@ -1652,18 +1669,70 @@ namespace TimeSeriesAnalysis
             this.linkLabel1.UseCompatibleTextRendering = true;
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
-            // autoCorChart
+            // numSkipLines
             // 
-            this.autoCorChart.Location = new System.Drawing.Point(8, 35);
-            this.autoCorChart.Name = "autoCorChart";
-            this.autoCorChart.Size = new System.Drawing.Size(400, 232);
-            this.autoCorChart.TabIndex = 27;
-            this.autoCorChart.Text = "chart1";
+            this.numSkipLines.Location = new System.Drawing.Point(135, 22);
+            this.numSkipLines.Name = "numSkipLines";
+            this.numSkipLines.Size = new System.Drawing.Size(90, 22);
+            this.numSkipLines.TabIndex = 30;
+            // 
+            // gBoxReadParams
+            // 
+            this.gBoxReadParams.Controls.Add(this.label22);
+            this.gBoxReadParams.Controls.Add(this.label5);
+            this.gBoxReadParams.Controls.Add(this.numReadLines);
+            this.gBoxReadParams.Controls.Add(this.numSkipLines);
+            this.gBoxReadParams.Location = new System.Drawing.Point(912, 56);
+            this.gBoxReadParams.Name = "gBoxReadParams";
+            this.gBoxReadParams.Size = new System.Drawing.Size(236, 82);
+            this.gBoxReadParams.TabIndex = 31;
+            this.gBoxReadParams.TabStop = false;
+            this.gBoxReadParams.Text = "File read parameters";
+            this.gBoxReadParams.Visible = false;
+            // 
+            // numReadLines
+            // 
+            this.numReadLines.Location = new System.Drawing.Point(135, 50);
+            this.numReadLines.Name = "numReadLines";
+            this.numReadLines.Size = new System.Drawing.Size(90, 22);
+            this.numReadLines.TabIndex = 31;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(38, 23);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(91, 14);
+            this.label5.TabIndex = 25;
+            this.label5.Text = "Lines to skip:";
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(34, 52);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(95, 14);
+            this.label22.TabIndex = 32;
+            this.label22.Text = "Lines to read:";
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(942, 15);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.checkBox1.Size = new System.Drawing.Size(118, 18);
+            this.checkBox1.TabIndex = 32;
+            this.checkBox1.Text = "Parameterized";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // MainForm
             // 
             this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(1160, 635);
+            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.gBoxReadParams);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.statusBar);
             this.Controls.Add(this.label20);
@@ -1727,6 +1796,7 @@ namespace TimeSeriesAnalysis
             ((System.ComponentModel.ISupportInitialize)(this.le_w_dtNum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.le_w_evolveStepsNum)).EndInit();
             this.tabPage3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.autoCorChart)).EndInit();
             this.sourcePrefGBox.ResumeLayout(false);
             this.sourcePrefGBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.endPointNum)).EndInit();
@@ -1737,7 +1807,10 @@ namespace TimeSeriesAnalysis
             ((System.ComponentModel.ISupportInitialize)(this.numPreviewHeight)).EndInit();
             this.statusBar.ResumeLayout(false);
             this.statusBar.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.autoCorChart)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numSkipLines)).EndInit();
+            this.gBoxReadParams.ResumeLayout(false);
+            this.gBoxReadParams.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numReadLines)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1850,6 +1923,12 @@ namespace TimeSeriesAnalysis
         private TabPage tabPage3;
         private Button autoCorBtn;
         private MathChart autoCorChart;
+        private NumericUpDown numSkipLines;
+        private GroupBox gBoxReadParams;
+        private Label label5;
+        private NumericUpDown numReadLines;
+        private Label label22;
+        private CheckBox checkBox1;
     }
 }
 
