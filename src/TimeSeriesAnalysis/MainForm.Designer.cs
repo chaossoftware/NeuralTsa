@@ -139,9 +139,9 @@ namespace TimeSeriesAnalysis
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.numSkipLines = new System.Windows.Forms.NumericUpDown();
             this.gBoxReadParams = new System.Windows.Forms.GroupBox();
-            this.numReadLines = new System.Windows.Forms.NumericUpDown();
-            this.label5 = new System.Windows.Forms.Label();
             this.label22 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.numReadLines = new System.Windows.Forms.NumericUpDown();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -1672,6 +1672,11 @@ namespace TimeSeriesAnalysis
             // numSkipLines
             // 
             this.numSkipLines.Location = new System.Drawing.Point(135, 22);
+            this.numSkipLines.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
             this.numSkipLines.Name = "numSkipLines";
             this.numSkipLines.Size = new System.Drawing.Size(90, 22);
             this.numSkipLines.TabIndex = 30;
@@ -1690,12 +1695,14 @@ namespace TimeSeriesAnalysis
             this.gBoxReadParams.Text = "File read parameters";
             this.gBoxReadParams.Visible = false;
             // 
-            // numReadLines
+            // label22
             // 
-            this.numReadLines.Location = new System.Drawing.Point(135, 50);
-            this.numReadLines.Name = "numReadLines";
-            this.numReadLines.Size = new System.Drawing.Size(90, 22);
-            this.numReadLines.TabIndex = 31;
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(34, 52);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(95, 14);
+            this.label22.TabIndex = 32;
+            this.label22.Text = "Lines to read:";
             // 
             // label5
             // 
@@ -1706,14 +1713,17 @@ namespace TimeSeriesAnalysis
             this.label5.TabIndex = 25;
             this.label5.Text = "Lines to skip:";
             // 
-            // label22
+            // numReadLines
             // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(34, 52);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(95, 14);
-            this.label22.TabIndex = 32;
-            this.label22.Text = "Lines to read:";
+            this.numReadLines.Location = new System.Drawing.Point(135, 50);
+            this.numReadLines.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.numReadLines.Name = "numReadLines";
+            this.numReadLines.Size = new System.Drawing.Size(90, 22);
+            this.numReadLines.TabIndex = 31;
             // 
             // checkBox1
             // 
