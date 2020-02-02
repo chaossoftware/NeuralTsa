@@ -11,6 +11,7 @@ using MathLib.Data;
 using System.Diagnostics;
 using MathLib.NumericalMethods;
 using System.Windows.Forms.DataVisualization.Charting;
+using MathLib;
 
 namespace TimeSeriesAnalysis {
     public partial class MainForm : Form
@@ -290,7 +291,7 @@ namespace TimeSeriesAnalysis {
                 {
                     if (!le_wolf_radio.Checked)
                     {
-                        var leSectorEnd = routines.SlopeChangePointIndex(routines.Lyapunov.Slope, 2, routines.Lyapunov.Slope.Amplitude.Y / 30);
+                        var leSectorEnd = Ext.SlopeChangePointIndex(routines.Lyapunov.Slope, 2, routines.Lyapunov.Slope.Amplitude.Y / 30);
 
                         if (leSectorEnd > 0)
                         {
