@@ -460,6 +460,7 @@ namespace TimeSeriesAnalysis {
                 routines.Lyapunov = new SanoSawadaMethod(
                     routines.SourceData.TimeSeries.YValues,
                     dim,
+                    tau,
                     routines.SourceData.TimeSeries.YValues.Length,
                     scaleMin,
                     le_j_scaleDtNum.ToDouble(),
