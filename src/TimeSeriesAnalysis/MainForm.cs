@@ -494,7 +494,7 @@ namespace TimeSeriesAnalysis {
         private void autoCorBtn_Click(object sender, EventArgs e)
         {
             var autoCor = new AutoCorrelationFunction()
-                .GetAutoCorrelationOfSeries(routines.SourceData.TimeSeries.YValues);
+                .GetFromSeries(routines.SourceData.TimeSeries.YValues);
 
             autoCorChart.ClearChart();
             autoCorChart.SetAxisNames("t", "autocorrelation")
