@@ -40,7 +40,7 @@
     <reconstructedPoincare build="true"/>
     <model3D build="true"/>
     <plots build="true" width="640" height="360"/>
-    <animation build="true" width="240" height="480"/>
+    <animation build="true" width="720" height="720"/>
     <leInTime build="true"/>
   </Output>
 	

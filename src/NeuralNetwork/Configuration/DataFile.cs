@@ -4,22 +4,22 @@
     {
         public DataFile(string fileName, int dataColumn, int points, int startPoint, int endPoint)
         {
-            this.FileName = fileName;
-            this.DataColumn = dataColumn;
-            this.StartPoint = startPoint;
-            this.EndPoint = endPoint;
-            this.Points = points;
+            FileName = fileName;
+            DataColumn = dataColumn;
+            StartPoint = startPoint;
+            EndPoint = endPoint;
+            Points = points;
         }
 
-        public string FileName { get; set; }
+        public string FileName { get; }
 
-        public int DataColumn { get; set; }
+        public int DataColumn { get; }
 
-        public int StartPoint { get; set; }
+        public int StartPoint { get; }
 
-        public int EndPoint { get; set; }
+        public int EndPoint { get; }
 
-        public int Points { get; set; }
+        public int Points { get; }
 
         public OutputParameters Output { get; set; }
     }

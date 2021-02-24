@@ -34,20 +34,30 @@ namespace NeuralAnalyser
 
         private readonly List<double> errors = new List<double>();
 
+        private readonly Size _squareSize;
+        private readonly Size _rectangleSize;
+
+
         private Bitmap poincare = null;
+        private Bitmap signalOriginal = null;
+        private Bitmap signal = null;
 
         public Visualizer Visualizator { get; set; }
 
         public Calculations(NeuralNetParameters parameters, OutputParameters outParameters)
         {
-            this.netParams = parameters;
-            this.outParams = outParameters;
+            netParams = parameters;
+            outParams = outParameters;
 
-            this.Visualizator = new Visualizer(outParameters.AnimationSize);
+            _squareSize = new Size(outParams.AnimationSize.Width / 2, outParams.AnimationSize.Height / 2);
+            _rectangleSize = new Size(outParams.AnimationSize.Width, outParams.AnimationSize.Height / 4);
+
+            var netImageSize = new Size(outParams.AnimationSize.Width / 8, outParams.AnimationSize.Height / 4);
+            Visualizator = new Visualizer(netImageSize);
 
             if (outParams.SaveAnimation)
             {
-                this.Visualizator.NeuralAnimation = new Animation();
+                Visualizator.NeuralAnimation = new Animation();
             }
 
             perturbationSqr = Math.Pow(Perturbation, 2);
@@ -59,7 +69,7 @@ namespace NeuralAnalyser
         {
             if (outParams.SaveAnimation)
             {
-                this.Visualizator.NeuralAnimation.AddFrame(PrepareAnimationFrame(net));
+                Visualizator.NeuralAnimation.AddFrame(PrepareAnimationFrame(net));
             }
 
             Console.WriteLine("{0}\tE: {1:0.#####e-0}", net.current, net.OutputLayer.Neurons[0].Memory[0]);
@@ -68,10 +78,10 @@ namespace NeuralAnalyser
         public void PerformCalculations(SciNeuralNet net)
         {
             double lle = CalculateLargestLyapunovExponent(net);
-            Console.WriteLine("----------------------------------");
+            Console.WriteLine(new string('-', 15));
             Console.WriteLine("Epoch {0}", net.successCount);
             Console.WriteLine("LLE = {0:F5}", lle);
-            Console.WriteLine("----------------------------------\n\n");
+            Console.WriteLine(new string('-', 15) + "\n\n");
 
             var benettin = CalculateLyapunovSpectrum(net, systemEquations);
 
@@ -97,11 +107,20 @@ namespace NeuralAnalyser
         {
             if (poincare == null)
             {
-                var size = new Size(outParams.AnimationSize.Width * 2, outParams.AnimationSize.Width);
-                var pPlot = new ScatterPlot(size);
+                var pPlot = new ScatterPlot(_squareSize);
                 pPlot.AddDataSeries(PseudoPoincareMap.GetMapDataFrom(net.xdata), Color.OrangeRed, 1.5f);
 
                 poincare = pPlot.Plot();
+            }
+
+            if (signalOriginal == null)
+            {
+                var sPlot = new LinePlot(_rectangleSize);
+                sPlot.AddDataSeries(new Timeseries(net.xdata), Color.OrangeRed);
+                signalOriginal = sPlot.Plot();
+
+                var sPlot1 = new LinePlot(_rectangleSize);
+                signal = sPlot1.Plot();
             }
 
             var error = Math.Log10(net.OutputLayer.Neurons[0].Memory[0]);
@@ -115,10 +134,10 @@ namespace NeuralAnalyser
 
             errors.Add(error);
 
-            var result = new Bitmap(outParams.AnimationSize.Width * 2, outParams.AnimationSize.Height + outParams.AnimationSize.Width);
+            var result = new Bitmap(outParams.AnimationSize.Width, outParams.AnimationSize.Height);
             var netImg = Visualizator.DrawBrain(net);
 
-            var plot = new LinePlot(outParams.AnimationSize);
+            var plot = new LinePlot(new Size(outParams.AnimationSize.Width / 2, outParams.AnimationSize.Height / 2));
 
             plot.AddDataSeries(new Timeseries(new double[] { 0, 0 }), Color.Black);
             plot.AddDataSeries(new Timeseries(new double[] { -10, -10 }), Color.Black);
@@ -142,9 +161,11 @@ namespace NeuralAnalyser
             using (Graphics g = Graphics.FromImage(result))
             {
                 g.TextRenderingHint = TextRenderingHint.AntiAlias;
-                g.DrawImage(netImg, new Point(0, 0));
-                g.DrawImage(chart, new Point(outParams.AnimationSize.Width, 0));
-                g.DrawImage(poincare, new Point(0, outParams.AnimationSize.Height));
+                g.DrawImage(poincare, new Point(0, 0));
+                g.DrawImage(chart, new Point(outParams.AnimationSize.Width / 2, 0));
+                g.DrawImage(netImg, new Point(outParams.AnimationSize.Width - netImg.Width, 0));
+                g.DrawImage(signalOriginal, new Point(0, outParams.AnimationSize.Height / 2));
+                g.DrawImage(signal, new Point(0, outParams.AnimationSize.Height / 4 * 3));
 
                 g.DrawString(string.Format("Dimensions: {1}\nNeurons: {0}\nIteration: {2:N0}", net.Params.Neurons, net.Params.Dimensions, net.current + net.successCount * net.Params.EpochInterval), font, textBrush, outParams.AnimationSize.Width * 2, 0f, stringFormat);
             }
@@ -380,20 +401,28 @@ namespace NeuralAnalyser
 
             if (outParams.SaveAnimation)
             {
-                var size = new Size(outParams.AnimationSize.Width * 2, outParams.AnimationSize.Width);
-
-                var pPlot = new ScatterPlot(size);
-                
                 try
                 {
+                    var pPlot = new ScatterPlot(_squareSize);
                     pPlot.AddDataSeries(PseudoPoincareMap.GetMapDataFrom(xt), Color.SteelBlue);
                     pPlot.AddDataSeries(PseudoPoincareMap.GetMapDataFrom(net.xdata), Color.OrangeRed, 1.5f);
                     poincare = pPlot.Plot();
                 }
                 catch
                 {
+                    var pPlot = new ScatterPlot(_squareSize);
                     pPlot.AddDataSeries(PseudoPoincareMap.GetMapDataFrom(net.xdata), Color.OrangeRed, 1.5f);
                     poincare = pPlot.Plot();
+                }
+
+                try
+                {
+                    var sPlot = new LinePlot(_rectangleSize);
+                    sPlot.AddDataSeries(new Timeseries(xt.Take(net.xdata.Length).ToArray()), Color.SteelBlue);
+                    signal = sPlot.Plot();
+                }
+                catch 
+                { 
                 }
             }
         }

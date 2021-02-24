@@ -14,7 +14,9 @@
         public override void Process()
         {
             foreach (PruneSynapse synapse in Outputs)
+            {
                 synapse.Signal = Inputs[0].Signal * synapse.Weight;
+            }
         }
     }
 }

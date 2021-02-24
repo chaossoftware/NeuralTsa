@@ -8,8 +8,8 @@ namespace NeuralAnalyser.NeuralNet.Entities
     {
         protected NudgeNeuron()
         {
-            this.Inputs = new List<PruneSynapse>();
-            this.Outputs = new List<PruneSynapse>();
+            Inputs = new List<PruneSynapse>();
+            Outputs = new List<PruneSynapse>();
         }
 
         public List<PruneSynapse> Inputs { get; set; }
@@ -32,37 +32,49 @@ namespace NeuralAnalyser.NeuralNet.Entities
             Outputs[index].Weight = Memory[index];
 
             if(NeuronRandomizer.Randomizer.NextDouble() < lowerThan)
+            {
                 Outputs[index].Weight += pertrubation * (Gauss2() - Nudge * Math.Sign(Memory[index]));
+            }
         }
 
         public void BestToMemory()
         {
             for(int i = 0; i < Outputs.Count; i++)
+            {
                 Memory[i] = Best[i];
+            }
         }
 
         public void WeightsToMemory()
         {
             for (int i = 0; i < Outputs.Count; i++)
+            {
                 Memory[i] = Outputs[i].Weight;
+            }
         }
 
         public void MemoryToWeights()
         {
             for (int i = 0; i < Outputs.Count; i++)
+            {
                 Outputs[i].Weight = Memory[i];
+            }
         }
 
         public void BestToWeights()
         {
             for (int i = 0; i < Outputs.Count; i++)
+            {
                 Outputs[i].Weight = Best[i];
+            }
         }
 
         public void MemoryToBest()
         {
             for (int i = 0; i < Outputs.Count; i++)
+            {
                 Best[i] = Memory[i];
+            }
         }
 
 

@@ -20,15 +20,15 @@ namespace NeuralAnalyser.NeuralNet.Entities
 
         public void PruneIfMarked()
         {
-            if (this.Prune)
+            if (Prune)
             {
-                this.Weight = 0;
+                Weight = 0;
             }
         }
 
         public override object Clone()
         {
-            var synapseCopy = new PruneSynapse(this.IndexSource, this.IndexDestination)
+            var synapseCopy = new PruneSynapse(IndexSource, IndexDestination)
             {
                 Weight = this.Weight,
                 Signal = this.Signal,

@@ -12,7 +12,7 @@ namespace NeuralAnalyser
     public class Visualizer
     {
         private readonly Brush brushInactiveNeuron = Brushes.WhiteSmoke;
-        private readonly Brush brushBackground = Brushes.WhiteSmoke;
+        private readonly Brush brushBackground = Brushes.Transparent;
         private readonly Brush brushNeuronMain = Brushes.Crimson;
         private readonly Brush brushActiveNeuron = Brushes.Orange;
         private readonly Brush brushSynapse = Brushes.OrangeRed;
@@ -45,7 +45,7 @@ namespace NeuralAnalyser
 
             g.SmoothingMode = SmoothingMode.AntiAlias;
 
-            g.FillRectangle(Brushes.White, new Rectangle(new Point(0, 0), bitmap.Size));
+            g.FillRectangle(Brushes.Transparent, new Rectangle(new Point(0, 0), bitmap.Size));
             
             int inputsCount = net.InputLayer.Neurons.Length;
             int hiddenCount = net.HiddenLayer.Neurons.Length;

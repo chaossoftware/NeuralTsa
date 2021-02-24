@@ -42,46 +42,46 @@ namespace NeuralAnalyser.Configuration
         }
 
         //Learning rate
-        public double Eta { get; private set; } = 0.999;
+        public double Eta { get; } = 0.999;
 
         //Number of iterations
-        public long EpochInterval { get; private set; } = 1000000;
+        public long EpochInterval { get; } = 1000000;
 
         //0 for bias term; otherwise 1
-        public int BiasTerm { get; private set; } = 1;
+        public int BiasTerm { get; } = 1;
 
         //0 for constant term; otherwise 1
-        public int ConstantTerm { get; private set; } = 0;
+        public int ConstantTerm { get; } = 0;
 
         //Maximum perturbation
-        public double MaxPertrubation { get; private set; } = 2;
+        public double MaxPertrubation { get; } = 2;
 
         //Amount to nudge the parameters back toward zero
-        public double Nudge { get; private set; } = 0.5;
+        public double Nudge { get; } = 0.5;
 
         //Pruning level (0 = no pruning)
-        public int Pruning { get; private set; } = 0;
+        public int Pruning { get; } = 0;
 
         //Interval for testing neural net results
-        public double TestingInterval { get; private set; } = 1e5;
+        public double TestingInterval { get; } = 1e5;
 
         //Neurons count
-        public int Neurons { get; private set; }
+        public int Neurons { get; }
 
         //System dimensions
-        public int Dimensions { get; private set; }
+        public int Dimensions { get; }
 
         //Exponent of errors
-        public int ErrorsExponent { get; private set; }
+        public int ErrorsExponent { get; }
 
         //Number of successful trainings to complete calculation
-        public int Trainings { get; private set; }
+        public int Trainings { get; }
 
         //Number of points to predict
-        public int PtsToPredict { get; private set; }
+        public int PtsToPredict { get; }
 
         //Activation function
-        public ActivationFunction ActFunction { get; private set; }
+        public ActivationFunction ActFunction { get; }
 
         public string GetInfoShort() => 
             new StringBuilder()

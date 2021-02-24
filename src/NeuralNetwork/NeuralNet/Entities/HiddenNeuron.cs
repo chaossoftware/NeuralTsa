@@ -19,11 +19,18 @@ namespace NeuralAnalyser.NeuralNet.Entities
         public override void Process()
         {
             double arg = BiasInput.Weight;
+
             foreach (PruneSynapse synapse in Inputs)
+            {
                 arg += synapse.Signal;
+            }
+
+            var multiplier = Function.Phi(arg);
 
             foreach (PruneSynapse synapse in Outputs)
-                synapse.Signal = synapse.Weight * Function.Phi(arg);
+            {
+                synapse.Signal = synapse.Weight * multiplier;
+            }
         }
     }
 }

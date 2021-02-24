@@ -66,14 +66,14 @@ namespace NeuralAnalyser.NeuralNet
                 #region "update memory with best results"
 
                 //update memory with best results
-                foreach (InputNeuron neuron in this.InputLayer.Neurons)
+                foreach (InputNeuron neuron in InputLayer.Neurons)
                 {
                     neuron.BestToMemory();
                 }
 
                 NeuronConstant.BestToMemory();
 
-                foreach (HiddenNeuron neuron in this.HiddenLayer.Neurons)
+                foreach (HiddenNeuron neuron in HiddenLayer.Neurons)
                 {
                     neuron.BestToMemory();
                 }
@@ -92,8 +92,6 @@ namespace NeuralAnalyser.NeuralNet
                 }
 
                 #endregion
-
-                
 
                 for (current = 1; current <= Params.EpochInterval; current++)
                 {
@@ -285,16 +283,16 @@ namespace NeuralAnalyser.NeuralNet
                         {
                             for (int j = 0; j < Params.Dimensions; j++)
                             {
-                                double aBest = this.InputLayer.Neurons[j].Memory[i];
-                                double bBest = this.HiddenLayer.Neurons[i].Memory[0];
+                                double aBest = InputLayer.Neurons[j].Memory[i];
+                                double bBest = HiddenLayer.Neurons[i].Memory[0];
 
                                 if (aBest != 0 && Math.Abs(aBest * bBest) < tenPowNegativePruning)
                                 {
-                                    this.InputLayer.Neurons[j].Outputs[i].Prune = true;
+                                    InputLayer.Neurons[j].Outputs[i].Prune = true;
                                 }
                             }
 
-                            if (NeuronConstant.Memory[i] != 0 && Math.Abs(NeuronConstant.Memory[i] * this.HiddenLayer.Neurons[i].Memory[0]) < tenPowNegativePruning)
+                            if (NeuronConstant.Memory[i] != 0 && Math.Abs(NeuronConstant.Memory[i] * HiddenLayer.Neurons[i].Memory[0]) < tenPowNegativePruning)
                             {
                                 NeuronConstant.Outputs[i].Prune = true;
                             }
@@ -305,11 +303,15 @@ namespace NeuralAnalyser.NeuralNet
                 #region "Save best weights"
 
                 //Save best weights
-                foreach (InputNeuron neuron in this.InputLayer.Neurons)
+                foreach (InputNeuron neuron in InputLayer.Neurons)
+                {
                     neuron.MemoryToBest();
+                }
 
-                foreach (HiddenNeuron neuron in this.HiddenLayer.Neurons)
+                foreach (HiddenNeuron neuron in HiddenLayer.Neurons)
+                {
                     neuron.MemoryToBest();
+                }
 
                 NeuronBias.MemoryToBest();
                 NeuronConstant.MemoryToBest();
@@ -371,7 +373,7 @@ namespace NeuralAnalyser.NeuralNet
                 neuron.Memory = new double[Params.Neurons];
                 neuron.Best = new double[Params.Neurons];
                 neuron.Inputs.Add(new PruneSynapse(i, i, 1));
-                this.InputLayer.Neurons[i] = neuron;
+                InputLayer.Neurons[i] = neuron;
             }
 
             // init constant neuron
@@ -387,7 +389,7 @@ namespace NeuralAnalyser.NeuralNet
                 var neuron = new HiddenNeuron(Params.Nudge);
                 neuron.Memory = new double[1];
                 neuron.Best = new double[1];
-                this.HiddenLayer.Neurons[i] = neuron;
+                HiddenLayer.Neurons[i] = neuron;
             }
 
             // init bias neuron
@@ -400,9 +402,7 @@ namespace NeuralAnalyser.NeuralNet
             outNeuron.Memory = new double[1];
             outNeuron.Best = new double[1];
             outNeuron.Outputs.Add(new PruneSynapse(0, 0, 1));
-            this.OutputLayer.Neurons[0] = outNeuron;
-
-
+            OutputLayer.Neurons[0] = outNeuron;
 
             //Connect input and hidden layer neurons
             for (int i = 0; i < Params.Dimensions; i++)
@@ -418,7 +418,7 @@ namespace NeuralAnalyser.NeuralNet
             {
                 var constantSynapse = new PruneSynapse(Params.Dimensions, i);
                 NeuronConstant.Outputs.Add(constantSynapse);
-                this.HiddenLayer.Neurons[i].BiasInput = constantSynapse;
+                HiddenLayer.Neurons[i].BiasInput = constantSynapse;
             }
 
             //Connect hidden and output layer neurons
@@ -435,14 +435,14 @@ namespace NeuralAnalyser.NeuralNet
 
             foreach (var synapse in Connections[0])
             {
-                this.InputLayer.Neurons[synapse.IndexSource].Outputs.Add(synapse);
-                this.HiddenLayer.Neurons[synapse.IndexDestination].Inputs.Add(synapse);
+                InputLayer.Neurons[synapse.IndexSource].Outputs.Add(synapse);
+                HiddenLayer.Neurons[synapse.IndexDestination].Inputs.Add(synapse);
             }
 
             foreach (var synapse in Connections[1])
             {
-                this.HiddenLayer.Neurons[synapse.IndexSource].Outputs.Add(synapse);
-                this.OutputLayer.Neurons[synapse.IndexDestination].Inputs.Add(synapse);
+                HiddenLayer.Neurons[synapse.IndexSource].Outputs.Add(synapse);
+                OutputLayer.Neurons[synapse.IndexDestination].Inputs.Add(synapse);
             }
         }
 
