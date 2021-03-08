@@ -4,9 +4,9 @@ using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms.DataVisualization.Charting;
-using MathLib.Data;
-using MathLib.DrawEngine;
-using MathLib.Transform;
+using ChaosSoft.Core.Data;
+using ChaosSoft.Core.DrawEngine;
+using ChaosSoft.Core.Transform;
 using NeuralAnalyser.Configuration;
 using NeuralAnalyser.NeuralNet;
 

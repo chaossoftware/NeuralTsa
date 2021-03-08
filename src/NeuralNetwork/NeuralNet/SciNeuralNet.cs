@@ -1,6 +1,6 @@
 ﻿using System;
 using NewMind.NeuralNet.Networks;
-using MathLib;
+using ChaosSoft.Core;
 using NeuralAnalyser.Configuration;
 using NeuralAnalyser.NeuralNet.Activation;
 using NeuralAnalyser.NeuralNet.Entities;

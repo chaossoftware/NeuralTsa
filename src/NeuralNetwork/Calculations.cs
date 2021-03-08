@@ -7,13 +7,13 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms.DataVisualization.Charting;
-using MathLib.Data;
-using MathLib.DrawEngine;
-using MathLib.DrawEngine.Charts;
-using MathLib.IO;
-using MathLib.NumericalMethods.Lyapunov;
-using MathLib.NumericalMethods.Orthogonalization;
-using MathLib.Transform;
+using ChaosSoft.Core.Data;
+using ChaosSoft.Core.DrawEngine;
+using ChaosSoft.Core.DrawEngine.Charts;
+using ChaosSoft.Core.IO;
+using ChaosSoft.Core.NumericalMethods.Lyapunov;
+using ChaosSoft.Core.NumericalMethods.Orthogonalization;
+using ChaosSoft.Core.Transform;
 using NeuralAnalyser.Configuration;
 using NeuralAnalyser.NeuralNet;
 using NeuralAnalyser.NeuralNet.Entities;
@@ -466,7 +466,7 @@ namespace NeuralAnalyser
 
             foreach (double predictedPoint in xpred)
             {
-                pred.AppendFormat(CultureInfo.InvariantCulture, "{0:" + NumFormat.General + "}\n", predictedPoint);
+                pred.AppendLine(NumFormat.ToLong(predictedPoint));
             }
 
             DataWriter.CreateDataFile(outParams.PredictFile, pred.ToString());

@@ -88,16 +88,16 @@
     <None Include="TestData\sine" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MathLib\MathLib.csproj">
-      <Project>{eda2c4f0-1d19-4fc8-a608-5b0607eea67a}</Project>
-      <Name>MathLib</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="neural_config.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ChaosSoft.Core\ChaosSoft.Core.csproj">
+      <Project>{eda2c4f0-1d19-4fc8-a608-5b0607eea67a}</Project>
+      <Name>ChaosSoft.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
