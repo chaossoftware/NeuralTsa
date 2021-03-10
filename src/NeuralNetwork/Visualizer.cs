@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Drawing.Text;
 using System.Linq;
+using ChaosSoft.Core;
 using ChaosSoft.Core.DrawEngine;
 using NeuralAnalyser.NeuralNet;
 using NeuralAnalyser.NeuralNet.Entities;
@@ -106,7 +106,7 @@ namespace NeuralAnalyser
                 var sourceCenter = GetItemCenter(i, yOffset3, xCenter3);
                 var pointStart = new PointF(bitmap.Width, sourceCenter.Y);
                 var thickness = GetSynapseThickness(net.OutputLayer.Neurons[i].Outputs[0].Signal, minSynapseValue, maxSynapseValue);
-                thickness = Math.Min(thickness, neuronSize);
+                thickness = FastMath.Min(thickness, neuronSize);
 
                 DrawSynapse(g, pointStart, sourceCenter, thickness);
                 DrawNeuron(g, gp, net.OutputLayer.Neurons[i], sourceCenter);

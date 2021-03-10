@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using NewMind.NeuralNet.Activation;
 using NeuralAnalyser.NeuralNet.Entities;
+using ChaosSoft.Core;
 
 namespace NeuralAnalyser.NeuralNet.Activation
 {
@@ -123,6 +124,6 @@ namespace NeuralAnalyser.NeuralNet.Activation
         public override double Dphi(double arg) =>
             Neuron.Outputs[1].Weight + 
                 arg * 2d * Neuron.Outputs[2].Weight +
-                    Neuron.Outputs[3].Weight * Math.Pow(Sech(arg), 2);
+                    Neuron.Outputs[3].Weight * FastMath.Pow2(Sech(arg));
     }
 }

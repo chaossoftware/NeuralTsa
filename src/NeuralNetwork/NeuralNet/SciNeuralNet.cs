@@ -60,7 +60,7 @@ namespace NeuralAnalyser.NeuralNet
                 else
                 {
                     OutputLayer.Neurons[0].Memory[0] = 10 * OutputLayer.Neurons[0].Best[0];
-                    ddw = Math.Min(Params.MaxPertrubation, Math.Sqrt(OutputLayer.Neurons[0].Best[0]));
+                    ddw = FastMath.Min(Params.MaxPertrubation, Math.Sqrt(OutputLayer.Neurons[0].Best[0]));
                 }
 
                 #region "update memory with best results"
@@ -239,7 +239,7 @@ namespace NeuralAnalyser.NeuralNet
 
                         if (improved > 0)
                         {
-                            ddw = Math.Min(Params.MaxPertrubation, (1 + improved / Params.TestingInterval) * Math.Abs(ddw));
+                            ddw = FastMath.Min(Params.MaxPertrubation, (1 + improved / Params.TestingInterval) * Math.Abs(ddw));
                             improved = 0;
                         }
                         else

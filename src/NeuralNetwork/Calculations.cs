@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms.DataVisualization.Charting;
+using ChaosSoft.Core;
 using ChaosSoft.Core.Data;
 using ChaosSoft.Core.DrawEngine;
 using ChaosSoft.Core.DrawEngine.Charts;
@@ -124,8 +125,8 @@ namespace NeuralAnalyser
             }
 
             var error = Math.Log10(net.OutputLayer.Neurons[0].Memory[0]);
-            error = Math.Min(error, 0);
-            error = Math.Max(error, -10);
+            error = FastMath.Min(error, 0d);
+            error = FastMath.Max(error, -10d);
 
             if (!errors.Any())
             {
