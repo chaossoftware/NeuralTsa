@@ -1,38 +1,44 @@
 <config>
 
-	<NeuralNetParams 
-		neurons="4" 
-		dimensions="2" 
-		activationFunction="Logistic" 
-		errorExponent="2" 
-		trainingsCount="10" 
+  <NeuralNetParams
+		neurons="4"
+		dimensions="2"
+		activationFunction="Logistic"
+		errorExponent="2"
+		trainingsCount="10"
 		pointsToPredict="0"
 	/>
-  <!-- Activation functions: Logistic , Sigmoid , Gaussian , Gaussian_derivative , Cosine , Exponential , Linear , Piecewise_linear , Hyperbolic_tangent , Binary_shift , Polynomial , Rational , Special-->
-	
-	<LowLevelParams 
+  <!-- Activation functions: 
+  Logistic Sigmoid Gaussian Gaussian_derivative Cosine Exponential Linear Piecewise_linear 
+  Hyperbolic_tangent Binary_shift Polynomial Rational Special 
+  -->
+
+  <LowLevelParams
 		learningRate="0.999"
 		epochInterval="1e6"
-		biasTerm="1" 
-		constantTerm="0" 
-		maxPertrubation="2" 
-		nudge="0.5" 
-		pruning="0" 
+		biasTerm="1"
+		constantTerm="0"
+		maxPertrubation="2"
+		nudge="0.5"
+		pruning="0"
 		testingInterval="1e5"
 	/>
-	<!-- Learning rate (default 0.999)-->
-	<!-- Number of iterations per cycle (default 1e6)-->
-	<!-- 0 for bias term; otherwise 1 (default 1) -->
-	<!-- 0 for constant term; otherwise 1 (default 0) -->
-	<!-- Maximum perturbation (default 2) -->
-	<!-- Amount to nudge the parameters back toward zero (default 0.5) -->
-	<!-- Pruning level (0 = no pruning) (default 0) -->
-	<!-- Interval for testing neural net results (default 1e4) -->
- 
-	<FilesToAnalyse>
+
+  <!-- 
+  Learning rate (default 0.999)
+  Number of iterations per cycle (default 1e6)
+  0 for bias term; otherwise 1 (default 1)
+  0 for constant term; otherwise 1 (default 0)
+  Maximum perturbation (default 2)
+  Amount to nudge the parameters back toward zero (default 0.5)
+  Pruning level (0 = no pruning) (default 0)
+  Interval for testing neural net results (default 1e4) 
+  -->
+
+  <FilesToAnalyse>
     <file path="TestData\henon" dataColumn="1" start="" end="" points="1"/>
-    <file path="TestData\hypchaos" dataColumn="1" start="" end="" points="1"/>
-	</FilesToAnalyse>
+    <!-- <file path="TestData\hypchaos" dataColumn="1" start="" end="" points="1"/> -->
+  </FilesToAnalyse>
 
   <Output>
     <reconstructedSignal points="1e5"/>
@@ -43,5 +49,5 @@
     <animation build="true" width="720" height="720"/>
     <leInTime build="true"/>
   </Output>
-	
+
 </config>

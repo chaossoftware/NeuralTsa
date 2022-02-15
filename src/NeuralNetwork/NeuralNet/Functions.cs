@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using NewMind.NeuralNet.Activation;
 using NeuralAnalyser.NeuralNet.Entities;
 using ChaosSoft.Core;
+using SciML.NeuralNetwork.Activation;
 
 namespace NeuralAnalyser.NeuralNet.Activation
 {
-    public abstract class ComplexActivationFunction : ActivationFunction
+    public abstract class ComplexActivationFunction : ActivationFunctionBase
     {
         public InputNeuron Neuron { get; set; }
 

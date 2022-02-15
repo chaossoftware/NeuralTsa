@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using System.Globalization;
-using NewMind.NeuralNet.Activation;
+using SciML.NeuralNetwork.Activation;
 
 namespace NeuralAnalyser.Configuration
 {
@@ -10,7 +10,7 @@ namespace NeuralAnalyser.Configuration
     public class NeuralNetParameters
     {
         public NeuralNetParameters(int neurons, int dimensions, int errorsExponent, int trainings, 
-            int ptsToPredict, ActivationFunction actFunction)
+            int ptsToPredict, ActivationFunctionBase actFunction)
         {
             Neurons = neurons;
             Dimensions = dimensions;
@@ -21,7 +21,7 @@ namespace NeuralAnalyser.Configuration
         }
 
         public NeuralNetParameters(int neurons, int dimensions, int errorsExponent, int trainings, 
-            int ptsToPredict, ActivationFunction actFunction, double eta, long epochInterval, int biasTerm, 
+            int ptsToPredict, ActivationFunctionBase actFunction, double eta, long epochInterval, int biasTerm, 
             int constantTerm, double maxPertrubation, double nudge, int pruning, double testingInterval)
         {
             Neurons = neurons;
@@ -81,7 +81,7 @@ namespace NeuralAnalyser.Configuration
         public int PtsToPredict { get; }
 
         //Activation function
-        public ActivationFunction ActFunction { get; }
+        public ActivationFunctionBase ActFunction { get; }
 
         public string GetInfoShort() => 
             new StringBuilder()

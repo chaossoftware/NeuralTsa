@@ -1,4 +1,4 @@
-﻿using NewMind.NeuralNet.Base.Entities;
+﻿using SciML.NeuralNetwork.Entities;
 
 namespace NeuralAnalyser.NeuralNet.Entities
 {
@@ -28,7 +28,7 @@ namespace NeuralAnalyser.NeuralNet.Entities
 
         public override object Clone()
         {
-            var synapseCopy = new PruneSynapse(IndexSource, IndexDestination)
+            var synapseCopy = new PruneSynapse(InIndex, OutIndex)
             {
                 Weight = this.Weight,
                 Signal = this.Signal,

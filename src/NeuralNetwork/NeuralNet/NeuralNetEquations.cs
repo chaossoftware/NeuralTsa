@@ -1,16 +1,16 @@
 ﻿using System;
-using NewMind.NeuralNet.Activation;
 using ChaosSoft.Core.NumericalMethods.Solvers;
 using NeuralAnalyser.NeuralNet.Entities;
+using SciML.NeuralNetwork.Activation;
 
 namespace NeuralAnalyser.NeuralNet
 {
     public class NeuralNetEquations : SystemEquations
     {
-        private readonly ActivationFunction Activation_Function;
+        private readonly ActivationFunctionBase Activation_Function;
         private readonly int Neurons;
 
-        public NeuralNetEquations(int dimensions, int neurons, ActivationFunction activationFunction) : base(true)
+        public NeuralNetEquations(int dimensions, int neurons, ActivationFunctionBase activationFunction) : base(true)
         {
             linearized = true;
             EquationsCount = dimensions;

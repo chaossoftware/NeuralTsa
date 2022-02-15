@@ -2,9 +2,9 @@
 using System.Drawing;
 using System.Globalization;
 using System.Xml.Linq;
-using NewMind.NeuralNet.Activation;
 using NeuralAnalyser.NeuralNet.Activation;
 using System.Collections.Generic;
+using SciML.NeuralNetwork.Activation;
 
 namespace NeuralAnalyser.Configuration
 {
@@ -104,7 +104,7 @@ namespace NeuralAnalyser.Configuration
                 maxPertrubation, nudge, pruning, testingInterval);
         }
 
-        private ActivationFunction GetActivationFunction(string functionName)
+        private ActivationFunctionBase GetActivationFunction(string functionName)
         {
             switch (functionName.ToLower())
             {

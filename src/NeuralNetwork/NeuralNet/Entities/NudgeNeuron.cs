@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using NewMind.NeuralNet.Base;
+using SciML.NeuralNetwork.Entities;
 
 namespace NeuralAnalyser.NeuralNet.Entities
 {

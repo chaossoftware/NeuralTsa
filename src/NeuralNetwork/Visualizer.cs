@@ -61,8 +61,8 @@ namespace NeuralAnalyser
 
             foreach (var synapse in net.Connections[0])
             {
-                var sourceCenter = GetItemCenter(synapse.IndexSource, yOffset1, xCenter1);
-                var destinationCenter = GetItemCenter(synapse.IndexDestination, yOffset2, xCenter2);
+                var sourceCenter = GetItemCenter(synapse.InIndex, yOffset1, xCenter1);
+                var destinationCenter = GetItemCenter(synapse.OutIndex, yOffset2, xCenter2);
 
                 DrawSynapse(g, sourceCenter, destinationCenter, GetSynapseThickness(synapse.Signal, minSynapseValue, maxSynapseValue));
             }
@@ -72,8 +72,8 @@ namespace NeuralAnalyser
 
             foreach (var synapse in net.Connections[1])
             {
-                var sourceCenter = GetItemCenter(synapse.IndexSource, yOffset2, xCenter2);
-                var destinationCenter = GetItemCenter(synapse.IndexDestination, yOffset3, xCenter3);
+                var sourceCenter = GetItemCenter(synapse.InIndex, yOffset2, xCenter2);
+                var destinationCenter = GetItemCenter(synapse.OutIndex, yOffset3, xCenter3);
 
                 DrawSynapse(g, sourceCenter, destinationCenter, GetSynapseThickness(synapse.Signal, minSynapseValue, maxSynapseValue));
             }

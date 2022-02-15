@@ -1,10 +1,11 @@
-﻿using NewMind.NeuralNet.Activation;
+﻿
+using SciML.NeuralNetwork.Activation;
 
 namespace NeuralAnalyser.NeuralNet.Entities
 {
     public class HiddenNeuron : NudgeNeuron<HiddenNeuron>
     {
-        public static ActivationFunction Function;
+        public static ActivationFunctionBase Function;
         public PruneSynapse BiasInput;
 
         public HiddenNeuron() : base()

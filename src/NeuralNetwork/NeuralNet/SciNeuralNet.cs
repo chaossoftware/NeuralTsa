@@ -1,13 +1,14 @@
 ﻿using System;
-using NewMind.NeuralNet.Networks;
 using ChaosSoft.Core;
+using MersenneTwister;
 using NeuralAnalyser.Configuration;
 using NeuralAnalyser.NeuralNet.Activation;
 using NeuralAnalyser.NeuralNet.Entities;
+using SciML.NeuralNetwork.Networks;
 
 namespace NeuralAnalyser.NeuralNet
 {
-    public class SciNeuralNet : ThreeLayerNetwork<InputNeuron, HiddenNeuron, OutputNeuron, PruneSynapse>
+    public class SciNeuralNet : NeuralNet3LayerBase<InputNeuron, HiddenNeuron, OutputNeuron, PruneSynapse>
     {
         //----- input data
         private long nmax;  //lines in file
@@ -235,7 +236,8 @@ namespace NeuralAnalyser.NeuralNet
                     //Reseed the random if the trial failed
                     else
                     {
-                        seed = NeuronRandomizer.Randomizer.Next(int.MaxValue);     //seed = (int) (1 / Math.Sqrt(e1));
+                        seed = NeuronRandomizer.Randomizer.Next(int.MaxValue);
+                        //seed = (int)(1 / Math.Sqrt(e1));
 
                         if (improved > 0)
                         {
@@ -248,7 +250,7 @@ namespace NeuralAnalyser.NeuralNet
                         }
                     }
 
-                    NeuronRandomizer.Randomizer = new Random(seed);
+                    NeuronRandomizer.Randomizer = Randoms.Create(seed, RandomType.FastestDouble);
         
                     //Testing is costly - don't do it too often
                     if (current % Params.TestingInterval != 0)
@@ -363,8 +365,7 @@ namespace NeuralAnalyser.NeuralNet
 
         public override void ConstructNetwork()
         {
-            //random = new Random();
-            NeuronRandomizer.Randomizer = new Random();
+            NeuronRandomizer.Randomizer = Randoms.FastestDouble;
 
             // init input layer
             for (int i = 0; i < Params.Dimensions; i++)
@@ -435,14 +436,14 @@ namespace NeuralAnalyser.NeuralNet
 
             foreach (var synapse in Connections[0])
             {
-                InputLayer.Neurons[synapse.IndexSource].Outputs.Add(synapse);
-                HiddenLayer.Neurons[synapse.IndexDestination].Inputs.Add(synapse);
+                InputLayer.Neurons[synapse.InIndex].Outputs.Add(synapse);
+                HiddenLayer.Neurons[synapse.OutIndex].Inputs.Add(synapse);
             }
 
             foreach (var synapse in Connections[1])
             {
-                HiddenLayer.Neurons[synapse.IndexSource].Outputs.Add(synapse);
-                OutputLayer.Neurons[synapse.IndexDestination].Inputs.Add(synapse);
+                HiddenLayer.Neurons[synapse.InIndex].Outputs.Add(synapse);
+                OutputLayer.Neurons[synapse.OutIndex].Inputs.Add(synapse);
             }
         }
 
