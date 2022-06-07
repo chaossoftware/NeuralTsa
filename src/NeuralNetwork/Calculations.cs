@@ -73,16 +73,20 @@ namespace NeuralAnalyser
                 Visualizator.NeuralAnimation.AddFrame(PrepareAnimationFrame(net));
             }
 
-            Console.WriteLine("{0}\tE: {1:0.#####e-0}", net.current, net.OutputLayer.Neurons[0].Memory[0]);
+            Console.SetCursorPosition(0, 19);
+            Console.WriteLine(net.current.ToString().PadRight(10) + "err: {0:e}\t\t", net.OutputLayer.Neurons[0].Memory[0]);
+            Console.WriteLine(new string('-', 40));
+            int offset = ConsoleNetVisualizer.Visualize(net, 20);
+            Console.SetCursorPosition(0, offset);
+            Console.WriteLine(new string('-', 40));
         }
 
         public void PerformCalculations(SciNeuralNet net)
         {
             double lle = CalculateLargestLyapunovExponent(net);
-            Console.WriteLine(new string('-', 15));
+            
             Console.WriteLine("Epoch {0}", net.successCount);
             Console.WriteLine("LLE = {0:F5}", lle);
-            Console.WriteLine(new string('-', 15) + "\n\n");
 
             var benettin = CalculateLyapunovSpectrum(net, systemEquations);
 

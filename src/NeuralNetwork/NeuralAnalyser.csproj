@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NeuralAnalyser</RootNamespace>
     <AssemblyName>NeuralAnalyser</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -58,6 +58,7 @@
     <Compile Include="Configuration\Config.cs" />
     <Compile Include="Configuration\DataFile.cs" />
     <Compile Include="Configuration\OutputParameters.cs" />
+    <Compile Include="ConsoleNetVisualizer.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="NeuralNet\Entities\BiasNeuron.cs" />
     <Compile Include="NeuralNet\Entities\HiddenNeuron.cs" />

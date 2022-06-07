@@ -85,25 +85,25 @@ namespace NeuralAnalyser.Configuration
 
         public string GetInfoShort() => 
             new StringBuilder()
-            .AppendFormat("Neurons: {0}\n", Neurons)
-            .AppendFormat("Dimensions: {0}\n", Dimensions)
-            .AppendFormat("Exponent of error: {0}\n", ErrorsExponent)
-            .AppendFormat("Successful trainings count: {0}\n", Trainings)
-            .AppendFormat("Point to predict: {0}\n", PtsToPredict)
-            .AppendFormat("Activation Function: {0}\n", ActFunction.Name)
+            .AppendFormat("Neurons                : {0}\n", Neurons)
+            .AppendFormat("Dimensions             : {0}\n", Dimensions)
+            .AppendFormat("Exponent of error      : {0}\n", ErrorsExponent)
+            .AppendFormat("Trainings count        : {0}\n", Trainings)
+            .AppendFormat("Point to predict       : {0}\n", PtsToPredict)
+            .AppendFormat("Activation Function    : {0}\n", ActFunction.Name)
             .ToString();
 
         public string GetInfoFull() =>
             new StringBuilder()
             .Append(GetInfoShort() + "\n")
-            .AppendFormat(CultureInfo.InvariantCulture, "Learning rate: {0}\n", Eta)
-            .AppendFormat(CultureInfo.InvariantCulture, "Epoch interval: {0:0.#####e-0}\n", EpochInterval)
-            .AppendFormat("Bias termt: {0}\n", BiasTerm)
-            .AppendFormat("Constant term: {0}\n", ConstantTerm)
-            .AppendFormat(CultureInfo.InvariantCulture, "Maximum perturbation: {0}\n", MaxPertrubation)
-            .AppendFormat(CultureInfo.InvariantCulture, "Amount to nudge the parameters back toward zero: {0}\n", Nudge)
-            .AppendFormat("Pruning level: {0}\n", Pruning)
-            .AppendFormat(CultureInfo.InvariantCulture, "Testing interval: {0:0.#####e-0}\n", TestingInterval)
+            .AppendFormat(CultureInfo.InvariantCulture, "Epoch interval         : {0:0.#####e-0}\n", EpochInterval)
+            .AppendFormat(CultureInfo.InvariantCulture, "Testing interval       : {0:0.#####e-0}\n", TestingInterval)
+            .AppendFormat(CultureInfo.InvariantCulture, "Learning rate          : {0}\n", Eta)
+            .AppendFormat(CultureInfo.InvariantCulture, "Maximum perturbation   : {0}\n", MaxPertrubation)
+            .AppendFormat("Bias termt             : {0}\n", BiasTerm)
+            .AppendFormat("Constant term          : {0}\n", ConstantTerm)
+            .AppendFormat("Pruning level          : {0}\n", Pruning)
+            .AppendFormat(CultureInfo.InvariantCulture, "\nAmount to nudge \nparams back towards 0  : {0}\n", Nudge)
             .ToString();
     }
 }

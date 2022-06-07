@@ -57,10 +57,10 @@ namespace NeuralAnalyser
 
             Console.Title = "Signal: " + dataFile.Output.FileName + " | " + neuralNetParams.ActFunction.Name;
             Console.WriteLine(neuralNetParams.GetInfoFull());
-            Console.WriteLine("\n\nStarting...");
 
             var calculations = new Calculations(neuralNetParams, dataFile.Output);
 
+            neuralNet.CycleComplete += calculations.LogCycle;
             neuralNet.CycleComplete += calculations.LogCycle;
             neuralNet.EpochComplete += calculations.PerformCalculations;
 
