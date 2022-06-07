@@ -1,4 +1,4 @@
-﻿namespace NeuralAnalyser.Configuration
+﻿namespace NeuralNetTsa.Configuration
 {
     public class DataFile
     {

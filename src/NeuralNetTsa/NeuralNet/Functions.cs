@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using NeuralAnalyser.NeuralNet.Entities;
+using NeuralNetTsa.NeuralNet.Entities;
 using ChaosSoft.Core;
 using SciML.NeuralNetwork.Activation;
 
-namespace NeuralAnalyser.NeuralNet.Activation
+namespace NeuralNetTsa.NeuralNet.Activation
 {
     public abstract class ComplexActivationFunction : ActivationFunctionBase
     {

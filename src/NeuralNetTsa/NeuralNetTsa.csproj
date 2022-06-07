@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net4.8</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SciML.NeuralNetwork" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ChaosSoft.Core\ChaosSoft.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="app_config.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\henon">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\hypchaos">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\lorenz">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

@@ -4,10 +4,10 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using ChaosSoft.Core;
 using ChaosSoft.Core.DrawEngine;
-using NeuralAnalyser.NeuralNet;
-using NeuralAnalyser.NeuralNet.Entities;
+using NeuralNetTsa.NeuralNet;
+using NeuralNetTsa.NeuralNet.Entities;
 
-namespace NeuralAnalyser
+namespace NeuralNetTsa
 {
     public class Visualizer
     {

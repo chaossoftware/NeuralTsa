@@ -1,7 +1,6 @@
-﻿
-using SciML.NeuralNetwork.Activation;
+﻿using SciML.NeuralNetwork.Activation;
 
-namespace NeuralAnalyser.NeuralNet.Entities
+namespace NeuralNetTsa.NeuralNet.Entities
 {
     public class HiddenNeuron : NudgeNeuron<HiddenNeuron>
     {

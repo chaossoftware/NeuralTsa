@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NeuralAnalyser.NeuralNet.Entities;
+using NeuralNetTsa.NeuralNet.Entities;
 
-namespace NeuralAnalyser.NeuralNet.Obsolete
+namespace NeuralNetTsa.NeuralNet.Obsolete
 {
     public struct Memory
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NeuralAnalyser.NeuralNet
+namespace NeuralNetTsa.NeuralNet
 {
     public static class NeuronRandomizer
     {

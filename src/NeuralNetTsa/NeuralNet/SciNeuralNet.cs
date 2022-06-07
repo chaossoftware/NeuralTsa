@@ -1,12 +1,12 @@
 ﻿using System;
 using ChaosSoft.Core;
 using MersenneTwister;
-using NeuralAnalyser.Configuration;
-using NeuralAnalyser.NeuralNet.Activation;
-using NeuralAnalyser.NeuralNet.Entities;
+using NeuralNetTsa.Configuration;
+using NeuralNetTsa.NeuralNet.Activation;
+using NeuralNetTsa.NeuralNet.Entities;
 using SciML.NeuralNetwork.Networks;
 
-namespace NeuralAnalyser.NeuralNet
+namespace NeuralNetTsa.NeuralNet
 {
     public class SciNeuralNet : NeuralNet3LayerBase<InputNeuron, HiddenNeuron, OutputNeuron, PruneSynapse>
     {

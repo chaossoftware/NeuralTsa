@@ -1,9 +1,9 @@
 ﻿using System;
 using ChaosSoft.Core.NumericalMethods.Solvers;
-using NeuralAnalyser.NeuralNet.Entities;
+using NeuralNetTsa.NeuralNet.Entities;
 using SciML.NeuralNetwork.Activation;
 
-namespace NeuralAnalyser.NeuralNet
+namespace NeuralNetTsa.NeuralNet
 {
     public class NeuralNetEquations : SystemEquations
     {

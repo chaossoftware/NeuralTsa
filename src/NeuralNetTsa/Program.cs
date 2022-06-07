@@ -1,18 +1,18 @@
-﻿using System;
+﻿using ChaosSoft.Core.Data;
+using ChaosSoft.Core.DrawEngine;
+using ChaosSoft.Core.Transform;
+using NeuralNetTsa.Configuration;
+using NeuralNetTsa.NeuralNet;
+using System;
 using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms.DataVisualization.Charting;
-using ChaosSoft.Core.Data;
-using ChaosSoft.Core.DrawEngine;
-using ChaosSoft.Core.Transform;
-using NeuralAnalyser.Configuration;
-using NeuralAnalyser.NeuralNet;
 
-namespace NeuralAnalyser
+namespace NeuralNetTsa
 {
-    public class Program
+    internal class Program
     {
         static void Main(string[] args)
         {

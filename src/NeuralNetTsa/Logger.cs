@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace NeuralAnalyser
+namespace NeuralNetTsa
 {
     public static class Logger
     {

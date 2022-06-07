@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using SciML.NeuralNetwork.Entities;
 
-namespace NeuralAnalyser.NeuralNet.Entities
+namespace NeuralNetTsa.NeuralNet.Entities
 {
     public abstract class NudgeNeuron<N> : INeuron<N> where N : NudgeNeuron<N>
     {

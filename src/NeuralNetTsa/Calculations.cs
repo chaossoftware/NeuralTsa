@@ -15,11 +15,11 @@ using ChaosSoft.Core.IO;
 using ChaosSoft.Core.NumericalMethods.Lyapunov;
 using ChaosSoft.Core.NumericalMethods.Orthogonalization;
 using ChaosSoft.Core.Transform;
-using NeuralAnalyser.Configuration;
-using NeuralAnalyser.NeuralNet;
-using NeuralAnalyser.NeuralNet.Entities;
+using NeuralNetTsa.Configuration;
+using NeuralNetTsa.NeuralNet;
+using NeuralNetTsa.NeuralNet.Entities;
 
-namespace NeuralAnalyser
+namespace NeuralNetTsa
 {
     internal class Calculations
     {

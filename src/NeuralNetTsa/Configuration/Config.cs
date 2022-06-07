@@ -2,15 +2,15 @@
 using System.Drawing;
 using System.Globalization;
 using System.Xml.Linq;
-using NeuralAnalyser.NeuralNet.Activation;
+using NeuralNetTsa.NeuralNet.Activation;
 using System.Collections.Generic;
 using SciML.NeuralNetwork.Activation;
 
-namespace NeuralAnalyser.Configuration
+namespace NeuralNetTsa.Configuration
 {
     public class Config
     {
-        public const string OptionsFile = "neural_config.xml";
+        public const string OptionsFile = "app_config.xml";
 
         private XDocument configFile = null;
 

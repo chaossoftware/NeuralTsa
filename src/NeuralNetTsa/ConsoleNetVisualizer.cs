@@ -1,9 +1,9 @@
-﻿using NeuralAnalyser.NeuralNet;
-using NeuralAnalyser.NeuralNet.Entities;
+﻿using NeuralNetTsa.NeuralNet;
+using NeuralNetTsa.NeuralNet.Entities;
 using System;
 using System.Linq;
 
-namespace NeuralAnalyser
+namespace NeuralNetTsa
 {
     public class ConsoleNetVisualizer
     {

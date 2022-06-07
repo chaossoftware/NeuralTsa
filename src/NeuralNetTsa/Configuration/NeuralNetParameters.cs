@@ -2,7 +2,7 @@
 using System.Globalization;
 using SciML.NeuralNetwork.Activation;
 
-namespace NeuralAnalyser.Configuration
+namespace NeuralNetTsa.Configuration
 {
     /// <summary>
     /// Class Describing parameters of Neural network

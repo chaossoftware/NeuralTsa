@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NeuralAnalyser.NeuralNet.Entities
+namespace NeuralNetTsa.NeuralNet.Entities
 {
     public class BiasNeuron : NudgeNeuron<BiasNeuron>
     {
