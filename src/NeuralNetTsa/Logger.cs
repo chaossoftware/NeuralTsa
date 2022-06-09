@@ -24,7 +24,7 @@ namespace NeuralNetTsa
         {
             if (withTimestamp)
             {
-                info = GetCurrentTime() + info;
+                info = $"{DateTime.Now}\n{info}";
             }
 
             using (StreamWriter file = new StreamWriter(LogFile, true))
@@ -32,12 +32,5 @@ namespace NeuralNetTsa
                 file.WriteLine(info + "\n\n");
             }
         }
-
-        /// <summary>
-        /// Get current date-time
-        /// </summary>
-        /// <returns>current date-time in format: "ShortDate - LongTime"</returns>
-        private static string GetCurrentTime() =>
-            DateTime.Now.ToShortDateString() + " - " + DateTime.Now.ToLongTimeString() + "\n";
     }
 }

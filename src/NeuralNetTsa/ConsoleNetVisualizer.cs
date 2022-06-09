@@ -10,57 +10,70 @@ namespace NeuralNetTsa
         private const string InactiveNeuron = "░░";
         private const string ActiveNeuron = "▓▓";
         private const string NeutralNeuron = "▒▒";
-        private const int MinOffset = 1;
+        private const string NeutralSynapse = "--";
+        private const int MinOffsetY = 1;
 
-        public static int Visualize(SciNeuralNet neuralNet, int offset)
+        private readonly SciNeuralNet _neuralNet;
+
+        private readonly int _inCount;
+        private readonly int _hiddenCount;
+        private readonly int _maxItemsCount;
+        private readonly int _inOffsetY;
+        private readonly int _hiddenOffsetY;
+        private readonly int _outOffsetY;
+
+        public ConsoleNetVisualizer(SciNeuralNet neuralNet)
         {
-            int inCount = neuralNet.Params.Dimensions;
-            int hiddenCount = neuralNet.Params.Neurons;
+            _neuralNet = neuralNet;
 
-            int maxLayerItemsCount = Math.Max(inCount, hiddenCount);
-            int height = maxLayerItemsCount * 2;
+            _inCount = neuralNet.Params.Dimensions;
+            _hiddenCount = neuralNet.Params.Neurons;
+            _maxItemsCount = Math.Max(_inCount, _hiddenCount);
 
-            int inYOffset = maxLayerItemsCount / inCount + MinOffset;
-            int hidYOffset = maxLayerItemsCount / hiddenCount + MinOffset;
-            int outYOffset = maxLayerItemsCount / neuralNet.OutputLayer.Neurons.Length + MinOffset;
+            _inOffsetY = _maxItemsCount / _inCount + MinOffsetY;
+            _hiddenOffsetY = _maxItemsCount / _hiddenCount + MinOffsetY;
+            _outOffsetY = _maxItemsCount / neuralNet.OutputLayer.Neurons.Length + MinOffsetY;
+        }
 
-            double maxSynapseValue = neuralNet.Connections[0].Max(s => s.Signal);
-            double minSynapseValue = neuralNet.Connections[0].Min(s => s.Signal);
+        public int Visualize(int offset)
+        {
+            double maxSynapseValue = _neuralNet.Connections[0].Max(s => s.Signal);
+            double minSynapseValue = _neuralNet.Connections[0].Min(s => s.Signal);
 
-            double oneThird = (maxSynapseValue - minSynapseValue) / 3d;
-            double firstThird = minSynapseValue + oneThird;
-            double secondThird = minSynapseValue + 2d * oneThird;
+            double segment = (maxSynapseValue - minSynapseValue) / 3d;
+            double lowSynapseTreshold = minSynapseValue + segment;
+            double highSynapseTreshold = minSynapseValue + 2d * segment;
 
             int i = 1;
 
-            foreach (InputNeuron inn in neuralNet.InputLayer.Neurons)
+            foreach (InputNeuron inn in _neuralNet.InputLayer.Neurons)
             {
-                string synapseBrush = GetSynapseBrush(inn.Outputs[0].Signal, firstThird, secondThird);
-                Console.SetCursorPosition(0, offset + i * inYOffset);
-                Console.Write($"■ {hiddenCount} {synapseBrush}");
+                string synapseBrush = GetSynapseBrush(inn.Outputs[0].Signal, lowSynapseTreshold, highSynapseTreshold);
+                Console.SetCursorPosition(0, offset + i * _inOffsetY);
+                Console.Write($"■ {_hiddenCount} {synapseBrush}");
                 i++;
             }
 
-            maxSynapseValue = neuralNet.Connections[1].Max(s => s.Signal);
-            minSynapseValue = neuralNet.Connections[1].Min(s => s.Signal);
+            maxSynapseValue = _neuralNet.Connections[1].Max(s => s.Signal);
+            minSynapseValue = _neuralNet.Connections[1].Min(s => s.Signal);
 
-            oneThird = (maxSynapseValue - minSynapseValue) / 3d;
-            firstThird = minSynapseValue + oneThird;
-            secondThird = minSynapseValue + 2d * oneThird;
+            segment = (maxSynapseValue - minSynapseValue) / 3d;
+            lowSynapseTreshold = minSynapseValue + segment;
+            highSynapseTreshold = minSynapseValue + 2d * segment;
             i = 1;
 
-            foreach (HiddenNeuron hn in neuralNet.HiddenLayer.Neurons)
+            foreach (HiddenNeuron hn in _neuralNet.HiddenLayer.Neurons)
             {
-                string synapseBrush = GetSynapseBrush(hn.Outputs[0].Signal, firstThird, secondThird);
-                Console.SetCursorPosition(13, offset + i * hidYOffset);
-                Console.Write($"= {inCount} {GetNeuronColor(hn)} {1} {synapseBrush}");
+                string synapseBrush = GetSynapseBrush(hn.Outputs[0].Signal, lowSynapseTreshold, highSynapseTreshold);
+                Console.SetCursorPosition(13, offset + i * _hiddenOffsetY);
+                Console.Write($"= {_inCount} {GetNeuronColor(hn)} 1 {synapseBrush}");
                 i++;
             }
 
-            Console.SetCursorPosition(29, offset + outYOffset);
-            Console.Write($"= {hiddenCount} {GetNeuronColor(neuralNet.OutputLayer.Neurons[0])} 1 --" );
+            Console.SetCursorPosition(29, offset + _outOffsetY);
+            Console.Write($"= {_hiddenCount} {GetNeuronColor(_neuralNet.OutputLayer.Neurons[0])} 1 {NeutralSynapse}");
 
-            return offset + height + 2;
+            return _maxItemsCount * 2 + offset + 2;
         }
 
         private static string GetNeuronColor(HiddenNeuron neuron) =>
@@ -77,7 +90,7 @@ namespace NeuralNetTsa
             } 
             else if (current > secondThird)
             {
-                return "--";
+                return NeutralSynapse;
             }
             else
             {

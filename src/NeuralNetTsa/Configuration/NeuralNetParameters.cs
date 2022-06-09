@@ -100,7 +100,7 @@ namespace NeuralNetTsa.Configuration
             .AppendFormat(CultureInfo.InvariantCulture, "Testing interval       : {0:0.#####e-0}\n", TestingInterval)
             .AppendFormat(CultureInfo.InvariantCulture, "Learning rate          : {0}\n", Eta)
             .AppendFormat(CultureInfo.InvariantCulture, "Maximum perturbation   : {0}\n", MaxPertrubation)
-            .AppendFormat("Bias termt             : {0}\n", BiasTerm)
+            .AppendFormat("Bias term              : {0}\n", BiasTerm)
             .AppendFormat("Constant term          : {0}\n", ConstantTerm)
             .AppendFormat("Pruning level          : {0}\n", Pruning)
             .AppendFormat(CultureInfo.InvariantCulture, "\nAmount to nudge \nparams back towards 0  : {0}\n", Nudge)

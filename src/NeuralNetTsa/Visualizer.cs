@@ -32,10 +32,15 @@ namespace NeuralNetTsa
 
         public Animation NeuralAnimation;
 
-        public Visualizer(Size size)
+        public Visualizer(Size size, bool animate)
         {
             bitmap = new Bitmap(size.Width, size.Height);
-            this.neuronSize = 0;
+            neuronSize = 0;
+
+            if (animate)
+            {
+                NeuralAnimation = new Animation();
+            }
         }
 
         public Bitmap DrawBrain(SciNeuralNet net)
@@ -51,7 +56,7 @@ namespace NeuralNetTsa
             int hiddenCount = net.HiddenLayer.Neurons.Length;
             int outputsCount = net.OutputLayer.Neurons.Length;
 
-            if (this.neuronSize == 0)
+            if (neuronSize == 0)
             {
                 CalculateSizes(inputsCount, hiddenCount, outputsCount);
             }
@@ -167,7 +172,7 @@ namespace NeuralNetTsa
         /// <param name="xOffset">offset by X coordinate (based on entity type)</param>
         /// <returns></returns>
         private PointF GetItemCenter(int index, double yOffset, double xCenter) =>
-            new PointF((float)xCenter, (float)(yOffset + index * yDistance + (index + 0.5) * this.neuronSize));
+            new PointF((float)xCenter, (float)(yOffset + index * yDistance + (index + 0.5) * neuronSize));
 
         /// <summary>
         /// Calculate entity size based on count of entities in list and specified imege height
@@ -179,18 +184,18 @@ namespace NeuralNetTsa
         {
             int maxLayerItemsCount = Math.Max(Math.Max(inputsCount, hiddenCount), outputsCount);
 
-            this.neuronSize = Math.Min((float)this.bitmap.Height / (maxLayerItemsCount * 2 - 1), (float)this.bitmap.Width / 7d);
-            this.maxSinapseThickness = this.neuronSize / 2d;
-            var xDistance = ((float)this.bitmap.Width - 3d * this.neuronSize) / 4d;
-            this.yDistance = ((float)this.bitmap.Height - maxLayerItemsCount * this.neuronSize) / (maxLayerItemsCount - 1);
+            neuronSize = Math.Min((float)bitmap.Height / (maxLayerItemsCount * 2 - 1), (float)bitmap.Width / 7d);
+            maxSinapseThickness = neuronSize / 2d;
+            var xDistance = ((float)bitmap.Width - 3d * neuronSize) / 4d;
+            yDistance = ((float)bitmap.Height - maxLayerItemsCount * neuronSize) / (maxLayerItemsCount - 1);
 
-            this.xCenter1 = xDistance + 0.5 * this.neuronSize;
-            this.xCenter2 = 2 * xDistance + 1.5 * this.neuronSize;
-            this.xCenter3 = 3 * xDistance + 2.5 * this.neuronSize;
+            xCenter1 = xDistance + 0.5 * neuronSize;
+            xCenter2 = 2 * xDistance + 1.5 * neuronSize;
+            xCenter3 = 3 * xDistance + 2.5 * neuronSize;
 
-            this.yOffset1 = (maxLayerItemsCount - inputsCount) * (this.neuronSize + this.yDistance) / 2;
-            this.yOffset2 = (maxLayerItemsCount - hiddenCount) * (this.neuronSize + this.yDistance) / 2;
-            this.yOffset3 = (maxLayerItemsCount - outputsCount) * (this.neuronSize + this.yDistance) / 2;
+            yOffset1 = (maxLayerItemsCount - inputsCount) * (neuronSize + yDistance) / 2;
+            yOffset2 = (maxLayerItemsCount - hiddenCount) * (neuronSize + yDistance) / 2;
+            yOffset3 = (maxLayerItemsCount - outputsCount) * (neuronSize + yDistance) / 2;
         }
 
         /// <summary>
