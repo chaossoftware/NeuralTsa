@@ -14,14 +14,14 @@
   -->
 
   <LowLevelParams
-		learningRate="0.999"
 		epochInterval="1e6"
+		testingInterval="1e5"
+		learningRate="0.999"
 		biasTerm="1"
 		constantTerm="0"
 		maxPertrubation="2"
 		nudge="0.5"
 		pruning="0"
-		testingInterval="1e5"
 	/>
 
   <!-- 
@@ -46,7 +46,7 @@
     <reconstructedPoincare build="true"/>
     <model3D build="true"/>
     <plots build="true" width="640" height="360"/>
-    <animation build="true" width="720" height="720"/>
+    <animation build="true" width="640" height="640"/>
     <leInTime build="true"/>
   </Output>
 
