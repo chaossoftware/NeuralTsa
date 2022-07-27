@@ -8,7 +8,6 @@ using System.Linq;
 using System.Text;
 using ChaosSoft.Core;
 using ChaosSoft.Core.Data;
-using ChaosSoft.Core.DrawEngine.Charts;
 using ChaosSoft.Core.IO;
 using ChaosSoft.Core.NumericalMethods.Lyapunov;
 using ChaosSoft.Core.Transform;
@@ -21,11 +20,11 @@ namespace NeuralNetTsa
 {
     internal class Calculations
     {
-        private readonly OutputParameters outParams;
-        private readonly NeuralNetEquations systemEquations;
+        private readonly OutputParameters _outParams;
+        private readonly NeuralNetEquations _systemEquations;
 
-        private readonly List<double[]> errorsHistory = new List<double[]>();
-        private readonly List<double> errors = new List<double>();
+        private readonly List<double[]> _trialsHistory = new List<double[]>();
+        private readonly List<double> _errors = new List<double>();
 
         private readonly Size _squareSize;
         private readonly Size _rectangleSize;
@@ -38,20 +37,20 @@ namespace NeuralNetTsa
 
         public Calculations(NeuralNetParameters parameters, OutputParameters outParameters)
         {
-            outParams = outParameters;
+            _outParams = outParameters;
 
-            _squareSize = new Size(outParams.AnimationSize.Width / 2, outParams.AnimationSize.Height / 2);
-            _rectangleSize = new Size(outParams.AnimationSize.Width, outParams.AnimationSize.Height / 4);
+            _squareSize = new Size(_outParams.AnimationSize.Width / 2, _outParams.AnimationSize.Height / 2);
+            _rectangleSize = new Size(_outParams.AnimationSize.Width, _outParams.AnimationSize.Height / 4);
 
-            Size netImageSize = new Size(outParams.AnimationSize.Width / 8, outParams.AnimationSize.Height / 4);
-            Visualizator = new Visualizer(netImageSize, outParams.SaveAnimation);
+            Size netImageSize = new Size(_outParams.AnimationSize.Width / 8, _outParams.AnimationSize.Height / 4);
+            Visualizator = new Visualizer(netImageSize, _outParams.SaveAnimation);
 
-            systemEquations = new NeuralNetEquations(parameters.Dimensions, parameters.Neurons, parameters.ActFunction);
+            _systemEquations = new NeuralNetEquations(parameters.Dimensions, parameters.Neurons, parameters.ActFunction);
         }
 
         public void AddAnimationFrame(SciNeuralNet net)
         {
-            if (outParams.SaveAnimation)
+            if (_outParams.SaveAnimation)
             {
                 Visualizator.NeuralAnimation.AddFrame(PrepareAnimationFrame(net));
             }
@@ -63,60 +62,60 @@ namespace NeuralNetTsa
             
             Console.WriteLine("Epoch {0}\nLLE = {1:F5}", net.successCount, lle);
 
-            LyapunovSpectrum leSpec = LeSpec.Calculate(net, systemEquations);
+            LyapunovSpectrum leSpec = LeSpec.Calculate(net, _systemEquations);
 
-            if (outParams.SaveLeInTime)
+            if (_outParams.SaveLeInTime)
             {
-                DataWriter.CreateDataFile(outParams.LeInTimeFile, leSpec.SpectrumInTime);
+                DataWriter.CreateDataFile(_outParams.LeInTimeFile, leSpec.SpectrumInTime);
             }
 
-            AttractorData data = Attractor.Construct(net, outParams.PredictedSignalPts);
+            AttractorData data = Attractor.Construct(net, _outParams.PredictedSignalPts);
 
             try
             {
-                var signalPlot = new ScottPlot.Plot(outParams.PlotsSize.Width, outParams.PlotsSize.Height);
+                var signalPlot = new ScottPlot.Plot(_outParams.PlotsSize.Width, _outParams.PlotsSize.Height);
                 signalPlot.AddSignal(data.Xt);
                 signalPlot.XLabel("t");
                 signalPlot.YLabel("f(t)");
                 signalPlot.Title("Signal");
-                signalPlot.SaveFig(outParams.ReconstructedSignalPlotFile);
+                signalPlot.SaveFig(_outParams.ReconstructedSignalPlotFile);
 
-                var pseudoPoincarePlot = new ScottPlot.Plot(outParams.PlotsSize.Width, outParams.PlotsSize.Height);
+                var pseudoPoincarePlot = new ScottPlot.Plot(_outParams.PlotsSize.Width, _outParams.PlotsSize.Height);
                 pseudoPoincarePlot.XLabel("t");
                 pseudoPoincarePlot.YLabel("t + 1");
                 pseudoPoincarePlot.Title("Pseudo poincare");
 
-                foreach (ChaosSoft.Core.Data.DataPoint dp in PseudoPoincareMap.GetMapDataFrom(data.Xt).DataPoints)
+                foreach (DataPoint dp in PseudoPoincareMap.GetMapDataFrom(data.Xt).DataPoints)
                 {
                     pseudoPoincarePlot.AddPoint(dp.X, dp.Y, Color.SteelBlue, 1);
                 }
 
-                pseudoPoincarePlot.SaveFig(outParams.ReconstructedPoincarePlotFile);
+                pseudoPoincarePlot.SaveFig(_outParams.ReconstructedPoincarePlotFile);
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Prediction was not succeeded, unable to build charts: " + ex);
             }
 
-            if (outParams.SaveModel)
+            if (_outParams.SaveModel)
             {
-                Model3D.Create3daModelFile(outParams.ModelFile, data.Xt, data.Yt, data.Zt);
+                Model3D.Create3daModelFile(_outParams.ModelFile, data.Xt, data.Yt, data.Zt);
             }
 
-            if (outParams.SaveWav)
+            if (_outParams.SaveWav)
             {
-                Sound.CreateWavFile(outParams.WavFile, data.Yt);
+                Sound.CreateWavFile(_outParams.WavFile, data.Yt);
             }
 
-            if (outParams.SaveAnimation)
+            if (_outParams.SaveAnimation)
             {
+                ScottPlot.Plot pPlot = new ScottPlot.Plot(_squareSize.Width, _squareSize.Height);
+                pPlot.XLabel("t");
+                pPlot.YLabel("t + 1");
+                pPlot.Title("Pseudo poincare");
+
                 try
                 {
-                    var pPlot = new ScottPlot.Plot(_squareSize.Width, _squareSize.Height);
-                    pPlot.XLabel("t");
-                    pPlot.YLabel("t + 1");
-                    pPlot.Title("Pseudo poincare");
-
                     foreach (DataPoint dp in PseudoPoincareMap.GetMapDataFrom(data.Xt).DataPoints)
                     {
                         pPlot.AddPoint(dp.X, dp.Y, Color.SteelBlue, 1);
@@ -131,10 +130,7 @@ namespace NeuralNetTsa
                 }
                 catch
                 {
-                    var pPlot = new ScottPlot.Plot(_squareSize.Width, _squareSize.Height);
-                    pPlot.XLabel("t");
-                    pPlot.YLabel("t + 1");
-                    pPlot.Title("Pseudo poincare");
+                    pPlot.Clear();
 
                     foreach (DataPoint dp in PseudoPoincareMap.GetMapDataFrom(net.xdata).DataPoints)
                     {
@@ -144,18 +140,20 @@ namespace NeuralNetTsa
                     poincare = pPlot.Render();
                 }
 
+
+                ScottPlot.Plot signalPlot = new ScottPlot.Plot(_rectangleSize.Width, _rectangleSize.Height);
+                signalPlot.XLabel("t");
+                signalPlot.YLabel("f(t)");
+
                 try
                 {
-                    var signalPlot = new ScottPlot.Plot(_rectangleSize.Width, _rectangleSize.Height);
                     signalPlot.AddSignal(data.Xt.Take(net.xdata.Length).ToArray());
-                    signalPlot.XLabel("t");
-                    signalPlot.YLabel("f(t)");
-
                     signal = signalPlot.Render();
                 }
                 catch
                 {
-
+                    signalPlot.Clear();
+                    signal = signalPlot.Render();
                 }
             }
 
@@ -166,12 +164,12 @@ namespace NeuralNetTsa
 
             SaveDebugInfoToFile(net, leSpec, lle);
 
-            Visualizator.DrawBrain(net).Save(outParams.NetPlotFile, ImageFormat.Png);
+            Visualizator.DrawBrain(net).Save(_outParams.NetPlotFile, ImageFormat.Png);
 
-            if (outParams.SaveAnimation)
+            if (_outParams.SaveAnimation)
             {
-                errorsHistory.Add(errors.ToArray());
-                errors.Clear();
+                _trialsHistory.Add(_errors.ToArray());
+                _errors.Clear();
             }
         }
 
@@ -214,29 +212,29 @@ namespace NeuralNetTsa
             error = FastMath.Min(error, 0);
             error = FastMath.Max(error, -10);
 
-            if (!errors.Any())
+            if (!_errors.Any())
             {
-                errors.Add(error);
+                _errors.Add(error);
             }
 
-            errors.Add(error);
+            _errors.Add(error);
 
-            Bitmap result = new Bitmap(outParams.AnimationSize.Width, outParams.AnimationSize.Height);
+            Bitmap result = new Bitmap(_outParams.AnimationSize.Width, _outParams.AnimationSize.Height);
             Bitmap netImg = Visualizator.DrawBrain(net);
 
 
-            var trainingsPlot = new ScottPlot.Plot(outParams.AnimationSize.Width / 2, outParams.AnimationSize.Height / 2);
+            var trainingsPlot = new ScottPlot.Plot(_outParams.AnimationSize.Width / 2, _outParams.AnimationSize.Height / 2);
             trainingsPlot.XLabel("cycle #");
             trainingsPlot.YLabel("Training error (Log10)");
             trainingsPlot.Title("Trainings");
             trainingsPlot.SetAxisLimits(0, 10, -10, 0);
 
-            foreach (var tSeries in errorsHistory)
+            foreach (var tSeries in _trialsHistory)
             {
                 trainingsPlot.AddSignal(tSeries, color: Color.Gray);
             }
 
-            trainingsPlot.AddSignal(errors.ToArray(), color: Color.SteelBlue);
+            trainingsPlot.AddSignal(_errors.ToArray(), color: Color.SteelBlue);
 
             Bitmap chart = trainingsPlot.Render();
 
@@ -252,12 +250,12 @@ namespace NeuralNetTsa
             {
                 g.TextRenderingHint = TextRenderingHint.AntiAlias;
                 g.DrawImage(poincare, new Point(0, 0));
-                g.DrawImage(chart, new Point(outParams.AnimationSize.Width / 2, 0));
-                g.DrawImage(netImg, new Point(outParams.AnimationSize.Width - netImg.Width - 20, 30));
-                g.DrawImage(signalOriginal, new Point(0, outParams.AnimationSize.Height / 2));
-                g.DrawImage(signal, new Point(0, outParams.AnimationSize.Height / 4 * 3));
+                g.DrawImage(chart, new Point(_outParams.AnimationSize.Width / 2, 0));
+                g.DrawImage(netImg, new Point(_outParams.AnimationSize.Width - netImg.Width - 20, 30));
+                g.DrawImage(signalOriginal, new Point(0, _outParams.AnimationSize.Height / 2));
+                g.DrawImage(signal, new Point(0, _outParams.AnimationSize.Height / 4 * 3));
 
-                g.DrawString(string.Format("Dimensions: {1}\nNeurons: {0}\nIteration: {2:N0}", net.Params.Neurons, net.Params.Dimensions, net.current + net.successCount * net.Params.EpochInterval), font, textBrush, outParams.AnimationSize.Width * 2, 0f, stringFormat);
+                g.DrawString(string.Format("Dimensions: {1}\nNeurons: {0}\nIteration: {2:N0}", net.Params.Neurons, net.Params.Dimensions, net.current + net.successCount * net.Params.EpochInterval), font, textBrush, _outParams.AnimationSize.Width * 2, 0f, stringFormat);
             }
 
             return result;
@@ -269,14 +267,14 @@ namespace NeuralNetTsa
 
             StringBuilder prediction = new StringBuilder();
             Array.ForEach(xPredicted, x => prediction.AppendLine(NumFormat.ToLong(x)));
-            DataWriter.CreateDataFile(outParams.PredictFile, prediction.ToString());
+            DataWriter.CreateDataFile(_outParams.PredictFile, prediction.ToString());
 
-            var predictedPlot = new ScottPlot.Plot(outParams.PlotsSize.Width, outParams.PlotsSize.Height);
+            var predictedPlot = new ScottPlot.Plot(_outParams.PlotsSize.Width, _outParams.PlotsSize.Height);
             predictedPlot.AddSignal(xPredicted);
             predictedPlot.XLabel("t");
             predictedPlot.YLabel("f(t)");
             predictedPlot.Title("Prediction");
-            predictedPlot.SaveFig(outParams.PredictedSignalPlotFile);
+            predictedPlot.SaveFig(_outParams.PredictedSignalPlotFile);
         }
 
         private void SaveDebugInfoToFile(SciNeuralNet net, LyapunovSpectrum les, double lle)
