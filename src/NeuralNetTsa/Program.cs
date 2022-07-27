@@ -4,11 +4,10 @@ using ChaosSoft.Core.Transform;
 using NeuralNetTsa.Configuration;
 using NeuralNetTsa.NeuralNet;
 using System;
-using System.Drawing.Imaging;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Threading;
-using System.Windows.Forms.DataVisualization.Charting;
 
 namespace NeuralNetTsa
 {
@@ -49,13 +48,24 @@ namespace NeuralNetTsa
 
             Logger.Init(dataFile.Output.LogFile);
 
-            new MathChart(dataFile.Output.PlotsSize, "t", "f(t)")
-                .AddTimeSeries("Signal", data.TimeSeries, SeriesChartType.Line)
-                .SaveImage(dataFile.Output.SignalPlotFile, ImageFormat.Png);
+            var signalPlot = new ScottPlot.Plot(dataFile.Output.PlotsSize.Width, dataFile.Output.PlotsSize.Height);
+            signalPlot.AddSignalXY(data.TimeSeries.XValues, data.TimeSeries.YValues);
+            signalPlot.XLabel("t");
+            signalPlot.YLabel("f(t)");
+            signalPlot.Title("Signal");
+            signalPlot.SaveFig(dataFile.Output.SignalPlotFile);
 
-            new MathChart(dataFile.Output.PlotsSize, "f(t)", "f(t+1)")
-                .AddTimeSeries("Pseudo Poincare", PseudoPoincareMap.GetMapDataFrom(data.TimeSeries.YValues), SeriesChartType.Point)
-                .SaveImage(dataFile.Output.PoincarePlotFile, ImageFormat.Png);
+            var pseudoPoincarePlot = new ScottPlot.Plot(dataFile.Output.PlotsSize.Width, dataFile.Output.PlotsSize.Height);
+            pseudoPoincarePlot.XLabel("t");
+            pseudoPoincarePlot.YLabel("t + 1");
+            pseudoPoincarePlot.Title("Pseudo poincare");
+
+            foreach (ChaosSoft.Core.Data.DataPoint dp in PseudoPoincareMap.GetMapDataFrom(data.TimeSeries.YValues).DataPoints)
+            {
+                pseudoPoincarePlot.AddPoint(dp.X, dp.Y, Color.SteelBlue, 2);
+            }
+
+            pseudoPoincarePlot.SaveFig(dataFile.Output.PoincarePlotFile);
 
             SciNeuralNet neuralNet = new SciNeuralNet(neuralNetParams, data.TimeSeries.YValues);
 

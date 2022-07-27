@@ -6,10 +6,8 @@ using System.Drawing.Text;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms.DataVisualization.Charting;
 using ChaosSoft.Core;
 using ChaosSoft.Core.Data;
-using ChaosSoft.Core.DrawEngine;
 using ChaosSoft.Core.DrawEngine.Charts;
 using ChaosSoft.Core.IO;
 using ChaosSoft.Core.NumericalMethods.Lyapunov;
@@ -76,13 +74,24 @@ namespace NeuralNetTsa
 
             try
             {
-                new MathChart(outParams.PlotsSize, "t", "f(t)")
-                    .AddTimeSeries("Signal", new Timeseries(data.Xt), SeriesChartType.Line)
-                    .SaveImage(outParams.ReconstructedSignalPlotFile, ImageFormat.Png);
+                var signalPlot = new ScottPlot.Plot(outParams.PlotsSize.Width, outParams.PlotsSize.Height);
+                signalPlot.AddSignal(data.Xt);
+                signalPlot.XLabel("t");
+                signalPlot.YLabel("f(t)");
+                signalPlot.Title("Signal");
+                signalPlot.SaveFig(outParams.ReconstructedSignalPlotFile);
 
-                new MathChart(outParams.PlotsSize, "t", "t + 1")
-                    .AddTimeSeries("Pseudo poincare", PseudoPoincareMap.GetMapDataFrom(data.Xt), SeriesChartType.Point)
-                    .SaveImage(outParams.ReconstructedPoincarePlotFile, ImageFormat.Png);
+                var pseudoPoincarePlot = new ScottPlot.Plot(outParams.PlotsSize.Width, outParams.PlotsSize.Height);
+                pseudoPoincarePlot.XLabel("t");
+                pseudoPoincarePlot.YLabel("t + 1");
+                pseudoPoincarePlot.Title("Pseudo poincare");
+
+                foreach (ChaosSoft.Core.Data.DataPoint dp in PseudoPoincareMap.GetMapDataFrom(data.Xt).DataPoints)
+                {
+                    pseudoPoincarePlot.AddPoint(dp.X, dp.Y, Color.SteelBlue, 1);
+                }
+
+                pseudoPoincarePlot.SaveFig(outParams.ReconstructedPoincarePlotFile);
             }
             catch (Exception ex)
             {
@@ -103,23 +112,46 @@ namespace NeuralNetTsa
             {
                 try
                 {
-                    ScatterPlot pPlot = new ScatterPlot(_squareSize);
-                    pPlot.AddDataSeries(PseudoPoincareMap.GetMapDataFrom(data.Xt), Color.SteelBlue);
-                    pPlot.AddDataSeries(PseudoPoincareMap.GetMapDataFrom(net.xdata), Color.OrangeRed, 1.5f);
-                    poincare = pPlot.Plot();
+                    var pPlot = new ScottPlot.Plot(_squareSize.Width, _squareSize.Height);
+                    pPlot.XLabel("t");
+                    pPlot.YLabel("t + 1");
+                    pPlot.Title("Pseudo poincare");
+
+                    foreach (DataPoint dp in PseudoPoincareMap.GetMapDataFrom(data.Xt).DataPoints)
+                    {
+                        pPlot.AddPoint(dp.X, dp.Y, Color.SteelBlue, 1);
+                    }
+
+                    foreach (DataPoint dp in PseudoPoincareMap.GetMapDataFrom(net.xdata).DataPoints)
+                    {
+                        pPlot.AddPoint(dp.X, dp.Y, Color.OrangeRed, 1.5f);
+                    }
+
+                    poincare = pPlot.Render();
                 }
                 catch
                 {
-                    ScatterPlot pPlot = new ScatterPlot(_squareSize);
-                    pPlot.AddDataSeries(PseudoPoincareMap.GetMapDataFrom(net.xdata), Color.OrangeRed, 1.5f);
-                    poincare = pPlot.Plot();
+                    var pPlot = new ScottPlot.Plot(_squareSize.Width, _squareSize.Height);
+                    pPlot.XLabel("t");
+                    pPlot.YLabel("t + 1");
+                    pPlot.Title("Pseudo poincare");
+
+                    foreach (DataPoint dp in PseudoPoincareMap.GetMapDataFrom(net.xdata).DataPoints)
+                    {
+                        pPlot.AddPoint(dp.X, dp.Y, Color.OrangeRed, 1.5f);
+                    }
+
+                    poincare = pPlot.Render();
                 }
 
                 try
                 {
-                    LinePlot sPlot = new LinePlot(_rectangleSize);
-                    sPlot.AddDataSeries(new Timeseries(data.Xt.Take(net.xdata.Length).ToArray()), Color.SteelBlue);
-                    signal = sPlot.Plot();
+                    var signalPlot = new ScottPlot.Plot(_rectangleSize.Width, _rectangleSize.Height);
+                    signalPlot.AddSignal(data.Xt.Take(net.xdata.Length).ToArray());
+                    signalPlot.XLabel("t");
+                    signalPlot.YLabel("f(t)");
+
+                    signal = signalPlot.Render();
                 }
                 catch
                 {
@@ -147,20 +179,35 @@ namespace NeuralNetTsa
         {
             if (poincare == null)
             {
-                ScatterPlot pPlot = new ScatterPlot(_squareSize);
-                pPlot.AddDataSeries(PseudoPoincareMap.GetMapDataFrom(net.xdata), Color.OrangeRed, 1.5f);
+                var pPlot = new ScottPlot.Plot(_squareSize.Width, _squareSize.Height);
+                pPlot.XLabel("t");
+                pPlot.YLabel("t + 1");
+                pPlot.Title("Pseudo poincare");
 
-                poincare = pPlot.Plot();
+                foreach (DataPoint dp in PseudoPoincareMap.GetMapDataFrom(net.xdata).DataPoints)
+                {
+                    pPlot.AddPoint(dp.X, dp.Y, Color.OrangeRed, 1.5f);
+                }
+
+                poincare = pPlot.Render();
             }
 
             if (signalOriginal == null)
             {
-                LinePlot sPlot = new LinePlot(_rectangleSize);
-                sPlot.AddDataSeries(new Timeseries(net.xdata), Color.OrangeRed);
-                signalOriginal = sPlot.Plot();
+                var signalOriginalPlot = new ScottPlot.Plot(_rectangleSize.Width, _rectangleSize.Height);
+                signalOriginalPlot.AddSignal(net.xdata, color: Color.OrangeRed);
+                signalOriginalPlot.XLabel("t");
+                signalOriginalPlot.YLabel("f(t)");
+                signalOriginalPlot.Title("Signal");
 
-                LinePlot sPlot1 = new LinePlot(_rectangleSize);
-                signal = sPlot1.Plot();
+                signalOriginal = signalOriginalPlot.Render();
+
+
+                var signalPlot = new ScottPlot.Plot(_rectangleSize.Width, _rectangleSize.Height);
+                signalPlot.XLabel("t");
+                signalPlot.YLabel("f(t)");
+
+                signal = signalPlot.Render();
             }
 
             double error = Math.Log10(net.OutputLayer.Neurons[0].Memory[0]);
@@ -177,21 +224,21 @@ namespace NeuralNetTsa
             Bitmap result = new Bitmap(outParams.AnimationSize.Width, outParams.AnimationSize.Height);
             Bitmap netImg = Visualizator.DrawBrain(net);
 
-            LinePlot plot = new LinePlot(new Size(outParams.AnimationSize.Width / 2, outParams.AnimationSize.Height / 2));
 
-            plot.AddDataSeries(new Timeseries(new double[] { 0, 0 }), Color.Black);
-            plot.AddDataSeries(new Timeseries(new double[] { -10, -10 }), Color.Black);
+            var trainingsPlot = new ScottPlot.Plot(outParams.AnimationSize.Width / 2, outParams.AnimationSize.Height / 2);
+            trainingsPlot.XLabel("cycle #");
+            trainingsPlot.YLabel("Training error (Log10)");
+            trainingsPlot.Title("Trainings");
+            trainingsPlot.SetAxisLimits(0, 10, -10, 0);
 
             foreach (var tSeries in errorsHistory)
             {
-                plot.AddDataSeries(new Timeseries(tSeries), Color.LightBlue);
+                trainingsPlot.AddSignal(tSeries, color: Color.Gray);
             }
 
-            plot.AddDataSeries(new Timeseries(errors.ToArray()), Color.Blue);
+            trainingsPlot.AddSignal(errors.ToArray(), color: Color.SteelBlue);
 
-            plot.LabelY = "Training error (Log10)";
-            plot.LabelX = "cycle #";
-            Bitmap chart = plot.Plot();
+            Bitmap chart = trainingsPlot.Render();
 
             StringFormat stringFormat = new StringFormat
             {
@@ -206,7 +253,7 @@ namespace NeuralNetTsa
                 g.TextRenderingHint = TextRenderingHint.AntiAlias;
                 g.DrawImage(poincare, new Point(0, 0));
                 g.DrawImage(chart, new Point(outParams.AnimationSize.Width / 2, 0));
-                g.DrawImage(netImg, new Point(outParams.AnimationSize.Width - netImg.Width, 0));
+                g.DrawImage(netImg, new Point(outParams.AnimationSize.Width - netImg.Width - 20, 30));
                 g.DrawImage(signalOriginal, new Point(0, outParams.AnimationSize.Height / 2));
                 g.DrawImage(signal, new Point(0, outParams.AnimationSize.Height / 4 * 3));
 
@@ -224,9 +271,12 @@ namespace NeuralNetTsa
             Array.ForEach(xPredicted, x => prediction.AppendLine(NumFormat.ToLong(x)));
             DataWriter.CreateDataFile(outParams.PredictFile, prediction.ToString());
 
-            new MathChart(outParams.PlotsSize, "t", "f(t)")
-                .AddTimeSeries("Signal", new Timeseries(xPredicted), SeriesChartType.Line)
-                .SaveImage(outParams.PredictedSignalPlotFile, ImageFormat.Png);
+            var predictedPlot = new ScottPlot.Plot(outParams.PlotsSize.Width, outParams.PlotsSize.Height);
+            predictedPlot.AddSignal(xPredicted);
+            predictedPlot.XLabel("t");
+            predictedPlot.YLabel("f(t)");
+            predictedPlot.Title("Prediction");
+            predictedPlot.SaveFig(outParams.PredictedSignalPlotFile);
         }
 
         private void SaveDebugInfoToFile(SciNeuralNet net, LyapunovSpectrum les, double lle)
