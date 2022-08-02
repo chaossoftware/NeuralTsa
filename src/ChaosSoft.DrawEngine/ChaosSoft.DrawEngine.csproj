@@ -2,6 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>net4.8</TargetFramework>
+    <UseWPF>true</UseWPF>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ChaosSoft.Core\ChaosSoft.Core.csproj" />
+  </ItemGroup>
 
 </Project>

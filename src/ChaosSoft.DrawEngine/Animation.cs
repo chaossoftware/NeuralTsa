@@ -4,7 +4,7 @@ using System.IO;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
 
-namespace ChaosSoft.Core.DrawEngine
+namespace ChaosSoft.DrawEngine
 {
     public class Animation
     {

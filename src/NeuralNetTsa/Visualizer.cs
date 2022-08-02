@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using ChaosSoft.Core;
-using ChaosSoft.Core.DrawEngine;
+using ChaosSoft.DrawEngine;
 using NeuralNetTsa.NeuralNet;
 using NeuralNetTsa.NeuralNet.Entities;
 

@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Linq;
 using ChaosSoft.Core.Data;
 
-namespace ChaosSoft.Core.DrawEngine.Charts
+namespace ChaosSoft.DrawEngine.Charts
 {
     /// <summary>
     /// Class for Multi Signal plot

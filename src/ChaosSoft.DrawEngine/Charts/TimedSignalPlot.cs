@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
-namespace ChaosSoft.Core.DrawEngine.Charts
+namespace ChaosSoft.DrawEngine.Charts
 {
     /// <summary>
     /// Class for Signal plot

@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 
-namespace ChaosSoft.Core.DrawEngine.Charts {
+namespace ChaosSoft.DrawEngine.Charts {
     /// <summary>
     /// Base class for plot object 
     /// </summary>

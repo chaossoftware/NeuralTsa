@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ChaosSoft.Core\ChaosSoft.Core.csproj" />
+    <ProjectReference Include="..\ChaosSoft.DrawEngine\ChaosSoft.DrawEngine.csproj" />
   </ItemGroup>
 
   <ItemGroup>

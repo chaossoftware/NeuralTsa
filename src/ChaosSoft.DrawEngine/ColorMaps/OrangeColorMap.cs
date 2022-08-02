@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace ChaosSoft.Core.DrawEngine.Charts.ColorMaps
+namespace ChaosSoft.DrawEngine.ColorMaps
 {
     public class OrangeColorMap : IColorMap
     {

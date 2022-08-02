@@ -1,5 +1,4 @@
 ﻿using ChaosSoft.Core.Data;
-using ChaosSoft.Core.DrawEngine;
 using ChaosSoft.Core.Transform;
 using NeuralNetTsa.Configuration;
 using NeuralNetTsa.NeuralNet;
