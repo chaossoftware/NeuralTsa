@@ -1,36 +1,35 @@
 ﻿using SciML.NeuralNetwork.Activation;
 
-namespace NeuralNetTsa.NeuralNet.Entities
+namespace NeuralNetTsa.NeuralNet.Entities;
+
+public sealed class HiddenNeuron : NudgeNeuron<HiddenNeuron>
 {
-    public class HiddenNeuron : NudgeNeuron<HiddenNeuron>
+    public static IActivationFunction Function;
+
+    public HiddenNeuron(int capacity) : base(capacity)
     {
-        public static ActivationFunctionBase Function;
-        public PruneSynapse BiasInput;
+    }
 
-        public HiddenNeuron() : base()
+    public HiddenNeuron(double nudge, int capacity) : base(nudge, capacity)
+    {
+    }
+
+    public PruneSynapse BiasInput { get; set; }
+
+    public override void Process()
+    {
+        double arg = BiasInput.Weight;
+
+        foreach (PruneSynapse synapse in Inputs)
         {
+            arg += synapse.Signal;
         }
 
-        public HiddenNeuron(double nudge) : base()
+        double multiplier = Function.Phi(arg);
+
+        foreach (PruneSynapse synapse in Outputs)
         {
-            Nudge = nudge;
-        }
-
-        public override void Process()
-        {
-            double arg = BiasInput.Weight;
-
-            foreach (PruneSynapse synapse in Inputs)
-            {
-                arg += synapse.Signal;
-            }
-
-            var multiplier = Function.Phi(arg);
-
-            foreach (PruneSynapse synapse in Outputs)
-            {
-                synapse.Signal = synapse.Weight * multiplier;
-            }
+            synapse.Signal = synapse.Weight * multiplier;
         }
     }
 }

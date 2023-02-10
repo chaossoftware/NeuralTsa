@@ -3,108 +3,101 @@ using ChaosSoft.Core.Transform;
 using NeuralNetTsa.Configuration;
 using NeuralNetTsa.NeuralNet;
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Threading;
 
-namespace NeuralNetTsa
+namespace NeuralNetTsa;
+
+internal class Program
 {
-    internal class Program
+    private ConsoleNetVisualizer consoleVisualizer;
+
+    static void Main(string[] args)
     {
-        private ConsoleNetVisualizer consoleVisualizer;
-        private readonly string _delimiter = new string('-', 50);
+        Console.Title = "Neural Net Time Series Analyzer";
+        Console.OutputEncoding = System.Text.Encoding.Unicode;
+        Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+        Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
 
-        static void Main(string[] args)
+        Program program = new Program();
+        Config config = new Config();
+        FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
+
+        foreach (var dataFile in config.Files)
         {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+            Console.Clear();
+            Console.WriteLine($"Version: {versionInfo.ProductVersion}");
+            Console.WriteLine($"File: {dataFile.FileName}");
+            program.ProcessFile(config.NeuralNet, dataFile);
+        }
+    }
 
-            Program program = new Program();
-            Config config = new Config();
+    private void ProcessFile(NeuralNetParameters neuralNetParams, DataFile dataFile)
+    {
+        SourceData data = new SourceData(dataFile.FileName);
 
-            foreach (var dataFile in config.Files)
-            {
-                program.ProcessFile(config.NeuralNet, dataFile);
-            }
+        int startPoint = dataFile.StartPoint != -1 ? dataFile.StartPoint - 1 : 0;
+        int endPoint = dataFile.EndPoint != -1 ? dataFile.EndPoint - 1 : data.LinesCount - 1;
+
+        data.SetTimeSeries(dataFile.DataColumn - 1, startPoint, endPoint, dataFile.Points, false);
+
+        if (!Directory.Exists(dataFile.Output.OutDirectory))
+        {
+            Directory.CreateDirectory(dataFile.Output.OutDirectory);
         }
 
-        private void ProcessFile(NeuralNetParameters neuralNetParams, DataFile dataFile)
+        Logger.Init(dataFile.Output.LogFile);
+
+        var signalPlot = new ScottPlot.Plot(dataFile.Output.PlotsSize.Width, dataFile.Output.PlotsSize.Height);
+        signalPlot.AddSignalXY(data.TimeSeries.XValues, data.TimeSeries.YValues);
+        signalPlot.XLabel("t");
+        signalPlot.YLabel("f(t)");
+        signalPlot.Title("Signal");
+        signalPlot.SaveFig(dataFile.Output.SignalPlotFile);
+
+        var pseudoPoincarePlot = new ScottPlot.Plot(dataFile.Output.PlotsSize.Width, dataFile.Output.PlotsSize.Height);
+        pseudoPoincarePlot.XLabel("t");
+        pseudoPoincarePlot.YLabel("t + 1");
+        pseudoPoincarePlot.Title("Pseudo poincare");
+
+        foreach (DataPoint dp in PseudoPoincareMap.GetMapDataFrom(data.TimeSeries.YValues).DataPoints)
         {
-            Console.Title = $"{dataFile.Output.FileName} > {neuralNetParams.ActFunction.Name}";
-
-            SourceData data = new SourceData(dataFile.FileName);
-
-            int startPoint = dataFile.StartPoint != -1 ? dataFile.StartPoint - 1 : 0;
-            int endPoint = dataFile.EndPoint != -1 ? dataFile.EndPoint - 1 : data.LinesCount - 1;
-
-            data.SetTimeSeries(dataFile.DataColumn - 1, startPoint, endPoint, dataFile.Points, false);
-
-            if (!Directory.Exists(dataFile.Output.OutDirectory))
-            {
-                Directory.CreateDirectory(dataFile.Output.OutDirectory);
-            }
-
-            Logger.Init(dataFile.Output.LogFile);
-
-            var signalPlot = new ScottPlot.Plot(dataFile.Output.PlotsSize.Width, dataFile.Output.PlotsSize.Height);
-            signalPlot.AddSignalXY(data.TimeSeries.XValues, data.TimeSeries.YValues);
-            signalPlot.XLabel("t");
-            signalPlot.YLabel("f(t)");
-            signalPlot.Title("Signal");
-            signalPlot.SaveFig(dataFile.Output.SignalPlotFile);
-
-            var pseudoPoincarePlot = new ScottPlot.Plot(dataFile.Output.PlotsSize.Width, dataFile.Output.PlotsSize.Height);
-            pseudoPoincarePlot.XLabel("t");
-            pseudoPoincarePlot.YLabel("t + 1");
-            pseudoPoincarePlot.Title("Pseudo poincare");
-
-            foreach (ChaosSoft.Core.Data.DataPoint dp in PseudoPoincareMap.GetMapDataFrom(data.TimeSeries.YValues).DataPoints)
-            {
-                pseudoPoincarePlot.AddPoint(dp.X, dp.Y, Color.SteelBlue, 2);
-            }
-
-            pseudoPoincarePlot.SaveFig(dataFile.Output.PoincarePlotFile);
-
-            SciNeuralNet neuralNet = new SciNeuralNet(neuralNetParams, data.TimeSeries.YValues);
-
-            Logger.LogInfo(neuralNetParams.GetInfoFull(), true);
-
-            Console.WriteLine(neuralNetParams.GetInfoFull());
-            Console.WriteLine(_delimiter);
-
-            var calculations = new Calculations(neuralNetParams, dataFile.Output);
-
-            consoleVisualizer = new ConsoleNetVisualizer(neuralNet);
-
-            if (dataFile.Output.SaveAnimation)
-            {
-                neuralNet.CycleComplete += calculations.AddAnimationFrame;
-            }
-
-            neuralNet.CycleComplete += ReportCycle;
-            neuralNet.EpochComplete += calculations.PerformCalculations;
-
-            neuralNet.Process();
-
-            if (dataFile.Output.SaveAnimation)
-            {
-                calculations.Visualizator.NeuralAnimation.SaveAnimation(dataFile.Output.AnimationFile);
-            }
+            pseudoPoincarePlot.AddPoint(dp.X, dp.Y, Color.SteelBlue, 2);
         }
 
-        public void ReportCycle(SciNeuralNet net)
-        {
-            const int reportOffset = 19;
-            double error = net.OutputLayer.Neurons[0].Memory[0];
-            string currentIteration = net.current.ToString().PadRight(10);
+        pseudoPoincarePlot.SaveFig(dataFile.Output.PoincarePlotFile);
 
-            Console.SetCursorPosition(0, reportOffset);
-            Console.WriteLine($"{currentIteration} e = {error:e}");
-            Console.WriteLine(_delimiter);
-            int offset = consoleVisualizer.Visualize(reportOffset + 1);
-            Console.SetCursorPosition(0, offset);
-            Console.WriteLine(_delimiter);
+        int length = data.TimeSeries.YValues.Length - dataFile.Output.PtsToTrain;
+        var xdata = data.TimeSeries.YValues.Take(length).ToArray();
+
+        ChaosNeuralNet neuralNet = new ChaosNeuralNet(neuralNetParams, xdata);
+        consoleVisualizer = new ConsoleNetVisualizer(neuralNet);
+
+        Logger.LogInfo(neuralNetParams.GetInfoFull(), true);
+
+        consoleVisualizer.PrintNetParams(neuralNetParams);
+
+        var calculations = new Calculations(neuralNetParams, dataFile.Output, data.TimeSeries.YValues);
+
+
+        if (dataFile.Output.SaveAnimation)
+        {
+            neuralNet.CycleComplete += calculations.AddAnimationFrame;
+        }
+
+        neuralNet.CycleComplete += consoleVisualizer.ReportCycle;
+        neuralNet.EpochComplete += calculations.PerformCalculations;
+
+        neuralNet.Process();
+
+        if (dataFile.Output.SaveAnimation)
+        {
+            calculations.Visualizator.NeuralAnimation.Dispose();
         }
     }
 }

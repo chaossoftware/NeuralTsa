@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace NeuralNetTsa.NeuralNet
+namespace NeuralNetTsa.NeuralNet;
+
+public static class NeuronRandomizer
 {
-    public static class NeuronRandomizer
-    {
-        public static Random Randomizer { get; set; }
-    }
+    public static Random Randomizer { get; set; }
 }

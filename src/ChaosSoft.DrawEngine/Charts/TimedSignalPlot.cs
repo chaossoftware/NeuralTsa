@@ -12,7 +12,7 @@ namespace ChaosSoft.DrawEngine.Charts
     {
         private int currentStep = 0;
 
-        public TimedSignalPlot(List<Timeseries> historicalData, Size bitmapSize, float thickness)
+        public TimedSignalPlot(List<DataSeries> historicalData, Size bitmapSize, float thickness)
             : base(bitmapSize)
         {
             this.Thickness = thickness;
@@ -75,7 +75,7 @@ namespace ChaosSoft.DrawEngine.Charts
             );
         }
 
-        protected override void DrawDataSeries(Timeseries ds, Pen pen)
+        protected override void DrawDataSeries(DataSeries ds, Pen pen)
         {
             double xPl, yPl;
 

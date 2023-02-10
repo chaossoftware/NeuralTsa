@@ -14,25 +14,25 @@ namespace ChaosSoft.DrawEngine.Charts
         public DataSeriesPlot(Size bitmapSize) 
             : base(bitmapSize, 1f)
         {
-            this.TimeSeriesList = new List<Timeseries>();
+            this.TimeSeriesList = new List<DataSeries>();
             this.PlotPens = new List<Pen>();
             this.tsAmplitude = new DataPoint(0, 0);
             this.tsPointMax = new DataPoint(double.MinValue, double.MinValue);
             this.tsPointMin = new DataPoint(double.MaxValue, double.MaxValue);
         }
 
-        public DataSeriesPlot(Size bitmapSize, Timeseries dataSeries, Color color, float thickness) 
+        public DataSeriesPlot(Size bitmapSize, DataSeries dataSeries, Color color, float thickness) 
             : this(bitmapSize)
         {
             this.AddDataSeries(dataSeries, color, thickness);
         }
 
-        public DataSeriesPlot(Size bitmapSize, Timeseries dataSeries) 
+        public DataSeriesPlot(Size bitmapSize, DataSeries dataSeries) 
             : this(bitmapSize, dataSeries, Color.SteelBlue, 1f)
         {
         }
 
-        protected List<Timeseries> TimeSeriesList { get; set; }
+        protected List<DataSeries> TimeSeriesList { get; set; }
 
         protected List<Pen> PlotPens { get; set; }
 
@@ -42,28 +42,24 @@ namespace ChaosSoft.DrawEngine.Charts
 
         protected DataPoint tsAmplitude;
 
-        public void AddDataSeries(Timeseries dataSeries, Color color, float thickness)
+        public void AddDataSeries(DataSeries dataSeries, Color color, float thickness)
         {
-            this.TimeSeriesList.Add(dataSeries);
-            this.PlotPens.Add(new Pen(color, thickness));
+            TimeSeriesList.Add(dataSeries);
+            PlotPens.Add(new Pen(color, thickness));
 
-            this.tsPointMax.X = Math.Max(this.tsPointMax.X, dataSeries.Max.X);
-            this.tsPointMax.Y = Math.Max(this.tsPointMax.Y, dataSeries.Max.Y);
-            this.tsPointMin.X = Math.Min(this.tsPointMin.X, dataSeries.Min.X);
-            this.tsPointMin.Y = Math.Min(this.tsPointMin.Y, dataSeries.Min.Y);
-
-            this.tsAmplitude.X = this.tsPointMax.X - this.tsPointMin.X;
-            this.tsAmplitude.Y = this.tsPointMax.Y - this.tsPointMin.Y;
+            tsPointMax = new DataPoint(Math.Max(tsPointMax.X, dataSeries.Max.X), Math.Max(tsPointMax.Y, dataSeries.Max.Y));
+            tsPointMin = new DataPoint(Math.Min(tsPointMin.X, dataSeries.Min.X), Math.Min(tsPointMin.Y, dataSeries.Min.Y));
+            tsAmplitude = new DataPoint(tsPointMax.X - tsPointMin.X, tsPointMax.Y - tsPointMin.Y);
         }
 
-        public void AddDataSeries(Timeseries dataSeries, Color color) =>
+        public void AddDataSeries(DataSeries dataSeries, Color color) =>
             AddDataSeries(dataSeries, color, 1f);
 
         public override Bitmap Plot()
         {
             PrepareChartArea();
 
-            if (this.TimeSeriesList.All(ts => ts.Length < 1))
+            if (TimeSeriesList.All(ts => ts.Length < 1))
             {
                 NoDataToPlot();
             }
@@ -87,13 +83,13 @@ namespace ChaosSoft.DrawEngine.Charts
         protected override void DrawGrid()
         {
             SetAxisValues(
-                GetAxisValue(this.tsPointMin.X),
-                GetAxisValue(this.tsPointMax.X),
-                GetAxisValue(this.tsPointMin.Y),
-                GetAxisValue(this.tsPointMax.Y)
+                GetAxisValue(tsPointMin.X),
+                GetAxisValue(tsPointMax.X),
+                GetAxisValue(tsPointMin.Y),
+                GetAxisValue(tsPointMax.Y)
             );
         }
 
-        protected abstract void DrawDataSeries(Timeseries ds, Pen pen);
+        protected abstract void DrawDataSeries(DataSeries ds, Pen pen);
     }
 }

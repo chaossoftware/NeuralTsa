@@ -1,28 +1,27 @@
-﻿namespace NeuralNetTsa.NeuralNet.Entities
+﻿namespace NeuralNetTsa.NeuralNet.Entities;
+
+public sealed class OutputNeuron : NudgeNeuron<OutputNeuron>
 {
-    public class OutputNeuron : NudgeNeuron<OutputNeuron>
+
+    public OutputNeuron(int capacity) : base(capacity)
     {
-        public PruneSynapse BiasInput;
+    }
 
-        public OutputNeuron() : base()
+    public OutputNeuron(double nudge, int capacity) : base(nudge, capacity)
+    {
+    }
+
+    public PruneSynapse BiasInput { get; set; }
+
+    public override void Process()
+    {
+        double arg = BiasInput.Weight;
+
+        foreach (PruneSynapse synapse in Inputs)
         {
+            arg += synapse.Signal;
         }
 
-        public OutputNeuron(double nudge) : base()
-        {
-            Nudge = nudge;
-        }
-
-        public override void Process()
-        {
-            double arg = BiasInput.Weight;
-
-            foreach (PruneSynapse synapse in Inputs)
-            {
-                arg += synapse.Signal;
-            }
-
-            Outputs[0].Signal = arg;
-        }
+        Outputs[0].Signal = arg;
     }
 }
