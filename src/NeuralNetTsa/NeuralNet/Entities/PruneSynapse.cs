@@ -1,4 +1,4 @@
-﻿using SciML.NeuralNetwork.Entities;
+﻿using ChaosSoft.NeuralNetwork.Entities;
 
 namespace NeuralNetTsa.NeuralNet.Entities;
 

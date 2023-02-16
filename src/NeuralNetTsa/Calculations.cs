@@ -1,9 +1,7 @@
 ﻿using AnimatedGif;
-using ChaosSoft.Core;
 using ChaosSoft.Core.Data;
 using ChaosSoft.Core.IO;
-using ChaosSoft.Core.NumericalMethods.Lyapunov;
-using ChaosSoft.Core.Transform;
+using ChaosSoft.NumericalMethods.Transform;
 using NeuralNetTsa.Configuration;
 using NeuralNetTsa.NeuralNet;
 using NeuralNetTsa.Routines;
@@ -13,6 +11,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.Linq;
+using System.Xml;
 
 namespace NeuralNetTsa;
 
@@ -82,7 +81,7 @@ internal sealed class Calculations
             pseudoPoincarePlot.YLabel("t + 1");
             pseudoPoincarePlot.Title("Pseudo poincare");
 
-            foreach (DataPoint dp in PseudoPoincareMap.GetMapDataFrom(data.Xt).DataPoints)
+            foreach (DataPoint dp in DelayedCoordinates.GetData(data.Xt).DataPoints)
             {
                 pseudoPoincarePlot.AddPoint(dp.X, dp.Y, Color.SteelBlue, 1);
             }
@@ -113,12 +112,12 @@ internal sealed class Calculations
 
             try
             {
-                foreach (DataPoint dp in PseudoPoincareMap.GetMapDataFrom(data.Xt).DataPoints)
+                foreach (DataPoint dp in DelayedCoordinates.GetData(data.Xt).DataPoints)
                 {
                     pPlot.AddPoint(dp.X, dp.Y, Color.SteelBlue, 1);
                 }
 
-                foreach (DataPoint dp in PseudoPoincareMap.GetMapDataFrom(net.xdata).DataPoints)
+                foreach (DataPoint dp in DelayedCoordinates.GetData(net.xdata).DataPoints)
                 {
                     pPlot.AddPoint(dp.X, dp.Y, Color.OrangeRed, 1.5f);
                 }
@@ -129,7 +128,7 @@ internal sealed class Calculations
             {
                 pPlot.Clear();
 
-                foreach (DataPoint dp in PseudoPoincareMap.GetMapDataFrom(net.xdata).DataPoints)
+                foreach (DataPoint dp in DelayedCoordinates.GetData(net.xdata).DataPoints)
                 {
                     pPlot.AddPoint(dp.X, dp.Y, Color.OrangeRed, 1.5f);
                 }
@@ -160,7 +159,7 @@ internal sealed class Calculations
         }
 
         DebugInfo.Write(net, leSpec, lle);
-        Console.WriteLine($"LES = {string.Join(" ", leSpec.Select(le => NumFormatter.ToShort(le)))}\t\t\t");
+        Console.WriteLine($"LES = {Format.General(leSpec, " ", 6)}\t\t\t");
 
         Visualizator.DrawBrain(net).Save(_outParams.NetPlotFile, ImageFormat.Png);
 
@@ -180,7 +179,7 @@ internal sealed class Calculations
             pPlot.YLabel("t + 1");
             pPlot.Title("Pseudo poincare");
 
-            foreach (DataPoint dp in PseudoPoincareMap.GetMapDataFrom(net.xdata).DataPoints)
+            foreach (DataPoint dp in DelayedCoordinates.GetData(net.xdata).DataPoints)
             {
                 pPlot.AddPoint(dp.X, dp.Y, Color.OrangeRed, 1.5f);
             }
@@ -207,8 +206,8 @@ internal sealed class Calculations
         }
 
         double error = Math.Log10(net.OutputLayer.Neurons[0].ShortMemory[0]);
-        error = FastMath.Min(error, 0);
-        error = FastMath.Max(error, -10);
+        error = Math.Min(error, 0);
+        error = Math.Max(error, -10);
 
         if (!_errors.Any())
         {

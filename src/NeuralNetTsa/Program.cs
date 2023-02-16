@@ -1,5 +1,5 @@
 ﻿using ChaosSoft.Core.Data;
-using ChaosSoft.Core.Transform;
+using ChaosSoft.NumericalMethods.Transform;
 using NeuralNetTsa.Configuration;
 using NeuralNetTsa.NeuralNet;
 using System;
@@ -65,7 +65,7 @@ internal class Program
         pseudoPoincarePlot.YLabel("t + 1");
         pseudoPoincarePlot.Title("Pseudo poincare");
 
-        foreach (DataPoint dp in PseudoPoincareMap.GetMapDataFrom(data.TimeSeries.YValues).DataPoints)
+        foreach (DataPoint dp in DelayedCoordinates.GetData(data.TimeSeries.YValues).DataPoints)
         {
             pseudoPoincarePlot.AddPoint(dp.X, dp.Y, Color.SteelBlue, 2);
         }

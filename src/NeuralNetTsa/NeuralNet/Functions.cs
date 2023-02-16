@@ -1,7 +1,6 @@
 ﻿using System;
 using NeuralNetTsa.NeuralNet.Entities;
-using ChaosSoft.Core;
-using SciML.NeuralNetwork.Activation;
+using ChaosSoft.NeuralNetwork.Activation;
 
 namespace NeuralNetTsa.NeuralNet.Activation;
 
@@ -124,5 +123,8 @@ public class Special : ComplexActivationFunction
     public override double Dphi(double arg) =>
         Neuron.Outputs[1].Weight + 
             arg * 2d * Neuron.Outputs[2].Weight +
-                Neuron.Outputs[3].Weight * FastMath.Pow2(ActivationFunctionsMath.Sech(arg));
+                Neuron.Outputs[3].Weight * Pow2(ActivationFunctionsMath.Sech(arg));
+
+    private static double Pow2(double num) =>
+        num * num;
 }

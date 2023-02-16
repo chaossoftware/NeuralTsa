@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Xml.Linq;
 using NeuralNetTsa.NeuralNet.Activation;
 using System.Collections.Generic;
-using SciML.NeuralNetwork.Activation;
+using ChaosSoft.NeuralNetwork.Activation;
 using NeuralNetTsa.NeuralNet;
 using System.IO;
 

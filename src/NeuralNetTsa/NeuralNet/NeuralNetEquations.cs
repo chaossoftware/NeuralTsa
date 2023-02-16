@@ -1,7 +1,7 @@
 ﻿using System;
-using ChaosSoft.Core.NumericalMethods.Equations;
+using ChaosSoft.NumericalMethods.Equations;
 using NeuralNetTsa.NeuralNet.Entities;
-using SciML.NeuralNetwork.Activation;
+using ChaosSoft.NeuralNetwork.Activation;
 
 namespace NeuralNetTsa.NeuralNet;
 

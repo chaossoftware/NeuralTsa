@@ -11,9 +11,9 @@ public sealed class OutputParameters
         OutDirectory = Path.Combine(outDir, $"nn_{FileName}_col{column}");
     }
 
-    public string FileName { get; protected set; }
+    public string FileName { get; }
 
-    public string OutDirectory { get; protected set; }
+    public string OutDirectory { get; }
 
     public bool SaveModel { get; set; } = true;
 
