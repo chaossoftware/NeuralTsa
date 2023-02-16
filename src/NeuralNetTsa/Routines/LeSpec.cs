@@ -1,5 +1,5 @@
-﻿using ChaosSoft.Core.NumericalMethods.Lyapunov;
-using ChaosSoft.Core.NumericalMethods.Orthogonalization;
+﻿using ChaosSoft.NumericalMethods.Lyapunov;
+using ChaosSoft.NumericalMethods.Orthogonalization;
 using NeuralNetTsa.NeuralNet;
 using NeuralNetTsa.NeuralNet.Entities;
 using System;
@@ -14,7 +14,7 @@ internal static class LeSpec
         int dimPlusOne = systemEquations.Rows;
 
         ModifiedGrammSchmidt ort = new ModifiedGrammSchmidt(dim);
-        BenettinMethod lyap = new BenettinMethod(dim);
+        LeSpecBenettin lyap = new LeSpecBenettin(dim);
 
         double time = 0;                 //time
         int irate = 1;                   //integration steps per reorthonormalization

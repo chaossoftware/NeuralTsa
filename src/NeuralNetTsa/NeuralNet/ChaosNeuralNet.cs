@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using ChaosSoft.Core;
-using ChaosSoft.Core.Extensions;
+using ChaosSoft.Core.DataUtils;
 using MersenneTwister;
 using NeuralNetTsa.Configuration;
 using NeuralNetTsa.NeuralNet.Activation;
 using NeuralNetTsa.NeuralNet.Entities;
-using SciML.NeuralNetwork.Networks;
-using BaseEntities = SciML.NeuralNetwork.Entities;
+using ChaosSoft.NeuralNetwork.Networks;
+using BaseEntities = ChaosSoft.NeuralNetwork.Entities;
 
 namespace NeuralNetTsa.NeuralNet;
 
@@ -86,7 +85,7 @@ public sealed class ChaosNeuralNet : INeuralNet
             else
             {
                 OutputLayer.Neurons[0].ShortMemory[0] = 10 * OutputLayer.Neurons[0].LongMemory[0];
-                ddw = FastMath.Min(Params.MaxPertrubation, Math.Sqrt(OutputLayer.Neurons[0].LongMemory[0]));
+                ddw = Math.Min(Params.MaxPertrubation, Math.Sqrt(OutputLayer.Neurons[0].LongMemory[0]));
             }
 
             #region "update memory with best results"
@@ -266,7 +265,7 @@ public sealed class ChaosNeuralNet : INeuralNet
 
                     if (improved > 0)
                     {
-                        ddw = FastMath.Min(Params.MaxPertrubation, (1 + improved / Params.TestingInterval) * Math.Abs(ddw));
+                        ddw = Math.Min(Params.MaxPertrubation, (1 + improved / Params.TestingInterval) * Math.Abs(ddw));
                         improved = 0;
                     }
                     else
@@ -376,7 +375,7 @@ public sealed class ChaosNeuralNet : INeuralNet
     private void Init(double[] sourceArray)
     {
         nmax = sourceArray.Length;
-        double xmax = Arrays.MaxAbs(sourceArray);
+        double xmax = Vector.MaxAbs(sourceArray);
 
         // create array with data
         xdata = new double[nmax];

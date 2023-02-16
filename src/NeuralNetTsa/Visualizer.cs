@@ -118,7 +118,7 @@ public sealed class Visualizer
             var sourceCenter = GetItemCenter(i, yOffset3, xCenter3);
             var pointStart = new PointF(bitmap.Width, sourceCenter.Y);
             var thickness = GetSynapseThickness(net.OutputLayer.Neurons[i].Outputs[0].Signal, minSynapseValue, maxSynapseValue);
-            thickness = FastMath.Min(thickness, neuronSize);
+            thickness = Math.Min(thickness, neuronSize);
 
             DrawSynapse(g, pointStart, sourceCenter, thickness);
             DrawNeuron(g, gp, net.OutputLayer.Neurons[i], sourceCenter);

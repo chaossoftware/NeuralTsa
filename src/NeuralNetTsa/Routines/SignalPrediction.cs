@@ -46,7 +46,7 @@ internal static class SignalPrediction
         double[] xPredicted = xpred.Skip(dimensions).ToArray();
 
         StringBuilder prediction = new StringBuilder();
-        Array.ForEach(xPredicted, x => prediction.AppendLine(NumFormatter.ToLong(x)));
+        Array.ForEach(xPredicted, x => prediction.AppendLine(Format.General(x, 8)));
         DataWriter.CreateDataFile(output.PredictFile, prediction.ToString());
 
         ScottPlot.Plot predictionPlot = new ScottPlot.Plot(output.PlotsSize.Width, output.PlotsSize.Height);

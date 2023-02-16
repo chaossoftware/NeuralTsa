@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using System.Globalization;
-using SciML.NeuralNetwork.Activation;
+using ChaosSoft.NeuralNetwork.Activation;
 
 namespace NeuralNetTsa.Configuration;
 
