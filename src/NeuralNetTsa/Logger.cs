@@ -3,7 +3,7 @@ using System.IO;
 
 namespace NeuralNetTsa;
 
-public static class Logger
+internal static class Logger
 {
     private static string LogFile;
 
@@ -27,9 +27,7 @@ public static class Logger
             info = $"{DateTime.Now}\n{info}";
         }
 
-        using (StreamWriter file = new StreamWriter(LogFile, true))
-        {
-            file.WriteLine(info + "\n\n");
-        }
+        using StreamWriter file = new StreamWriter(LogFile, true);
+        file.WriteLine(info + "\n\n");
     }
 }

@@ -31,7 +31,7 @@ public abstract class ComplexActivationFunction : IActivationFunction
     public abstract double Phi(double arg);
 }
 
-public class PolynomialSixOrder : ComplexActivationFunction
+public sealed class PolynomialSixOrder : ComplexActivationFunction
 {
     public override string Name => "Polynomial (6 order)";
 
@@ -57,7 +57,7 @@ public class PolynomialSixOrder : ComplexActivationFunction
                             arg * 6d * Neuron.Outputs[6].Weight))));
 }
 
-public class Rational : ComplexActivationFunction
+public sealed class Rational : ComplexActivationFunction
 {
     public override string Name => "Rational";
 
@@ -98,7 +98,7 @@ public class Rational : ComplexActivationFunction
     }
 }
 
-public class Special : ComplexActivationFunction
+public sealed class Special : ComplexActivationFunction
 {
     public override string Name => "Special";
 

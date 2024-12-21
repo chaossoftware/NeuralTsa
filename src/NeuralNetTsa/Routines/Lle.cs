@@ -1,4 +1,5 @@
-﻿using NeuralNetTsa.NeuralNet;
+﻿using ChaosSoft.Core;
+using NeuralNetTsa.NeuralNet;
 using System;
 
 namespace NeuralNetTsa.Routines;
@@ -82,7 +83,7 @@ internal static class Lle
         }
 
         double lle = ltot / (nmax - dimensions);
-        Console.WriteLine($"LLE = {lle:0.#####}");
+        Console.WriteLine("LLE = " + NumFormat.Format(lle, Constants.LeNumFormat));
 
         return lle;
     }

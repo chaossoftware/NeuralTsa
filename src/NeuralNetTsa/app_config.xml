@@ -41,7 +41,7 @@
   </FilesToAnalyse>
 
   <Output>
-    <Folder>D:\temp\results</Folder>
+    <Folder>results</Folder>
     <prediction predict="50" train="50"/>
     <reconstruction points="1e5" wav="false" model3D="false" poincare="true"/>
     <plots build="true" width="640" height="360"/>

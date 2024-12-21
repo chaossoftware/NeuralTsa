@@ -7,7 +7,7 @@ using System;
 
 namespace NeuralNetTsa.Routines;
 
-public class LeSpecCalculator
+internal sealed class LeSpecCalculator
 {
     public double[] Result { get; set; }
 

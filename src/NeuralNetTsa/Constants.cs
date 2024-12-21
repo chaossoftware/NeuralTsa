@@ -1,7 +1,6 @@
-﻿namespace NeuralNetTsa
+﻿namespace NeuralNetTsa;
+
+internal class Constants
 {
-    internal class Constants
-    {
-        public static string LeNumFormat = "0.#####";
-    }
+    public static string LeNumFormat = "0.#####";
 }

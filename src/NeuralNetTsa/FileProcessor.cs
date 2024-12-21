@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace NeuralNetTsa;
 
-public class FileProcessor
+internal static class FileProcessor
 {
     public static void ProcessFile(Config config, DataFileParams dataFile)
     {
