@@ -10,13 +10,12 @@ namespace NeuralNetTsa.Visualization;
 
 public sealed class NetVisualizer
 {
-    private readonly Brush brushInactiveNeuron = Brushes.WhiteSmoke;
-    private readonly Brush brushBackground = Brushes.Transparent;
-    private readonly Brush brushNeuronMain = Brushes.Crimson;
-    private readonly Brush brushActiveNeuron = Brushes.Orange;
-    private readonly Brush brushSynapse = Brushes.OrangeRed;
+    private static readonly Brush ColActiveNeuron = Brushes.PeachPuff;
+    private static readonly Brush ColInactiveNeuron = Brushes.IndianRed;
+    private static readonly Brush ColPositiveSynapse = Brushes.Coral;
+    private static readonly Brush ColNegativeSynapse = Brushes.CornflowerBlue;
 
-    private Bitmap bitmap;
+    private readonly Bitmap _bitmap;
 
     private double neuronSize;
     private double maxSinapseThickness;
@@ -33,7 +32,7 @@ public sealed class NetVisualizer
 
     public NetVisualizer(Size size, bool animate, string animationFile)
     {
-        bitmap = new Bitmap(size.Width, size.Height);
+        _bitmap = new Bitmap(size.Width, size.Height);
         neuronSize = 0;
 
         if (animate)
@@ -44,12 +43,12 @@ public sealed class NetVisualizer
 
     public Bitmap DrawBrain(ChaosNeuralNet net)
     {
-        var g = Graphics.FromImage(bitmap);
+        var g = Graphics.FromImage(_bitmap);
         var gp = new GraphicsPath();
 
         g.SmoothingMode = SmoothingMode.AntiAlias;
 
-        g.FillRectangle(Brushes.Transparent, new Rectangle(new Point(0, 0), bitmap.Size));
+        g.FillRectangle(Brushes.Transparent, new Rectangle(new Point(0, 0), _bitmap.Size));
 
         int inputsCount = net.InputLayer.Neurons.Length;
         int hiddenCount = net.HiddenLayer.Neurons.Length;
@@ -68,7 +67,7 @@ public sealed class NetVisualizer
             var sourceCenter = GetItemCenter(synapse.InIndex, yOffset1, xCenter1);
             var destinationCenter = GetItemCenter(synapse.OutIndex, yOffset2, xCenter2);
 
-            DrawSynapse(g, sourceCenter, destinationCenter, GetSynapseThickness(synapse.Signal, minSynapseValue, maxSynapseValue));
+            DrawSynapse(synapse.Signal, g, sourceCenter, destinationCenter, GetSynapseThickness(synapse.Signal, minSynapseValue, maxSynapseValue));
         }
 
         maxSynapseValue = net.Connections[1].Max(s => s.Signal);
@@ -79,7 +78,7 @@ public sealed class NetVisualizer
             var sourceCenter = GetItemCenter(synapse.InIndex, yOffset2, xCenter2);
             var destinationCenter = GetItemCenter(synapse.OutIndex, yOffset3, xCenter3);
 
-            DrawSynapse(g, sourceCenter, destinationCenter, GetSynapseThickness(synapse.Signal, minSynapseValue, maxSynapseValue));
+            DrawSynapse(synapse.Signal, g, sourceCenter, destinationCenter, GetSynapseThickness(synapse.Signal, minSynapseValue, maxSynapseValue));
         }
 
         maxSynapseValue = net.InputLayer.Neurons.Select(n => n.Inputs[0]).Max(s => s.Signal);
@@ -97,7 +96,7 @@ public sealed class NetVisualizer
                 thickness = maxSinapseThickness / 2;
             }
 
-            DrawSynapse(g, pointStart, sourceCenter, thickness);
+            DrawSynapse(net.InputLayer.Neurons[i].Inputs[0].Signal, g, pointStart, sourceCenter, thickness);
             DrawNeuron(g, gp, net.InputLayer.Neurons[i], sourceCenter);
         }
 
@@ -108,17 +107,14 @@ public sealed class NetVisualizer
             DrawNeuron(g, gp, net.HiddenLayer.Neurons[i], sourceCenter);
         }
 
-        //maxSynapseValue = net.OutputLayer.Neurons.Select(n => n.Outputs[0]).Max(s => s.Signal);
-        //minSynapseValue = net.OutputLayer.Neurons.Select(n => n.Outputs[0]).Min(s => s.Signal);
-
         for (int i = 0; i < outputsCount; i++)
         {
             var sourceCenter = GetItemCenter(i, yOffset3, xCenter3);
-            var pointStart = new PointF(bitmap.Width, sourceCenter.Y);
+            var pointStart = new PointF(_bitmap.Width, sourceCenter.Y);
             var thickness = GetSynapseThickness(net.OutputLayer.Neurons[i].Outputs[0].Signal, minSynapseValue, maxSynapseValue);
             thickness = Math.Min(thickness, neuronSize);
 
-            DrawSynapse(g, pointStart, sourceCenter, thickness);
+            DrawSynapse(net.OutputLayer.Neurons[i].Outputs[0].Signal, g, pointStart, sourceCenter, thickness);
             DrawNeuron(g, gp, net.OutputLayer.Neurons[i], sourceCenter);
         }
 
@@ -126,7 +122,7 @@ public sealed class NetVisualizer
         gp.Dispose();
         g.Dispose();
 
-        return bitmap;
+        return _bitmap;
     }
 
     private void DrawNeuron(Graphics g, GraphicsPath gp, InputNeuron neuron, PointF center)
@@ -134,10 +130,6 @@ public sealed class NetVisualizer
         var rect = new RectangleF((float)(center.X - neuronSize / 2), (float)(center.Y - neuronSize / 2), (float)neuronSize, (float)neuronSize);
         g.FillRectangle(GetNeuronColor(neuron), rect);
         gp.AddRectangle(rect);
-
-        var rect1 = new RectangleF((float)(center.X - neuronSize / 2) + 3, (float)(center.Y - neuronSize / 2) + 3, (float)neuronSize - 6, (float)neuronSize - 6);
-        g.FillRectangle(brushNeuronMain, rect1);
-        gp.AddRectangle(rect1);
     }
 
     private void DrawNeuron(Graphics g, GraphicsPath gp, HiddenNeuron neuron, PointF center)
@@ -145,10 +137,6 @@ public sealed class NetVisualizer
         var rect = new RectangleF((float)(center.X - neuronSize / 2), (float)(center.Y - neuronSize / 2), (float)neuronSize, (float)neuronSize);
         g.FillEllipse(GetNeuronColor(neuron), rect);
         gp.AddEllipse(rect);
-
-        var rect1 = new RectangleF((float)(center.X - neuronSize / 2) + 3, (float)(center.Y - neuronSize / 2) + 3, (float)neuronSize - 6, (float)neuronSize - 6);
-        g.FillEllipse(brushNeuronMain, rect1);
-        gp.AddEllipse(rect1);
     }
 
     private void DrawNeuron(Graphics g, GraphicsPath gp, OutputNeuron neuron, PointF center)
@@ -156,16 +144,10 @@ public sealed class NetVisualizer
         var rect = new RectangleF((float)(center.X - neuronSize / 2), (float)(center.Y - neuronSize / 2), (float)neuronSize, (float)neuronSize);
         g.FillEllipse(GetNeuronColor(neuron), rect);
         gp.AddEllipse(rect);
-
-        var rect1 = new RectangleF((float)(center.X - neuronSize / 2) + 3, (float)(center.Y - neuronSize / 2) + 3, (float)neuronSize - 6, (float)neuronSize - 6);
-        g.FillEllipse(brushNeuronMain, rect1);
-        gp.AddEllipse(rect1);
     }
 
-    private void DrawSynapse(Graphics g, PointF start, PointF end, double thickness)
-    {
-        g.DrawLine(new Pen(brushSynapse, (float)thickness), start, end);
-    }
+    private static void DrawSynapse(double value, Graphics g, PointF start, PointF end, double thickness) =>
+        g.DrawLine(new Pen(GetSynapseColor(value), (float)thickness), start, end);
 
     /// <summary>
     /// Get Entity center coordinates
@@ -189,10 +171,10 @@ public sealed class NetVisualizer
     {
         int maxLayerItemsCount = Math.Max(Math.Max(inputsCount, hiddenCount), outputsCount);
 
-        neuronSize = Math.Min((float)bitmap.Height / (maxLayerItemsCount * 2 - 1), bitmap.Width / 7d);
+        neuronSize = Math.Min((float)_bitmap.Height / (maxLayerItemsCount * 2 - 1), _bitmap.Width / 7d);
         maxSinapseThickness = neuronSize / 2d;
-        var xDistance = (bitmap.Width - 3d * neuronSize) / 4d;
-        yDistance = (bitmap.Height - maxLayerItemsCount * neuronSize) / (maxLayerItemsCount - 1);
+        var xDistance = (_bitmap.Width - 3d * neuronSize) / 4d;
+        yDistance = (_bitmap.Height - maxLayerItemsCount * neuronSize) / (maxLayerItemsCount - 1);
 
         xCenter1 = xDistance + 0.5 * neuronSize;
         xCenter2 = 2 * xDistance + 1.5 * neuronSize;
@@ -208,15 +190,18 @@ public sealed class NetVisualizer
     /// </summary>
     /// <param name="neuron">current neuron instance</param>
     /// <returns>colored brush</returns>
-    private Brush GetNeuronColor(InputNeuron neuron) =>
-        neuron.Outputs[0].Signal > 0 ? brushActiveNeuron : brushInactiveNeuron;
+    private static Brush GetNeuronColor(InputNeuron neuron) =>
+        neuron.Outputs[0].Signal > 0 ? ColActiveNeuron : ColInactiveNeuron;
 
-    private Brush GetNeuronColor(HiddenNeuron neuron) =>
-        neuron.Outputs[0].Signal > 0 ? brushActiveNeuron : brushInactiveNeuron;
+    private static Brush GetNeuronColor(HiddenNeuron neuron) =>
+        neuron.Outputs[0].Signal > 0 ? ColActiveNeuron : ColInactiveNeuron;
 
-    private Brush GetNeuronColor(OutputNeuron neuron) =>
-        neuron.Outputs[0].Signal > 0 ? brushActiveNeuron : brushInactiveNeuron;
+    private static Brush GetNeuronColor(OutputNeuron neuron) =>
+        neuron.Outputs[0].Signal > 0 ? ColActiveNeuron : ColInactiveNeuron;
 
     private double GetSynapseThickness(double current, double minValue, double maxValue) =>
         (current - minValue) * (maxSinapseThickness / (maxValue - minValue)) + 0.2;
+
+    private static Brush GetSynapseColor(double value) =>
+            value > 0 ? ColPositiveSynapse : ColNegativeSynapse;
 }

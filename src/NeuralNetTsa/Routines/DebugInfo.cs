@@ -50,7 +50,7 @@ internal class DebugInfo
         Array.ForEach(net.HiddenLayer.Neurons,
             neuron => debug.Append(FormatNeuronValue(neuron.ShortMemory[0])));
 
-        debug.AppendLine("\n\n< < <");
+        debug.AppendLine("\n\n- - -");
 
         Logger.LogInfo(debug.ToString(), true);
     }
