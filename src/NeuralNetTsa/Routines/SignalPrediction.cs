@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using ChaosSoft.Core;
 using ChaosSoft.Core.IO;
 using NeuralNetTsa.Configuration;
 using NeuralNetTsa.NeuralNet;
@@ -10,7 +11,7 @@ namespace NeuralNetTsa.Routines;
 
 internal static class SignalPrediction
 {
-    internal static void Make(ChaosNeuralNet net, OutputParameters output, double[] originalData)
+    internal static void Make(ChaosNeuralNet net, OutputParams output, OutputPaths paths, double[] originalData)
     {
         int dimensions = net.Params.Dimensions;
         int neurons = net.Params.Neurons;
@@ -46,8 +47,8 @@ internal static class SignalPrediction
         double[] xPredicted = xpred.Skip(dimensions).ToArray();
 
         StringBuilder prediction = new StringBuilder();
-        Array.ForEach(xPredicted, x => prediction.AppendLine(Format.General(x, 8)));
-        DataWriter.CreateDataFile(output.PredictFile, prediction.ToString());
+        Array.ForEach(xPredicted, x => prediction.AppendLine(NumFormat.Format(x)));
+        FileUtils.CreateDataFile(paths.PredictFile, prediction.ToString());
 
         ScottPlot.Plot predictionPlot = new ScottPlot.Plot(output.PlotsSize.Width, output.PlotsSize.Height);
         predictionPlot.AddSignal(xPredicted);
@@ -61,6 +62,6 @@ internal static class SignalPrediction
         predictionPlot.XLabel("t");
         predictionPlot.YLabel("f(t)");
         predictionPlot.Title("Prediction");
-        predictionPlot.SaveFig(output.PredictedSignalPlotFile);
+        predictionPlot.SaveFig(paths.PredictedSignalPlotFile);
     }
 }

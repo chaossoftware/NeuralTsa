@@ -7,9 +7,9 @@ namespace NeuralNetTsa.Configuration;
 /// <summary>
 /// Class Describing parameters of Neural network
 /// </summary>
-public sealed class NeuralNetParameters
+public sealed class NeuralNetParams
 {
-    public NeuralNetParameters(int neurons, int dimensions, int errorsExponent, int trainings, 
+    public NeuralNetParams(int neurons, int dimensions, int errorsExponent, int trainings, 
         IActivationFunction actFunction)
     {
         Neurons = neurons;
@@ -19,7 +19,7 @@ public sealed class NeuralNetParameters
         ActFunction = actFunction;
     }
 
-    public NeuralNetParameters(int neurons, int dimensions, int errorsExponent, int trainings,
+    public NeuralNetParams(int neurons, int dimensions, int errorsExponent, int trainings,
         IActivationFunction actFunction, double eta, long epochInterval, int biasTerm, 
         int constantTerm, double maxPertrubation, double nudge, int pruning, double testingInterval)
     {

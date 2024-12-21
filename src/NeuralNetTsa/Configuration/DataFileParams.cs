@@ -1,8 +1,8 @@
 ﻿namespace NeuralNetTsa.Configuration;
 
-public class DataFile
+public class DataFileParams
 {
-    public DataFile(string fileName, int dataColumn, int points, int startPoint, int endPoint)
+    public DataFileParams(string fileName, int dataColumn, int points, int startPoint, int endPoint)
     {
         FileName = fileName;
         DataColumn = dataColumn;
@@ -20,6 +20,4 @@ public class DataFile
     public int EndPoint { get; }
 
     public int Points { get; }
-
-    public OutputParameters Output { get; set; }
 }

@@ -4,7 +4,7 @@ using NeuralNetTsa.NeuralNet.Entities;
 using System;
 using System.Linq;
 
-namespace NeuralNetTsa;
+namespace NeuralNetTsa.Visualization;
 
 public sealed class ConsoleNetVisualizer
 {
@@ -16,7 +16,11 @@ public sealed class ConsoleNetVisualizer
     private const string InactiveNeuron = "░░";
     private const string ActiveNeuron = "██";
     private const string NeutralNeuron = "▒▒";
+    private const string WeakSynapse = ">  ";
     private const string NeutralSynapse = ">> ";
+    private const string StrongSynapse = ">>>";
+    private const string InputNeuron = "@";
+
     private const int MinOffsetY = 1;
 
     private readonly string _delimiter = new string('_', InfoBorderOffset - 2);
@@ -59,7 +63,7 @@ public sealed class ConsoleNetVisualizer
         Console.SetCursorPosition(0, offset);
     }
 
-    public void PrintNetParams(NeuralNetParameters neuralNetParams)
+    public void PrintNetParams(NeuralNetParams neuralNetParams)
     {
         Console.WriteLine(_delimiter);
 
@@ -90,7 +94,7 @@ public sealed class ConsoleNetVisualizer
         {
             string synapseBrush = GetSynapseBrush(inn.Outputs[0].Signal, lowSynapseTreshold, highSynapseTreshold);
             Console.SetCursorPosition(RightPartOffset, i * _inOffsetY + TopRightOffset);
-            Console.Write($"[] {synapseBrush}");
+            Console.Write($"{InputNeuron} {synapseBrush}");
             i++;
         }
 
@@ -124,15 +128,15 @@ public sealed class ConsoleNetVisualizer
     {
         if (current < firstThird)
         {
-            return ">  ";
-        } 
+            return WeakSynapse;
+        }
         else if (current > secondThird)
         {
             return NeutralSynapse;
         }
         else
         {
-            return ">>>";
+            return StrongSynapse;
         }
     }
 }

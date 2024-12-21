@@ -81,6 +81,9 @@ internal static class Lle
             ltot += Math.Log(rs);
         }
 
-        return ltot / (nmax - dimensions);
+        double lle = ltot / (nmax - dimensions);
+        Console.WriteLine($"LLE = {lle:0.#####}");
+
+        return lle;
     }
 }

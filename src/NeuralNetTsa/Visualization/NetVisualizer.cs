@@ -3,13 +3,12 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using AnimatedGif;
-using ChaosSoft.Core;
 using NeuralNetTsa.NeuralNet;
 using NeuralNetTsa.NeuralNet.Entities;
 
-namespace NeuralNetTsa;
+namespace NeuralNetTsa.Visualization;
 
-public sealed class Visualizer
+public sealed class NetVisualizer
 {
     private readonly Brush brushInactiveNeuron = Brushes.WhiteSmoke;
     private readonly Brush brushBackground = Brushes.Transparent;
@@ -32,8 +31,7 @@ public sealed class Visualizer
 
     public AnimatedGifCreator NeuralAnimation;
 
-
-    public Visualizer(Size size, bool animate, string animationFile)
+    public NetVisualizer(Size size, bool animate, string animationFile)
     {
         bitmap = new Bitmap(size.Width, size.Height);
         neuronSize = 0;
@@ -52,7 +50,7 @@ public sealed class Visualizer
         g.SmoothingMode = SmoothingMode.AntiAlias;
 
         g.FillRectangle(Brushes.Transparent, new Rectangle(new Point(0, 0), bitmap.Size));
-        
+
         int inputsCount = net.InputLayer.Neurons.Length;
         int hiddenCount = net.HiddenLayer.Neurons.Length;
         int outputsCount = net.OutputLayer.Neurons.Length;
@@ -191,10 +189,10 @@ public sealed class Visualizer
     {
         int maxLayerItemsCount = Math.Max(Math.Max(inputsCount, hiddenCount), outputsCount);
 
-        neuronSize = Math.Min((float)bitmap.Height / (maxLayerItemsCount * 2 - 1), (float)bitmap.Width / 7d);
+        neuronSize = Math.Min((float)bitmap.Height / (maxLayerItemsCount * 2 - 1), bitmap.Width / 7d);
         maxSinapseThickness = neuronSize / 2d;
-        var xDistance = ((float)bitmap.Width - 3d * neuronSize) / 4d;
-        yDistance = ((float)bitmap.Height - maxLayerItemsCount * neuronSize) / (maxLayerItemsCount - 1);
+        var xDistance = (bitmap.Width - 3d * neuronSize) / 4d;
+        yDistance = (bitmap.Height - maxLayerItemsCount * neuronSize) / (maxLayerItemsCount - 1);
 
         xCenter1 = xDistance + 0.5 * neuronSize;
         xCenter2 = 2 * xDistance + 1.5 * neuronSize;

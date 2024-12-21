@@ -45,7 +45,7 @@
     <prediction predict="50" train="50"/>
     <reconstruction points="1e5" wav="false" model3D="false" poincare="true"/>
     <plots build="true" width="640" height="360"/>
-    <animation build="true" width="640" height="640"/>
+    <animation build="true" width="800" height="800"/>
     <leInTime build="false"/>
   </Output>
 

@@ -1,24 +1,23 @@
 ﻿using AnimatedGif;
 using ChaosSoft.Core.Data;
-using ChaosSoft.Core.IO;
 using ChaosSoft.NumericalMethods.Transform;
 using NeuralNetTsa.Configuration;
 using NeuralNetTsa.NeuralNet;
 using NeuralNetTsa.Routines;
+using NeuralNetTsa.Visualization;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.Linq;
-using System.Xml;
 
 namespace NeuralNetTsa;
 
 internal sealed class Calculations
 {
-    private readonly OutputParameters _outParams;
-    private readonly NeuralNetEquations _systemEquations;
+    private readonly OutputParams _outParams;
+    private readonly OutputPaths _paths;
 
     private readonly double[] _originalData;
 
@@ -32,39 +31,39 @@ internal sealed class Calculations
     private Bitmap signalOriginal = null;
     private Bitmap signal = null;
 
-    public Visualizer Visualizator { get; set; }
+    public NetVisualizer Visualizator { get; set; }
 
-    public Calculations(NeuralNetParameters parameters, OutputParameters outParameters, double[] originalData)
+    public Calculations(Config config, DataFileParams dataFileParams, double[] originalData)
     {
-        _outParams = outParameters;
+        _outParams = config.Output;
+        _paths = config.Output.PathsFor(dataFileParams);
 
         _squareSize = new Size(_outParams.AnimationSize.Width / 2, _outParams.AnimationSize.Height / 2);
         _rectangleSize = new Size(_outParams.AnimationSize.Width, _outParams.AnimationSize.Height / 4);
 
         Size netImageSize = new Size(_outParams.AnimationSize.Width / 8, _outParams.AnimationSize.Height / 4);
         
-        Visualizator = new Visualizer(netImageSize, _outParams.SaveAnimation, outParameters.AnimationFile);
-
-        _systemEquations = new NeuralNetEquations(parameters.Dimensions, parameters.Neurons, parameters.ActFunction);
+        Visualizator = new NetVisualizer(netImageSize, _outParams.SaveAnimation, _paths.AnimationFile);
 
         _originalData = originalData;
     }
 
     public void AddAnimationFrame(ChaosNeuralNet net)
     {
+        Bitmap overview = PrepareAnimationFrame(net);
+        overview.Save(_paths.OverviewFile, ImageFormat.Png);
+
         if (_outParams.SaveAnimation)
         {
-            Visualizator.NeuralAnimation.AddFrame(PrepareAnimationFrame(net), quality: GifQuality.Bit4);
+            Visualizator.NeuralAnimation.AddFrame(overview, quality: GifQuality.Bit4);
         }
     }
 
     public void PerformCalculations(ChaosNeuralNet net)
     {
         double lle = Lle.Calculate(net);
-        
-        Console.WriteLine($"LLE = {lle:F5}");
-
-        double[] leSpec = LeSpec.Calculate(net, _systemEquations);
+        LeSpecCalculator leSpecCalculator = new();
+        leSpecCalculator.Calculate(net);
 
         // TODO!!!
         //if (_outParams.SaveLeInTime)
@@ -76,17 +75,7 @@ internal sealed class Calculations
 
         try
         {
-            var pseudoPoincarePlot = new ScottPlot.Plot(_outParams.PlotsSize.Width, _outParams.PlotsSize.Height);
-            pseudoPoincarePlot.XLabel("t");
-            pseudoPoincarePlot.YLabel("t + 1");
-            pseudoPoincarePlot.Title("Pseudo poincare");
-
-            foreach (DataPoint dp in DelayedCoordinates.GetData(data.Xt).DataPoints)
-            {
-                pseudoPoincarePlot.AddPoint(dp.X, dp.Y, Color.SteelBlue, 1);
-            }
-
-            pseudoPoincarePlot.SaveFig(_outParams.ReconstructedPoincarePlotFile);
+            Charts.PlotDelayedCoordinatesChart(_outParams, _paths.ReconstrDelayedCoordPlotFile, data.Xt);
         }
         catch (Exception ex)
         {
@@ -95,89 +84,69 @@ internal sealed class Calculations
 
         if (_outParams.SaveModel)
         {
-            Model3D.Create3daModelFile(_outParams.ModelFile, data.Xt, data.Yt, data.Zt);
+            Model3D.Create3daModelFile(_paths.ModelFile, data.Xt, data.Yt, data.Zt);
         }
 
         if (_outParams.SaveWav)
         {
-            Sound.CreateWavFile(_outParams.WavFile, data.Yt);
+            Sound.CreateWavFile(_paths.WavFile, data.Yt);
         }
 
-        if (_outParams.SaveAnimation)
+        ScottPlot.Plot pPlot = Charts.NewPlot(_squareSize, "Delayed coordinates", "t", "t+1");
+        pPlot.Grid(enable: false);
+
+        try
         {
-            ScottPlot.Plot pPlot = new ScottPlot.Plot(_squareSize.Width, _squareSize.Height);
-            pPlot.XLabel("t");
-            pPlot.YLabel("t + 1");
-            pPlot.Title("Pseudo poincare");
+            DelayedCoordinates.GetData(data.Xt).DataPoints
+                .ForEach(dp => pPlot.AddPoint(dp.X, dp.Y, Color.SteelBlue, 1));
 
-            try
-            {
-                foreach (DataPoint dp in DelayedCoordinates.GetData(data.Xt).DataPoints)
-                {
-                    pPlot.AddPoint(dp.X, dp.Y, Color.SteelBlue, 1);
-                }
+            DelayedCoordinates.GetData(net.xdata).DataPoints
+                .ForEach(dp => pPlot.AddPoint(dp.X, dp.Y, Color.OrangeRed, 1.5f));
 
-                foreach (DataPoint dp in DelayedCoordinates.GetData(net.xdata).DataPoints)
-                {
-                    pPlot.AddPoint(dp.X, dp.Y, Color.OrangeRed, 1.5f);
-                }
+            poincare = pPlot.Render();
+        }
+        catch
+        {
+            pPlot.Clear();
 
-                poincare = pPlot.Render();
-            }
-            catch
-            {
-                pPlot.Clear();
+            DelayedCoordinates.GetData(net.xdata).DataPoints
+                .ForEach(dp => pPlot.AddPoint(dp.X, dp.Y, Color.OrangeRed, 1.5f));
 
-                foreach (DataPoint dp in DelayedCoordinates.GetData(net.xdata).DataPoints)
-                {
-                    pPlot.AddPoint(dp.X, dp.Y, Color.OrangeRed, 1.5f);
-                }
+            poincare = pPlot.Render();
+        }
 
-                poincare = pPlot.Render();
-            }
+        ScottPlot.Plot signalPlot = Charts.NewPlot(_rectangleSize, "", "t", "f(t)");
 
-
-            ScottPlot.Plot signalPlot = new ScottPlot.Plot(_rectangleSize.Width, _rectangleSize.Height);
-            signalPlot.XLabel("t");
-            signalPlot.YLabel("f(t)");
-
-            try
-            {
-                signalPlot.AddSignal(data.Xt.Take(net.xdata.Length).ToArray());
-                signal = signalPlot.Render();
-            }
-            catch
-            {
-                signalPlot.Clear();
-                signal = signalPlot.Render();
-            }
+        try
+        {
+            signalPlot.AddSignal(data.Xt.Take(net.xdata.Length).ToArray());
+            signal = signalPlot.Render();
+        }
+        catch
+        {
+            signalPlot.Clear();
+            signal = signalPlot.Render();
         }
 
         if (_outParams.PtsToPredict > 0)
         {
-            SignalPrediction.Make(net, _outParams, _originalData);
+            SignalPrediction.Make(net, _outParams, _paths, _originalData);
         }
 
-        DebugInfo.Write(net, leSpec, lle);
-        Console.WriteLine($"LES = {Format.General(leSpec, " ", 6)}\t\t\t");
+        DebugInfo.Write(net, leSpecCalculator.Result, lle);
 
-        Visualizator.DrawBrain(net).Save(_outParams.NetPlotFile, ImageFormat.Png);
+        Visualizator.DrawBrain(net).Save(_paths.NetPlotFile, ImageFormat.Png);
 
-        if (_outParams.SaveAnimation)
-        {
-            _trialsHistory.Add(_errors.ToArray());
-            _errors.Clear();
-        }
+        _trialsHistory.Add(_errors.ToArray());
+        _errors.Clear();
     }
 
     private Bitmap PrepareAnimationFrame(ChaosNeuralNet net)
     {
         if (poincare == null)
         {
-            var pPlot = new ScottPlot.Plot(_squareSize.Width, _squareSize.Height);
-            pPlot.XLabel("t");
-            pPlot.YLabel("t + 1");
-            pPlot.Title("Pseudo poincare");
+            ScottPlot.Plot pPlot = Charts.NewPlot(_squareSize, "Delayed coordinates", "t", "t+1");
+            pPlot.Grid(enable: false);
 
             foreach (DataPoint dp in DelayedCoordinates.GetData(net.xdata).DataPoints)
             {
@@ -189,18 +158,14 @@ internal sealed class Calculations
 
         if (signalOriginal == null)
         {
-            var signalOriginalPlot = new ScottPlot.Plot(_rectangleSize.Width, _rectangleSize.Height);
+            ScottPlot.Plot signalOriginalPlot = Charts.NewPlot(_rectangleSize, "Signal", "t", "f(t)");
+            signalOriginalPlot.Grid(enable: false);
+
             signalOriginalPlot.AddSignal(net.xdata, color: Color.OrangeRed);
-            signalOriginalPlot.XLabel("t");
-            signalOriginalPlot.YLabel("f(t)");
-            signalOriginalPlot.Title("Signal");
 
             signalOriginal = signalOriginalPlot.Render();
 
-
-            var signalPlot = new ScottPlot.Plot(_rectangleSize.Width, _rectangleSize.Height);
-            signalPlot.XLabel("t");
-            signalPlot.YLabel("f(t)");
+            ScottPlot.Plot signalPlot = Charts.NewPlot(_rectangleSize, "", "t", "f(t)");
 
             signal = signalPlot.Render();
         }
@@ -216,7 +181,7 @@ internal sealed class Calculations
 
         _errors.Add(error);
 
-        Bitmap result = new Bitmap(_outParams.AnimationSize.Width, _outParams.AnimationSize.Height);
+        Bitmap result = new(_outParams.AnimationSize.Width, _outParams.AnimationSize.Height);
         Bitmap netImg = Visualizator.DrawBrain(net);
 
 
@@ -225,13 +190,16 @@ internal sealed class Calculations
         trainingsPlot.YLabel("Training error (Log10)");
         trainingsPlot.Title("Trainings");
         trainingsPlot.SetAxisLimits(0, 10, -10, 0);
+        trainingsPlot.Grid(enable: false);
 
         foreach (var tSeries in _trialsHistory)
         {
-            trainingsPlot.AddSignal(tSeries, color: Color.Gray);
+            var trial = trainingsPlot.AddSignal(tSeries, color: Color.Gray);
+            trial.MarkerSize = 1f;
         }
 
-        trainingsPlot.AddSignal(_errors.ToArray(), color: Color.SteelBlue);
+        var lastTrial = trainingsPlot.AddSignal(_errors.ToArray(), color: Color.SteelBlue);
+        lastTrial.MarkerSize = 4f;
 
         Bitmap chart = trainingsPlot.Render();
 
@@ -240,8 +208,8 @@ internal sealed class Calculations
             Alignment = StringAlignment.Far
         };
 
-        Font font = new Font(new FontFamily("Cambria Math"), 11f);
-        SolidBrush textBrush = new SolidBrush(Color.Black);
+        Font font = new(new FontFamily("Cambria Math"), 11f);
+        SolidBrush textBrush = new(Color.Black);
 
         using (Graphics g = Graphics.FromImage(result))
         {
