@@ -5,11 +5,10 @@ using NeuralNetTsa.Utils;
 
 namespace NeuralNetTsa.NeuralNet;
 
-public class NeuralNetEquations : ILinearizedOdeSys
+public sealed class NeuralNetEquations : ILinearizedOdeSys
 {
     private readonly IActivationFunction ActivationFunction;
     private readonly int Neurons;
-    private readonly ChaosNeuralNet _neuralNet;
 
     private readonly double[,] _a;
     private readonly double[] _b;
@@ -18,15 +17,14 @@ public class NeuralNetEquations : ILinearizedOdeSys
 
     public NeuralNetEquations(ChaosNeuralNet neuralNet)
     {
-        _neuralNet = neuralNet;
         EqCount = neuralNet.Params.Dimensions;
         Neurons = neuralNet.Params.Neurons;
         ActivationFunction = neuralNet.Params.ActFunction;
 
-        _a = NeuralNetDataConverter.GetL1Connections(_neuralNet);
-        _b = NeuralNetDataConverter.GetL2Connections(_neuralNet);
-        _bias = _neuralNet.NeuronBias.Outputs[0].Weight;
-        _constant = _neuralNet.NeuronConstant;
+        _a = NeuralNetDataConverter.GetL1Connections(neuralNet);
+        _b = NeuralNetDataConverter.GetL2Connections(neuralNet);
+        _bias = neuralNet.NeuronBias.Outputs[0].Weight;
+        _constant = neuralNet.NeuronConstant;
     }
 
     public int EqCount { get; }

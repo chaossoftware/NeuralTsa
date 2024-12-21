@@ -4,10 +4,10 @@ using System.Diagnostics;
 using ChaosSoft.Core.DataUtils;
 using MersenneTwister;
 using NeuralNetTsa.Configuration;
-using NeuralNetTsa.NeuralNet.Activation;
 using NeuralNetTsa.NeuralNet.Entities;
 using ChaosSoft.NeuralNetwork.Networks;
 using BaseEntities = ChaosSoft.NeuralNetwork.Entities;
+using NeuralNetTsa.NeuralNet.CustomActivation;
 
 namespace NeuralNetTsa.NeuralNet;
 

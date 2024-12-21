@@ -3,7 +3,7 @@ using System;
 
 namespace NeuralNetTsa.Utils;
 
-internal class ModifiedDiscreteSolver : LinearizedOdeSolverBase
+internal sealed class ModifiedDiscreteSolver : LinearizedOdeSolverBase
 {
     private readonly int _n;
     private readonly double[] _xData;

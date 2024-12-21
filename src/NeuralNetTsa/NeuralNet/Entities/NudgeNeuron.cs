@@ -84,28 +84,27 @@ public abstract class NudgeNeuron<N> : INeuron<N> where N : NudgeNeuron<N>
         }
     }
 
+    public abstract void Process();
+
+    public virtual object Clone() =>
+        throw new NotImplementedException();
 
     /// <summary>
     /// Returns the product of two normally (Gaussian) distributed random 
     /// deviates with meanof zero and standard deviation of 1.0
     /// </summary>
     /// <returns></returns>
-    private double Gauss2()
+    private static double Gauss2()
     {
-        double v1, v2, _arg;
+        double v1, v2, arg;
         do
         {
             v1 = 2d * NeuronRandomizer.Randomizer.NextDouble() - 1d;
             v2 = 2d * NeuronRandomizer.Randomizer.NextDouble() - 1d;
-            _arg = v1 * v1 + v2 * v2;
+            arg = v1 * v1 + v2 * v2;
         }
-        while (_arg >= 1d || _arg == 0d);
+        while (arg >= 1d || arg == 0d);
 
-        return v1 * v2 * (-2d + Math.Log(_arg) / _arg);
+        return v1 * v2 * (-2d + Math.Log(arg) / arg);
     }
-
-    public abstract void Process();
-
-    public virtual object Clone() =>
-        throw new NotImplementedException();
 }
