@@ -1,122 +1,99 @@
-﻿using System;
-using ChaosSoft.NumericalMethods.Equations;
+﻿using ChaosSoft.NumericalMethods.Ode.Linearized;
 using NeuralNetTsa.NeuralNet.Entities;
 using ChaosSoft.NeuralNetwork.Activation;
+using NeuralNetTsa.Utils;
 
 namespace NeuralNetTsa.NeuralNet;
 
-public class NeuralNetEquations : SystemBase
+public class NeuralNetEquations : ILinearizedOdeSys
 {
-    private readonly IActivationFunction Activation_Function;
+    private readonly IActivationFunction ActivationFunction;
     private readonly int Neurons;
+    private readonly ChaosNeuralNet _neuralNet;
 
-    public NeuralNetEquations(int dimensions, int neurons, IActivationFunction activationFunction) 
-        : base(dimensions)
+    private readonly double[,] _a;
+    private readonly double[] _b;
+    private readonly double _bias;
+    private readonly BiasNeuron _constant;
+
+    public NeuralNetEquations(ChaosNeuralNet neuralNet)
     {
-        Rows += dimensions;
-        Neurons = neurons;
-        Activation_Function = activationFunction;
+        _neuralNet = neuralNet;
+        EqCount = neuralNet.Params.Dimensions;
+        Neurons = neuralNet.Params.Neurons;
+        ActivationFunction = neuralNet.Params.ActFunction;
+
+        _a = NeuralNetDataConverter.GetL1Connections(_neuralNet);
+        _b = NeuralNetDataConverter.GetL2Connections(_neuralNet);
+        _bias = _neuralNet.NeuronBias.Outputs[0].Weight;
+        _constant = _neuralNet.NeuronConstant;
     }
 
-    public override string Name => "Neural Net";
+    public int EqCount { get; }
 
-    public override void GetDerivatives(double[,] current, double[,] derivs) =>
-        throw new NotImplementedException();
-
-    public double[,] Derivs(double[,] x, double[,] a, double[] b, double bias, BiasNeuron constant) 
+    // Nonlinear
+    public void F(double t, double[] solution, double[] derivs)
     {
-        
-        double[] df = new double[Count];
-        double[,] xnew = new double[Rows, Count];
         double arg;
+        derivs[0] = _bias;
 
-        /*
-         * Nonlinear neural net equations:
-         */
-        xnew[0, 0] = bias;
-
-        for (int i = 0; i < Neurons; i++) 
+        for (int i = 0; i < Neurons; i++)
         {
-            arg = constant.Outputs[i].Weight;
+            arg = _constant.Outputs[i].Weight;
 
-            for (int j = 0; j < Count; j++)
+            for (int j = 0; j < EqCount; j++)
             {
-                arg += a[i, j] * x[0, j];
+                arg += _a[i, j] * solution[j];
             }
 
-            xnew[0, 0] += b[i] * Activation_Function.Phi(arg);
+            derivs[0] += _b[i] * ActivationFunction.Phi(arg);
         }
 
-        for (int j = 1; j < Count; j++)
+        for (int j = 1; j < EqCount; j++)
         {
-            xnew[0, j] = x[0, j - 1];
+            derivs[j] = solution[j - 1];
         }
+    }
 
-        /*
-         * Linearized neural net equations:
-         */
-        for (int k = 0; k < Count; k++) 
+    // Linearized
+    public void F(double t, double[] solution, double[,] linearization, double[,] derivs)
+    {
+        double[] df = new double[EqCount];
+        double arg;
+
+        for (int k = 0; k < EqCount; k++)
         {
             df[k] = 0;
 
-            for (int i = 0; i < Neurons; i++) 
+            for (int i = 0; i < Neurons; i++)
             {
-                arg = constant.Outputs[i].Weight;
+                arg = _constant.Outputs[i].Weight;
 
-                for (int j = 0; j < Count; j++)
+                for (int j = 0; j < EqCount; j++)
                 {
-                    arg += a[i, j] * x[0, j];
+                    arg += _a[i, j] * solution[j];
                 }
 
-                df[k] += b[i] * a[i, k] * Activation_Function.Dphi(arg);
+                df[k] += _b[i] * _a[i, k] * ActivationFunction.Dphi(arg);
             }
         }
 
-        for (int k = 0; k < Count; k++) 
+        for (int k = 0; k < EqCount; k++)
         {
-            xnew[1, k] = 0;
+            derivs[0, k] = 0;
 
-            for (int j = 0; j < Count; j++)
+            for (int j = 0; j < EqCount; j++)
             {
-                xnew[1, k] += df[j] * x[j + 1, k];//xnew(k) + df(j) * x(k + d * (j - 1))
+                derivs[0, k] += df[j] * linearization[j, k];//xnew(k) + df(j) * x(k + d * (j - 1))
             }
         }
 
-        for (int k = 2; k < Count + 1; k++) 
+        for (int k = 1; k < EqCount; k++)
         {
-            for (int j = 0; j < Count; j++) 
+            for (int j = 0; j < EqCount; j++)
             {
-                xnew[k, j] = x[k - 1, j];
+                derivs[k, j] = linearization[k - 1, j]; // xnew[k, j] = x[k - 1, j];
             }
-        }
-
-        return xnew;
-    }
-
-    public override void SetInitialConditions(double[,] current) =>
-        throw new NotImplementedException();
-
-    public void Init(double[,] x, double[] xdata) 
-    {
-        // initial conditions for nonlinear map
-        for (int i = 0; i < Count; i++) 
-        {
-            x[0, i] = xdata[Count - i - 1];   //was xdata[dimensions - i + 1]
-        }
-
-        // initial conditions for linearized maps
-        for (int i = 1; i < Rows; i++) 
-        {
-            x[i, i - 1] = 1;
         }
     }
-
-    public override string ToFileName() =>
-        throw new NotImplementedException();
-
-    public override string ToString() =>
-        throw new NotImplementedException();
-
-    public override void SetParameters(params double[] parameters) =>
-        throw new NotImplementedException();
 }

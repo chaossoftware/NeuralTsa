@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="AnimatedGif" Version="1.0.5" />
-    <PackageReference Include="ChaosSoft.NumericalMethods" Version="1.0.0" />
+    <PackageReference Include="ChaosSoft.NumericalMethods" Version="2.0.0" />
     <PackageReference Include="ChaosSoft.NeuralNetwork" Version="1.0.0" />
     <PackageReference Include="ScottPlot" Version="4.1.52" />
   </ItemGroup>

@@ -33,7 +33,7 @@ public sealed class ChaosNeuralNet : INeuralNet
 
     private bool AdditionalNeuron;
 
-    public ChaosNeuralNet(NeuralNetParameters taskParams, double[] array) 
+    public ChaosNeuralNet(NeuralNetParams taskParams, double[] array) 
     {
         InputLayer = new BaseEntities.Layer<InputNeuron>(taskParams.Dimensions);
         HiddenLayer = new BaseEntities.Layer<HiddenNeuron>(taskParams.Neurons);
@@ -56,7 +56,7 @@ public sealed class ChaosNeuralNet : INeuralNet
 
     public event NeuralNetEvent EpochComplete;
 
-    public NeuralNetParameters Params { get; set; }
+    public NeuralNetParams Params { get; set; }
 
     public BiasNeuron NeuronBias { get; set; }
 
@@ -202,7 +202,7 @@ public sealed class ChaosNeuralNet : INeuralNet
 
                 double e1 = 0;
 
-                #region "calculate 'mean square' error in prediction of all points"
+                #region calculate 'mean square' error in prediction of all points
 
                 for (int k = Params.Dimensions; k < nmax; k++)
                 {
@@ -230,10 +230,10 @@ public sealed class ChaosNeuralNet : INeuralNet
 
                 if (e1 < OutputLayer.Neurons[0].ShortMemory[0])
                 {
-                    improved ++;
+                    #region memorize current weights and new error 
+                    improved++;
                     OutputLayer.Neurons[0].ShortMemory[0] = e1;
 
-                    //memorize current weights
                     foreach (InputNeuron neuron in InputLayer.Neurons)
                     {
                         neuron.WeightsToShortMemory();
@@ -252,6 +252,8 @@ public sealed class ChaosNeuralNet : INeuralNet
                     {
                         (Params.ActFunction as ComplexActivationFunction).Neuron.WeightsToShortMemory();
                     }
+
+                    #endregion
                 }
                 else if (ddw > 0 && improved == 0)
                 {
@@ -302,7 +304,8 @@ public sealed class ChaosNeuralNet : INeuralNet
                     (Params.ActFunction as ComplexActivationFunction).Neuron.ShortMemoryToWeights();
                 }
 
-                //Mark the weak connections for pruning
+                #region Mark the weak connections for pruning
+
                 if (Params.Pruning != 0)
                 {
                     for (int i = 0; i < Params.Neurons; i++)
@@ -324,6 +327,8 @@ public sealed class ChaosNeuralNet : INeuralNet
                         }
                     }
                 }
+
+                #endregion
             }
 
             #region "Save best weights"

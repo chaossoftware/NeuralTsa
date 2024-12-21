@@ -5,7 +5,6 @@ using System.Xml.Linq;
 using NeuralNetTsa.NeuralNet.Activation;
 using System.Collections.Generic;
 using ChaosSoft.NeuralNetwork.Activation;
-using NeuralNetTsa.NeuralNet;
 using System.IO;
 
 namespace NeuralNetTsa.Configuration;
@@ -13,14 +12,13 @@ namespace NeuralNetTsa.Configuration;
 public sealed class Config
 {
     private const string OptionsFile = "app_config.xml";
+    
+    private static readonly CultureInfo Culture = CultureInfo.InvariantCulture;
 
     private readonly XDocument _xConfig;
-    private readonly CultureInfo _culture;
 
     public Config()
     {
-        _culture = CultureInfo.InvariantCulture;
-
         try
         {
             _xConfig = XDocument.Load(OptionsFile);
@@ -29,22 +27,23 @@ public sealed class Config
         {
             throw new ArgumentException($"Unable to load configuration file {OptionsFile}.");
         }
-
         LoadNeuralNetParams();
+        LoadOutParams();
 
-        Files = new List<DataFile>();
+        Files = new List<DataFileParams>();
 
         foreach (var file in _xConfig.Root.Element("FilesToAnalyse").Elements("File"))
         {
             var dataFile = GetDataFile(file);
-            dataFile.Output = LoadOutParams(dataFile.FileName, dataFile.DataColumn);
             Files.Add(dataFile);
         }
     }
 
-    public NeuralNetParameters NeuralNet { get; private set; }
+    public NeuralNetParams NeuralNet { get; private set; }
 
-    public List<DataFile> Files { get; }
+    public List<DataFileParams> Files { get; }
+
+    public OutputParams Output { get; set; }
 
     private void LoadNeuralNetParams()
     {
@@ -69,53 +68,36 @@ public sealed class Config
 
         IActivationFunction activation = GetActivationFunction(activationFunction);
 
-        NeuralNet = new NeuralNetParameters(neurons, dimensions, errorExponent, trainings,
+        NeuralNet = new NeuralNetParams(neurons, dimensions, errorExponent, trainings,
             activation, eta, epochInterval, biasTerm, constantTerm,
             maxPertrubation, nudge, pruning, testingInterval);
     }
 
-    private IActivationFunction GetActivationFunction(string functionName)
+    private static IActivationFunction GetActivationFunction(string functionName)
     {
-        switch (functionName.ToLower())
+        return functionName.ToLower() switch
         {
-            case "binary_shift":
-                return new BinaryShift();
-            case "gaussian":
-                return new Gaussian();
-            case "gaussian_derivative":
-                return new GaussianDerivative();
-            case "sigmoid":
-                return new Sigmoid();
-            case "exponential":
-                return new Exponential();
-            case "linear":
-                return new Linear();
-            case "piecewise_linear":
-                return new PiecewiseLinear();
-            case "hyperbolic_tangent":
-                return new HyperbolicTangent();
-            case "hyperbolic_tangent_v2":
-                return new HyperbolicTangentV2();
-            case "cosine":
-                return new Cosine();
-            case "logistic":
-                return new Logistic();
-            case "logistic_v2":
-                return new LogisticV2();
-            case "polynomial":
-                return new PolynomialSixOrder();
-            case "rational":
-                return new Rational();
-            case "special":
-                return new Special();
-            case "sinc":
-                return new Sinc();
-            default:
-                return new LogisticV2();
-        }
+            "binary_shift" => new BinaryShift(),
+            "gaussian" => new Gaussian(),
+            "gaussian_derivative" => new GaussianDerivative(),
+            "sigmoid" => new Sigmoid(),
+            "exponential" => new Exponential(),
+            "linear" => new Linear(),
+            "piecewise_linear" => new PiecewiseLinear(),
+            "hyperbolic_tangent" => new HyperbolicTangent(),
+            "hyperbolic_tangent_v2" => new HyperbolicTangentV2(),
+            "cosine" => new Cosine(),
+            "logistic" => new Logistic(),
+            "logistic_v2" => new LogisticV2(),
+            "polynomial" => new PolynomialSixOrder(),
+            "rational" => new Rational(),
+            "special" => new Special(),
+            "sinc" => new Sinc(),
+            _ => new LogisticV2(),
+        };
     }
 
-    private OutputParameters LoadOutParams(string fileName, int column)
+    private void LoadOutParams()
     {
         var xParams = _xConfig.Root.Element("Output");
 
@@ -126,36 +108,34 @@ public sealed class Config
             Directory.CreateDirectory(outDir);
         }
 
-        var output = new OutputParameters(fileName, column, outDir);
+        Output = new OutputParams(outDir);
 
         var xPrediction = xParams.Element("prediction");
-        output.PtsToPredict = ParseInt(xPrediction.Attribute("predict").Value);
-        output.PtsToTrain = ParseInt(xPrediction.Attribute("train").Value);
+        Output.PtsToPredict = ParseInt(xPrediction.Attribute("predict").Value);
+        Output.PtsToTrain = ParseInt(xPrediction.Attribute("train").Value);
 
         var xReconstruction = xParams.Element("reconstruction");
-        output.PredictedSignalPts = ParseFloatAsInt(xReconstruction.Attribute("points").Value);
-        output.SaveWav = bool.Parse(xReconstruction.Attribute("wav").Value);
-        output.SaveModel = bool.Parse(xReconstruction.Attribute("model3D").Value);
+        Output.PredictedSignalPts = ParseFloatAsInt(xReconstruction.Attribute("points").Value);
+        Output.SaveWav = bool.Parse(xReconstruction.Attribute("wav").Value);
+        Output.SaveModel = bool.Parse(xReconstruction.Attribute("model3D").Value);
 
         var xPlots = xParams.Element("plots");
         var xAnimation = xParams.Element("animation");
         var xLeInTime = xParams.Element("leInTime");
 
-        output.SaveLeInTime = bool.Parse(xLeInTime.Attribute("build").Value);
+        Output.SaveLeInTime = bool.Parse(xLeInTime.Attribute("build").Value);
 
-        output.PlotsSize = new Size(
+        Output.PlotsSize = new Size(
             ParseInt(xPlots.Attribute("width").Value),
             ParseInt(xPlots.Attribute("height").Value));
 
-        output.SaveAnimation = bool.Parse(xAnimation.Attribute("build").Value);
-        output.AnimationSize = new Size(
+        Output.SaveAnimation = bool.Parse(xAnimation.Attribute("build").Value);
+        Output.AnimationSize = new Size(
             ParseInt(xAnimation.Attribute("width").Value),
             ParseInt(xAnimation.Attribute("height").Value));
-
-        return output;
     }
 
-    private DataFile GetDataFile(XElement xFile)
+    private static DataFileParams GetDataFile(XElement xFile)
     {
         try
         {
@@ -165,29 +145,28 @@ public sealed class Config
             int start = TryParseInt(xFile.Attribute("start").Value);
             int end = TryParseInt(xFile.Attribute("end").Value);
 
-            return new DataFile(fName, dataColumn, points, start, end);
+            return new DataFileParams(fName, dataColumn, points, start, end);
         }
         catch
         {
             throw new ArgumentException("Unable to read files list");
         }
     }
+    
+    private static int ParseInt(string value) =>
+        int.Parse(value, NumberStyles.Integer, Culture);
 
+    private static int ParseFloatAsInt(string value) =>
+        int.Parse(value, NumberStyles.Float, Culture);
 
-    private int ParseInt(string value) =>
-        int.Parse(value, NumberStyles.Integer, _culture);
+    private static long ParseLong(string value) =>
+        long.Parse(value, NumberStyles.Float, Culture);
 
-    private int ParseFloatAsInt(string value) =>
-        int.Parse(value, NumberStyles.Float, _culture);
+    private static double ParseDouble(string value) =>
+        double.Parse(value, NumberStyles.Float, Culture);
 
-    private long ParseLong(string value) =>
-        long.Parse(value, NumberStyles.Float, _culture);
-
-    private double ParseDouble(string value) =>
-        double.Parse(value, NumberStyles.Float, _culture);
-
-    private int TryParseInt(string value) =>
-        int.TryParse(value, NumberStyles.Integer, _culture, out int parsed) ? 
+    private static int TryParseInt(string value) =>
+        int.TryParse(value, NumberStyles.Integer, Culture, out int parsed) ? 
         parsed : 
         -1;
 }

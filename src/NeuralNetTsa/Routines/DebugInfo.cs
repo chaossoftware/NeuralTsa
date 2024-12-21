@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Text;
-using ChaosSoft.Core.IO;
+using ChaosSoft.Core;
 using ChaosSoft.NumericalMethods.Lyapunov;
 using NeuralNetTsa.NeuralNet;
 using NeuralNetTsa.NeuralNet.Entities;
@@ -18,11 +18,11 @@ internal class DebugInfo
             .AppendLine($"\nEpoch {net.successCount}")
             .AppendFormat(CultureInfo.InvariantCulture, "ε = {0:e}\n", net.Epsilon)
             .AppendFormat(CultureInfo.InvariantCulture, "e = {0:e}\n\n", eBest)
-            .AppendLine($"LLE = {Format.General(lle)}")
-            .AppendLine("LES = " + Format.General(les, " ", 6))
-            .AppendLine($"Dky = {Format.General(StochasticProperties.KYDimension(les))}")
-            .AppendLine($"Eks = {Format.General(StochasticProperties.KSEntropy(les))}")
-            .AppendLine($"PVC = {Format.General(StochasticProperties.PhaseVolumeContractionSpeed(les))}")
+            .AppendLine($"LLE = {NumFormat.Format(lle, Constants.LeNumFormat)}")
+            .AppendLine("LES = " + NumFormat.Format(les, Constants.LeNumFormat, " "))
+            .AppendLine($"Dky = {NumFormat.Format(StochasticProperties.KYDimension(les), Constants.LeNumFormat)}")
+            .AppendLine($"Eks = {NumFormat.Format(StochasticProperties.KSEntropy(les), Constants.LeNumFormat)}")
+            .AppendLine($"PVC = {NumFormat.Format(StochasticProperties.PhaseVolumeContractionSpeed(les), Constants.LeNumFormat)}")
             .AppendFormat(CultureInfo.InvariantCulture, "\nBias = {0:F6}\n\n", net.NeuronBias.ShortMemory[0]);
 
         for (int i = 0; i < net.Params.Neurons; i++)
