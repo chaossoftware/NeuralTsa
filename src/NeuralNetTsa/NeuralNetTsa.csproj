@@ -17,6 +17,9 @@
     <None Update="app_config.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="TestData\logistic">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\henon">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

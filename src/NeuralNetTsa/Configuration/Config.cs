@@ -2,10 +2,10 @@
 using System.Drawing;
 using System.Globalization;
 using System.Xml.Linq;
-using NeuralNetTsa.NeuralNet.Activation;
 using System.Collections.Generic;
 using ChaosSoft.NeuralNetwork.Activation;
 using System.IO;
+using NeuralNetTsa.NeuralNet.CustomActivation;
 
 namespace NeuralNetTsa.Configuration;
 

@@ -36,8 +36,9 @@
   -->
 
   <FilesToAnalyse>
+    <!--<File path="TestData\logistic" dataColumn="2" start="" end="" points="1"/>-->
     <File path="TestData\henon" dataColumn="1" start="" end="" points="1"/>
-    <!-- <File path="TestData\hypchaos" dataColumn="1" start="" end="" points="1"/> -->
+     <!--<File path="TestData\hypchaos" dataColumn="1" start="" end="" points="1"/>--> 
   </FilesToAnalyse>
 
   <Output>
