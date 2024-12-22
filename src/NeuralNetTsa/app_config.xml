@@ -44,7 +44,7 @@
   <Output>
     <Folder>results</Folder>
     <prediction predict="50" train="50"/>
-    <reconstruction points="1e5" wav="false" model3D="false" poincare="true"/>
+    <reconstruction points="1e5" wav="false" model3D="false" delayedCoordinates="true"/>
     <plots build="true" width="640" height="360"/>
     <animation build="true" width="800" height="800"/>
     <leInTime build="false"/>
